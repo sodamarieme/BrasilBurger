@@ -1,0 +1,11 @@
+target/
+projet_brasil_burger/
+.DS_Store
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.classpath
+.project
+.settings/
