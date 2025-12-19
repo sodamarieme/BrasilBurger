@@ -2,6 +2,7 @@
 using BrasilBurgerC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BrasilBurgerC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251218211701_AddEstArchiveToBurger")]
+    partial class AddEstArchiveToBurger
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,33 +45,6 @@ namespace BrasilBurgerC.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Burgers");
-                });
-
-            modelBuilder.Entity("BrasilBurgerC.Models.Produit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("EstArchive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Prix")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Produits");
                 });
 #pragma warning restore 612, 618
         }
