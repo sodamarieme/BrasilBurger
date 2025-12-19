@@ -3,8 +3,13 @@ namespace BrasilBurgerC.Models
     public class Produit
     {
         public int Id { get; set; }
-        public required string Nom { get; set; }
-        public required string Type { get; set; } // burger | menu | complement
+
+        public string Nom { get; set; } = string.Empty;
+
+        public string Type { get; set; } = string.Empty;
+
         public int Prix { get; set; }
+
+        public bool EstArchive { get; set; }
     }
 }

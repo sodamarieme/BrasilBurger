@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using BrasilBurgerC.Data;
-using BrasilBurgerC.Models;
 using System.Linq;
 
 namespace BrasilBurgerC.Controllers
@@ -14,10 +13,18 @@ namespace BrasilBurgerC.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        // /Produit/Index?type=Burger
+        public IActionResult Index(string type)
         {
-            var produits = _context.Produits.ToList();
-            return View(produits);
+            var produits = _context.Produits
+                .Where(p => !p.EstArchive);
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                produits = produits.Where(p => p.Type == type);
+            }
+
+            return View(produits.ToList());
         }
     }
 }
