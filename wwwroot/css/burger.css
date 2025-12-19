@@ -260,3 +260,54 @@ body {
     background: #e74c3c;
     color: white;
 }
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.choice-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.choice {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #eee;
+    background: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.choice.active {
+    border-color: #ff7a00;
+    background: #fff4ea;
+}
+
+input, textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.btn-orange.full {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.btn-grey {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    padding: 12px;
+    background: #aaa;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+}

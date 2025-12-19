@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Finaliser la commande";
+}
+
+<div class="container">
+
+    <h2 style="margin-bottom:20px;">💳 Finaliser votre commande</h2>
+
+    <!-- TYPE DE COMMANDE -->
+    <div class="box">
+        <h4> Type de commande</h4>
+        <div class="choice-group">
+            <button class="choice active" onclick="setType('Livraison')">Livraison</button>
+            <button class="choice" onclick="setType('Sur place')"> Sur place</button>
+            <button class="choice" onclick="setType('À emporter')"> À emporter</button>
+        </div>
+    </div>
+
+    <!-- RESUME -->
+    <div class="box">
+        <h4> Résumé de la commande</h4>
+        <p>Menu Classic x1 <span style="float:right;">4000 FCFA</span></p>
+        <hr>
+        <strong>Total <span style="float:right;">4000 FCFA</span></strong>
+    </div>
+
+    <!-- INFOS LIVRAISON -->
+    <div class="box">
+        <h4> Informations de livraison</h4>
+        <input type="text" placeholder="Nom complet">
+        <input type="text" placeholder="Téléphone">
+        <textarea placeholder="Adresse de livraison complète"></textarea>
+    </div>
+
+    <!-- MODE DE PAIEMENT -->
+    <div class="box">
+        <h4> Choisissez votre mode de paiement</h4>
+        <div class="choice-group">
+            <button class="choice" onclick="setPaiement('Wave')">Wave</button>
+            <button class="choice" onclick="setPaiement('Orange Money')">Orange Money</button>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <button class="btn-orange full" onclick="payer()"> Confirmer et payer</button>
+    <a href="/Produit" class="btn-grey full">← Retour au panier</a>
+
+</div>
+
+<script src="/js/paiement.js"></script>

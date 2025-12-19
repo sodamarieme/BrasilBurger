@@ -1,52 +1,56 @@
 let cart = [];
 
-// AJOUT AU PANIER
-function addToCart(id, name, price) {
-    cart.push({ id, name, price });
-    document.getElementById("cartBadge").textContent = cart.length;
+function addToCart(name, price) {
+    cart.push({ name, price });
+    document.getElementById("cartCount").textContent = cart.length;
+    renderCart();
 }
 
-// NAVIGATION
-function showPage(id) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    if (id === "cartPage") showCart();
-}
+function renderCart() {
+    const ul = document.getElementById("cartList");
+    const totalSpan = document.getElementById("cartTotal");
 
-// AFFICHAGE PANIER
-function showCart() {
-    const cartItems = document.getElementById("cartItems");
-    cartItems.innerHTML = "";
+    if (!ul || !totalSpan) return;
 
-    if (cart.length === 0) {
-        cartItems.innerHTML = "<p>Votre panier est vide 🛒</p>";
-        return;
-    }
+    ul.innerHTML = "";
+    let total = 0;
 
     cart.forEach(p => {
-        cartItems.innerHTML += `<p>${p.name} - ${p.price} FCFA</p>`;
+        total += p.price;
+        ul.innerHTML += `
+            <li>
+                <span>${p.name}</span>
+                <span>${p.price} FCFA</span>
+            </li>
+        `;
     });
+
+    totalSpan.textContent = total + " FCFA";
 }
 
-// LOGIN
-function login() {
-    loginPage.classList.remove("active");
-    navBar.style.display = "block";
-    showPage("productsPage");
-}
-
-function logout() {
-    navBar.style.display = "none";
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    loginPage.classList.add("active");
+function clearCart() {
+    cart = [];
+    renderCart();
+    document.getElementById("cartCount").textContent = 0;
 }
 
 function togglePanier() {
     document.getElementById("panier").style.display = "block";
-    document.getElementById("catalogue").style.display = "none";
+    document.getElementById("catalogue").style.display = "grid";
 }
 
 function showCatalogue() {
     document.getElementById("panier").style.display = "none";
     document.getElementById("catalogue").style.display = "grid";
+}
+
+function commander() {
+    if (cart.length === 0) {
+        alert("Votre panier est vide !");
+        return;
+    }
+
+    alert("✅ Commande enregistrée !");
+    clearCart();
+    showCatalogue();
 }
