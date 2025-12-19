@@ -1,0 +1,233 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Brasil Burger</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff8c00, #ff6b35);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        /* ZONE BLANCHE PRINCIPALE */
+        .app-wrapper {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+        }
+
+        /* === PAGES === */
+        .main-page, .sub-page {
+            display: none;
+        }
+
+        .main-page.active, .sub-page.active {
+            display: block;
+        }
+
+        /* === LOGIN === */
+        .login-box {
+            background: white;
+            padding: 40px;
+            max-width: 400px;
+            margin: 120px auto;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .btn {
+            background: #ff8c00;
+            color: white;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        /* === NAVBAR === */
+        .navbar {
+            background: #fff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            margin-left: 5px;
+            border-radius: 6px;
+        }
+
+        /* === FILTRES (UML) === */
+        .filters {
+            margin-bottom: 20px;
+        }
+
+        .filters button {
+            padding: 8px 15px;
+            margin-right: 5px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: #f5f5f5;
+        }
+
+        /* === PRODUITS === */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ===== LOGIN ===== -->
+    <div id="loginPage" class="main-page active">
+        <div class="login-box">
+            <h2>🍔 Brasil Burger</h2>
+            <input id="email" placeholder="Email ou téléphone">
+            <input id="password" type="password" placeholder="Mot de passe">
+            <button class="btn" onclick="login()">Se connecter</button>
+        </div>
+    </div>
+
+    <!-- ===== APPLICATION ===== -->
+    <div id="appPage" class="main-page">
+
+        <div class="app-wrapper">
+
+            <!-- NAVBAR -->
+            <div class="navbar">
+                <strong>🍔 Brasil Burger</strong>
+                <div>
+                    <button class="nav-btn" onclick="showSubPage('catalogue')">Catalogue</button>
+                    <button class="nav-btn" onclick="showSubPage('panier')">
+                        Panier (<span id="count">0</span>)
+                    </button>
+                    <button class="nav-btn" onclick="logout()">Déconnexion</button>
+                </div>
+            </div>
+
+            <!-- FILTRES UML -->
+            <div class="filters">
+                <button onclick="filterProducts('all')">Tous</button>
+                <button onclick="filterProducts('burger')">Burger</button>
+            </div>
+
+            <!-- CATALOGUE -->
+            <div id="catalogue" class="sub-page active">
+                <h2>🍔 Catalogue</h2>
+                <div id="products" class="grid"></div>
+            </div>
+
+            <!-- PANIER -->
+            <div id="panier" class="sub-page">
+                <h2>🛒 Panier</h2>
+                <ul id="cartList"></ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const products = [
+        { id: 1, name: "Classic Burger", price: 2500, type: "burger" },
+        { id: 2, name: "Cheese Burger", price: 3000, type: "burger" },
+        { id: 3, name: "Bacon Burger", price: 3500, type: "burger" }
+    ];
+
+    let cart = [];
+
+    function login() {
+        document.querySelectorAll(".main-page").forEach(p => p.classList.remove("active"));
+        document.getElementById("appPage").classList.add("active");
+        showSubPage("catalogue");
+        loadProducts(products);
+    }
+
+    function logout() {
+        location.reload();
+    }
+
+    function showSubPage(id) {
+        document.querySelectorAll(".sub-page").forEach(p => p.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+
+        if (id === "panier") renderCart();
+    }
+
+    function loadProducts(list) {
+        const div = document.getElementById("products");
+        div.innerHTML = "";
+
+        list.forEach(p => {
+            div.innerHTML += `
+                <div class="card">
+                    <h3>${p.name}</h3>
+                    <p>${p.price} FCFA</p>
+                    <button class="btn" onclick="addToCart(${p.id})">Ajouter</button>
+                </div>
+            `;
+        });
+    }
+
+    function filterProducts(type) {
+        if (type === "all") loadProducts(products);
+        else loadProducts(products.filter(p => p.type === type));
+    }
+
+    function addToCart(id) {
+        cart.push(products.find(p => p.id === id));
+        document.getElementById("count").textContent = cart.length;
+    }
+
+    function renderCart() {
+        const ul = document.getElementById("cartList");
+        ul.innerHTML = "";
+
+        cart.forEach(p => {
+            ul.innerHTML += `<li>${p.name} - ${p.price} FCFA</li>`;
+        });
+    }
+</script>
+
+</body>
+</html>
