@@ -43,6 +43,7 @@ app.UseAuthorization();
 // 🔹 ROUTE MVC PAR DÉFAUT
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Produit}/{action=Index}/{id?}");
+
 
 app.Run();

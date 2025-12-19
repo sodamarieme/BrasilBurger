@@ -1,37 +1,132 @@
-@model List<BrasilBurgerC.Models.Produit>
-
 @{
     ViewData["Title"] = "Catalogue";
 }
 
-<div class="container mt-4">
-    <h2 class="text-white mb-4">🍔 Catalogue</h2>
+<nav class="navbar" style="background:white; padding:15px 25px; border-radius:15px; margin-bottom:30px;">
+    <div class="logo">🍔 Brasil Burger</div>
+    <div>
+        <button onclick="showCatalogue()" class="nav-btn">Catalogue</button>
+        <button onclick="togglePanier()" class="nav-btn">
+            Panier (<span id="cartCount">0</span>)
+        </button>
+        <a href="/Home/Logout" class="nav-btn" style="background:#e74c3c;">Déconnexion</a>
+    </div>
+</nav>
 
-    <!-- FILTRES UML -->
-    <div class="mb-4">
-        <a class="btn btn-light me-2" href="/Produit/Index">Tous</a>
-        <a class="btn btn-light me-2" href="/Produit/Index?type=Burger">Burgers</a>
-        <a class="btn btn-light me-2" href="/Produit/Index?type=Menu">Menus</a>
-        <a class="btn btn-light" href="/Produit/Index?type=Complement">Compléments</a>
+<div class="container">
+
+    <!-- FILTRES -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterProduits('all', this)">Tous</button>
+        <button class="filter-btn" onclick="filterProduits('burger', this)">Burgers</button>
+        <button class="filter-btn" onclick="filterProduits('menu', this)">Menus</button>
+        <button class="filter-btn" onclick="filterProduits('complement', this)">Compléments</button>
     </div>
 
-    <div class="row">
-        @foreach (var p in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title">@p.Nom</h5>
-                        <p class="card-text">
-                            <strong>@p.Type</strong><br />
-                            <span class="text-warning fw-bold">@p.Prix FCFA</span>
-                        </p>
-                        <button class="btn btn-warning w-100">
-                            Ajouter au panier
-                        </button>
-                    </div>
-                </div>
+    <!-- CATALOGUE -->
+    <div id="catalogue" class="row">
+
+        <div class="produit-card burger">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" class="produit-img">
+            <div class="produit-info">
+                <h3>Classic Burger</h3>
+                <p>2500 FCFA</p>
+                <button class="btn-orange" onclick="addToCart('Classic Burger',2500)">Ajouter</button>
             </div>
-        }
+        </div>
+
+        <div class="produit-card burger">
+            <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b" class="produit-img">
+            <div class="produit-info">
+                <h3>Bacon Burger</h3>
+                <p>3500 FCFA</p>
+                <button class="btn-orange" onclick="addToCart('Bacon Burger',3500)">Ajouter</button>
+            </div>
+        </div>
+
+        <div class="produit-card menu">
+            <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5" class="produit-img">
+            <div class="produit-info">
+                <h3>Menu Classique</h3>
+                <p>4500 FCFA</p>
+                <button class="btn-orange" onclick="addToCart('Menu Classique',4500)">Ajouter</button>
+            </div>
+        </div>
+
+        <div class="produit-card complement">
+            <img src="https://images.unsplash.com/photo-1576107232684-1279f390859f" class="produit-img">
+            <div class="produit-info">
+                <h3>Frites</h3>
+                <p>1000 FCFA</p>
+                <button class="btn-orange" onclick="addToCart('Frites',1000)">Ajouter</button>
+            </div>
+        </div>
+
     </div>
+
+    <!-- PANIER -->
+    <div id="panier" class="panier-box" style="display:none;">
+        <h2>🛒 Panier</h2>
+        <ul id="cartList" class="panier-list"></ul>
+
+        <div class="panier-total">
+            Total : <strong id="cartTotal">0 FCFA</strong>
+        </div>
+
+        <div class="panier-actions">
+            <button class="btn-panier danger" onclick="clearCart()">Vider</button>
+            <button class="btn-panier success">Commander</button>
+        </div>
+    </div>
+
 </div>
+
+<script>
+let cart = [];
+
+function addToCart(name, price) {
+    cart.push({ name, price });
+    document.getElementById("cartCount").textContent = cart.length;
+    renderCart();
+}
+
+function renderCart() {
+    const ul = document.getElementById("cartList");
+    const totalSpan = document.getElementById("cartTotal");
+    ul.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(p => {
+        total += p.price;
+        ul.innerHTML += `<li><span>${p.name}</span><span>${p.price} FCFA</span></li>`;
+    });
+
+    totalSpan.textContent = total + " FCFA";
+}
+
+function clearCart() {
+    cart = [];
+    renderCart();
+    document.getElementById("cartCount").textContent = 0;
+}
+
+function togglePanier() {
+    document.getElementById("panier").style.display = "block";
+    document.getElementById("catalogue").style.display = "none";
+}
+
+function showCatalogue() {
+    document.getElementById("panier").style.display = "none";
+    document.getElementById("catalogue").style.display = "grid";
+}
+
+function filterProduits(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.produit-card').forEach(card => {
+        card.style.display =
+            (type === 'all' || card.classList.contains(type)) ? 'block' : 'none';
+    });
+}
+</script>

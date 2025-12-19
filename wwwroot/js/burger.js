@@ -41,3 +41,12 @@ function logout() {
     loginPage.classList.add("active");
 }
 
+function togglePanier() {
+    document.getElementById("panier").style.display = "block";
+    document.getElementById("catalogue").style.display = "none";
+}
+
+function showCatalogue() {
+    document.getElementById("panier").style.display = "none";
+    document.getElementById("catalogue").style.display = "grid";
+}

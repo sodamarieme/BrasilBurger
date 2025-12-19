@@ -9,6 +9,8 @@
     <title>Brasil Burger</title>
 
     <style>
+
+        
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -97,6 +99,8 @@
             border: 1px solid #ccc;
             background: #f5f5f5;
         }
+
+        
 
         /* === PRODUITS === */
         .grid {
@@ -228,6 +232,54 @@
         });
     }
 </script>
+<!-- ===== JAVASCRIPT PANIER ===== -->
+<script>
+let panier = [];
+
+function ajouterAuPanier(nom, prix) {
+    panier.push({ nom, prix });
+    alert(nom + " ajouté au panier");
+    afficherPanier();
+}
+
+function afficherPanier() {
+    let div = document.getElementById("cartItems");
+    let total = 0;
+    div.innerHTML = "";
+
+    panier.forEach((p, index) => {
+        total += p.prix;
+        div.innerHTML += `
+            <div class="cart-item">
+                ${p.nom} - ${p.prix} FCFA
+                <button onclick="supprimer(${index})">❌</button>
+            </div>
+        `;
+    });
+
+    document.getElementById("total").innerText = "Total : " + total + " FCFA";
+}
+
+function supprimer(index) {
+    panier.splice(index, 1);
+    afficherPanier();
+}
+
+function viderPanier() {
+    panier = [];
+    afficherPanier();
+}
+
+function togglePanier() {
+    let p = document.getElementById("panier");
+    p.style.display = (p.style.display === "none") ? "block" : "none";
+}
+</script>
+
+
+
 
 </body>
 </html>
+
+
