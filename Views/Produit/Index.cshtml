@@ -254,7 +254,11 @@
         </div>
 
         <!-- GRILLE PRODUITS -->
-        @if (burgers.Any() || (ViewBag.Complements as List<BrasilBurgerC.Models.Complement>).Count > 0 || (ViewBag.Menus as List<BrasilBurgerC.Models.Menu>).Count > 0)
+        @{
+            var complements = ViewBag.Complements as List<BrasilBurgerC.Models.Complement> ?? new List<BrasilBurgerC.Models.Complement>();
+            var menus = ViewBag.Menus as List<BrasilBurgerC.Models.Menu> ?? new List<BrasilBurgerC.Models.Menu>();
+        }
+        @if (burgers.Any() || complements.Count > 0 || menus.Count > 0)
         {
             <div class="products-grid">
                 @{
@@ -297,7 +301,7 @@
 
                 @if (type == "all" || type == "Menu")
                 {
-                    @foreach (var menu in (ViewBag.Menus as List<BrasilBurgerC.Models.Menu>))
+                    @foreach (var menu in menus)
                     {
                         <div class="product-card">
                             <img src="@menuImages[menu.Id - 1]" alt="@menu.Nom" class="product-image">
@@ -313,7 +317,7 @@
 
                 @if (type == "all" || type == "Complement")
                 {
-                    @foreach (var complement in (ViewBag.Complements as List<BrasilBurgerC.Models.Complement>))
+                    @foreach (var complement in complements)
                     {
                         <div class="product-card">
                             <img src="@complementImages[complement.Id - 1]" alt="@complement.Nom" class="product-image">
