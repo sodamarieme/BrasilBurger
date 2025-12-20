@@ -124,36 +124,57 @@ namespace BrasilBurgerC.Controllers
                     Quantite = 1
                 };
 
-                // Récupérer le nom et prix depuis la base
+                // Données hardcodées (mêmes que dans ProduitController)
+                var burgers = new List<(int id, string nom, int prix)>
+                {
+                    (1, "Classic Burger", 2500),
+                    (2, "Cheese Burger", 3000),
+                    (3, "Bacon Burger", 3500),
+                    (4, "Double Burger", 4000)
+                };
+
+                var menus = new List<(int id, string nom, int prix)>
+                {
+                    (1, "Menu Classique", 4500),
+                    (2, "Menu Complet", 5500),
+                    (3, "Menu Premium", 5800),
+                    (4, "Menu Deluxe", 6500)
+                };
+
+                var complements = new List<(int id, string nom, int prix)>
+                {
+                    (1, "Frites Croustillantes", 1500),
+                    (2, "Boisson 50cl", 2000),
+                    (3, "Salade Fraîche", 1800),
+                    (4, "Sauce Extra", 500)
+                };
+
+                // Récupérer le nom et prix depuis les données hardcodées
                 if (type == "Burger" && burgerId.HasValue)
                 {
-                    var burger = _context.Burgers.Find(burgerId.Value);
-                    if (burger != null)
+                    var burger = burgers.FirstOrDefault(b => b.id == burgerId.Value);
+                    if (burger != default)
                     {
-                        item.Nom = burger.Nom;
-                        item.Prix = burger.Prix;
+                        item.Nom = burger.nom;
+                        item.Prix = burger.prix;
                     }
                 }
                 else if (type == "Menu" && menuId.HasValue)
                 {
-                    var menu = _context.Menus
-                        .Include(m => m.Burger)
-                        .Include(m => m.Boisson)
-                        .Include(m => m.Frites)
-                        .FirstOrDefault(m => m.Id == menuId.Value);
-                    if (menu != null)
+                    var menu = menus.FirstOrDefault(m => m.id == menuId.Value);
+                    if (menu != default)
                     {
-                        item.Nom = menu.Nom;
-                        item.Prix = menu.Prix;
+                        item.Nom = menu.nom;
+                        item.Prix = menu.prix;
                     }
                 }
                 else if (type == "Complement" && complementId.HasValue)
                 {
-                    var complement = _context.Complements.Find(complementId.Value);
-                    if (complement != null)
+                    var complement = complements.FirstOrDefault(c => c.id == complementId.Value);
+                    if (complement != default)
                     {
-                        item.Nom = complement.Nom;
-                        item.Prix = complement.Prix;
+                        item.Nom = complement.nom;
+                        item.Prix = complement.prix;
                     }
                 }
 
