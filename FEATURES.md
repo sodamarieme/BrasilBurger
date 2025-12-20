@@ -29,4 +29,12 @@
 - Vérification panier avant finalisation
 - **Files**: CommandeController.cs, Views/Commande/finaliser.cshtml
 
+## 5. ✅ Payment System Integration
+- Sélection méthode de paiement (Wave / Orange Money)
+- Saisie numéro de transaction
+- Page de confirmation paiement
+- Thème cohérent (orange)
+- Affichage total et détails commande
+- **Files**: CommandeController.cs, Views/Commande/Paiement.cshtml, ConfirmerPaiement.cshtml
+
 ---
