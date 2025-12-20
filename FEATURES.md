@@ -37,4 +37,12 @@
 - Affichage total et détails commande
 - **Files**: CommandeController.cs, Views/Commande/Paiement.cshtml, ConfirmerPaiement.cshtml
 
+## 6. ✅ Order History Display
+- Vue des commandes précédentes
+- Statut de chaque commande
+- Détails du contenu (articles, prix)
+- Filtrage par statut
+- Historique persistant en base de données
+- **Files**: CommandeController.cs, Views/Commande/Index.cshtml
+
 ---
