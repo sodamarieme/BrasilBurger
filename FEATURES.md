@@ -14,4 +14,12 @@
 - Images Unsplash dynamiques
 - **Files**: ProduitController.cs, Views/Produit/Index.cshtml
 
+## 3. ✅ Shopping Cart Management
+- Ajouter/Retirer produits du panier
+- Modifier quantité
+- Calcul total en temps réel
+- Persistance en session (JSON)
+- Affichage prix corrects
+- **Files**: PanierController.cs, Views/Panier/Index.cshtml, js/panier.js
+
 ---
