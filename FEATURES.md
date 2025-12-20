@@ -45,4 +45,12 @@
 - Historique persistant en base de données
 - **Files**: CommandeController.cs, Views/Commande/Index.cshtml
 
+## 7. ✅ PostgreSQL Database Integration
+- Connexion Neon cloud
+- Tables: Clients, Commandes, CommandeItems, Zones
+- Entity Framework Core avec Npgsql
+- Migrations automatiques
+- Persistance données client et commandes
+- **Files**: ApplicationDbContext.cs, Models, appsettings.json
+
 ---
