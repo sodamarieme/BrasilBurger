@@ -55,10 +55,68 @@ namespace BrasilBurgerC.Controllers
                 ? new List<PanierItem>() 
                 : JsonSerializer.Deserialize<List<PanierItem>>(panierJson) ?? new List<PanierItem>();
 
+            // Données hardcoded (mêmes que dans ProduitController et PanierController)
+            var burgers = new List<(int id, string nom, int prix)>
+            {
+                (1, "Classic Burger", 2500),
+                (2, "Cheese Burger", 3000),
+                (3, "Bacon Burger", 3500),
+                (4, "Double Burger", 4000)
+            };
+
+            var menus = new List<(int id, string nom, int prix)>
+            {
+                (1, "Menu Classique", 4500),
+                (2, "Menu Complet", 5500),
+                (3, "Menu Premium", 5800),
+                (4, "Menu Deluxe", 6500)
+            };
+
+            var complements = new List<(int id, string nom, int prix)>
+            {
+                (1, "Frites Croustillantes", 1500),
+                (2, "Boisson 50cl", 2000),
+                (3, "Salade Fraîche", 1800),
+                (4, "Sauce Extra", 500)
+            };
+
+            // Enrichir le panier avec les données hardcoded
+            foreach (var item in panier)
+            {
+                if (item.BurgerId.HasValue)
+                {
+                    var burger = burgers.FirstOrDefault(b => b.id == item.BurgerId.Value);
+                    if (burger != default)
+                    {
+                        item.Nom = burger.nom;
+                        item.Prix = burger.prix;
+                    }
+                }
+                else if (item.MenuId.HasValue)
+                {
+                    var menu = menus.FirstOrDefault(m => m.id == item.MenuId.Value);
+                    if (menu != default)
+                    {
+                        item.Nom = menu.nom;
+                        item.Prix = menu.prix;
+                    }
+                }
+                else if (item.ComplementId.HasValue)
+                {
+                    var complement = complements.FirstOrDefault(c => c.id == item.ComplementId.Value);
+                    if (complement != default)
+                    {
+                        item.Nom = complement.nom;
+                        item.Prix = complement.prix;
+                    }
+                }
+            }
+
             // Récupérer les zones de la base de données
             var zones = _context.Zones.Where(z => z.EstActive).ToList();
 
             ViewBag.Panier = panier;
+            ViewBag.Total = panier.Sum(p => p.Prix * p.Quantite);
             ViewBag.Zones = zones;
             ViewBag.TypeCommande = HttpContext.Session.GetString("TypeCommande") ?? "SurPlace";
             return View();
@@ -85,6 +143,71 @@ namespace BrasilBurgerC.Controllers
             if (!IsClient())
                 return RedirectToAction("Login", "Auth");
 
+            // Récupérer le panier de la session
+            var panierJson = HttpContext.Session.GetString("Panier");
+            var panier = string.IsNullOrEmpty(panierJson) 
+                ? new List<PanierItem>() 
+                : JsonSerializer.Deserialize<List<PanierItem>>(panierJson) ?? new List<PanierItem>();
+
+            // Données hardcoded (mêmes que dans ProduitController et PanierController)
+            var burgers = new List<(int id, string nom, int prix)>
+            {
+                (1, "Classic Burger", 2500),
+                (2, "Cheese Burger", 3000),
+                (3, "Bacon Burger", 3500),
+                (4, "Double Burger", 4000)
+            };
+
+            var menus = new List<(int id, string nom, int prix)>
+            {
+                (1, "Menu Classique", 4500),
+                (2, "Menu Complet", 5500),
+                (3, "Menu Premium", 5800),
+                (4, "Menu Deluxe", 6500)
+            };
+
+            var complements = new List<(int id, string nom, int prix)>
+            {
+                (1, "Frites Croustillantes", 1500),
+                (2, "Boisson 50cl", 2000),
+                (3, "Salade Fraîche", 1800),
+                (4, "Sauce Extra", 500)
+            };
+
+            // Enrichir le panier avec les données hardcoded
+            foreach (var item in panier)
+            {
+                if (item.BurgerId.HasValue)
+                {
+                    var burger = burgers.FirstOrDefault(b => b.id == item.BurgerId.Value);
+                    if (burger != default)
+                    {
+                        item.Nom = burger.nom;
+                        item.Prix = burger.prix;
+                    }
+                }
+                else if (item.MenuId.HasValue)
+                {
+                    var menu = menus.FirstOrDefault(m => m.id == item.MenuId.Value);
+                    if (menu != default)
+                    {
+                        item.Nom = menu.nom;
+                        item.Prix = menu.prix;
+                    }
+                }
+                else if (item.ComplementId.HasValue)
+                {
+                    var complement = complements.FirstOrDefault(c => c.id == item.ComplementId.Value);
+                    if (complement != default)
+                    {
+                        item.Nom = complement.nom;
+                        item.Prix = complement.prix;
+                    }
+                }
+            }
+
+            ViewBag.Panier = panier;
+            ViewBag.Total = panier.Sum(p => p.Prix * p.Quantite);
             return View();
         }
 

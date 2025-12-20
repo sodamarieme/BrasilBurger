@@ -202,7 +202,7 @@
 
         <!-- MODE DE PAIEMENT -->
         <div class="box" style="background:white; padding:20px; border-radius:10px; margin-bottom:20px; border-left:5px solid #ff6b35;">
-            <h4 style="margin-bottom:15px;">Choisissez votre mode de paiement</h4>
+            <h4 style="margin-bottom:15px;">Mode de paiement</h4>
             <div class="choice-group" style="display:flex; gap:10px;">
                 <button type="button" class="choice" onclick="setPaiement('Wave')" style="flex:1; padding:15px; border:2px solid #ddd; border-radius:8px; background:white; cursor:pointer;">
                     Wave
@@ -211,24 +211,13 @@
                     Orange Money
                 </button>
             </div>
-            <input type="hidden" name="modePaiement" id="modePaiement" value="OrangeMoney" required>
-            
-            <div id="paiementDetails" style="margin-top:20px; padding:15px; background:#fff3e0; border-radius:8px;">
-                <div style="margin-bottom:15px;">
-                    <label class="form-label">Numéro de transaction</label>
-                    <input type="text" name="numeroTransaction" class="form-control" placeholder="Entrez le numéro de transaction" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
-                </div>
-                <div style="display:flex; align-items:start; gap:10px;">
-                    <input type="checkbox" id="notificationCheck" style="margin-top:5px;">
-                    <label for="notificationCheck" style="color:#666; font-size:0.9em;">Vous recevrez une notification de paiement sur votre téléphone</label>
-                </div>
-            </div>
+            <input type="hidden" name="modePaiement" id="modePaiement" value="OrangeMoney">
         </div>
 
         <!-- ACTIONS -->
         <div style="display:flex; gap:10px;">
             <button type="submit" class="btn-orange full" style="background:#27ae60; color:white; padding:15px 30px; border-radius:8px; border:none; flex:2; cursor:pointer; font-size:1.1em;">
-                ✅ Confirmer et Payer
+                ✅ Aller au Paiement
             </button>
             <a href="/Panier" class="btn-grey full" style="background:#95a5a6; color:white; padding:15px 30px; border-radius:8px; text-decoration:none; flex:1; text-align:center;">
                 ← Retour au panier

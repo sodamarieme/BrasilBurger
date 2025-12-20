@@ -18,6 +18,11 @@ namespace BrasilBurgerC.Controllers
         // GET: Panier/Index
         public IActionResult Index()
         {
+            // Vérifier que l'utilisateur est connecté
+            var userType = HttpContext.Session.GetString("UserType");
+            if (string.IsNullOrEmpty(userType) || userType != "Client")
+                return RedirectToAction("Login", "Auth");
+
             var panierJson = HttpContext.Session.GetString("Panier");
             var panier = string.IsNullOrEmpty(panierJson) 
                 ? new List<PanierItem>() 
@@ -89,6 +94,11 @@ namespace BrasilBurgerC.Controllers
         [HttpPost]
         public IActionResult Ajouter(string type, int? burgerId, int? menuId, int? complementId)
         {
+            // Vérifier que l'utilisateur est connecté
+            var userType = HttpContext.Session.GetString("UserType");
+            if (string.IsNullOrEmpty(userType) || userType != "Client")
+                return RedirectToAction("Login", "Auth");
+
             var panierJson = HttpContext.Session.GetString("Panier");
             var panier = string.IsNullOrEmpty(panierJson) 
                 ? new List<PanierItem>() 
@@ -168,6 +178,11 @@ namespace BrasilBurgerC.Controllers
         [HttpPost]
         public IActionResult ModifierQuantite(int index, int quantite)
         {
+            // Vérifier que l'utilisateur est connecté
+            var userType = HttpContext.Session.GetString("UserType");
+            if (string.IsNullOrEmpty(userType) || userType != "Client")
+                return RedirectToAction("Login", "Auth");
+
             var panierJson = HttpContext.Session.GetString("Panier");
             var panier = string.IsNullOrEmpty(panierJson) 
                 ? new List<PanierItem>() 
@@ -195,6 +210,11 @@ namespace BrasilBurgerC.Controllers
         [HttpPost]
         public IActionResult Retirer(int index)
         {
+            // Vérifier que l'utilisateur est connecté
+            var userType = HttpContext.Session.GetString("UserType");
+            if (string.IsNullOrEmpty(userType) || userType != "Client")
+                return RedirectToAction("Login", "Auth");
+
             var panierJson = HttpContext.Session.GetString("Panier");
             var panier = string.IsNullOrEmpty(panierJson) 
                 ? new List<PanierItem>() 
@@ -214,6 +234,11 @@ namespace BrasilBurgerC.Controllers
         [HttpPost]
         public IActionResult Vider()
         {
+            // Vérifier que l'utilisateur est connecté
+            var userType = HttpContext.Session.GetString("UserType");
+            if (string.IsNullOrEmpty(userType) || userType != "Client")
+                return RedirectToAction("Login", "Auth");
+
             HttpContext.Session.Remove("Panier");
             return RedirectToAction("Index");
         }

@@ -4,7 +4,7 @@
     var panier = ViewBag.Panier as List<BrasilBurgerC.Models.PanierItem> ?? new List<BrasilBurgerC.Models.PanierItem>();
     var client = ViewBag.Client as BrasilBurgerC.Models.Client;
     var zones = ViewBag.Zones as List<BrasilBurgerC.Models.Zone> ?? new List<BrasilBurgerC.Models.Zone>();
-    var total = ViewBag.Total as int? ?? 0;
+    var total = panier.Sum(p => p.Prix * p.Quantite);
 }
 
 <!DOCTYPE html>
