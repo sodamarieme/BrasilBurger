@@ -22,4 +22,11 @@
 - Affichage prix corrects
 - **Files**: PanierController.cs, Views/Panier/Index.cshtml, js/panier.js
 
+## 4. ✅ Order Finalization Workflow
+- Choix du type de livraison (A emporter / Livraison)
+- Sélection zone de livraison
+- Saisie informations client (Nom, Téléphone, Adresse)
+- Vérification panier avant finalisation
+- **Files**: CommandeController.cs, Views/Commande/finaliser.cshtml
+
 ---
