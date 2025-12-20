@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: brasil-burger
+    runtime: dotnet
+    runtimeVersion: 8
+    buildCommand: dotnet build BrasilBurgerC.csproj
+    startCommand: dotnet run --project BrasilBurgerC.csproj --launch-profile Production
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:$PORT
+      - key: DATABASE_URL
+        fromDatabase:
+          name: db
+          property: connectionString
+    healthCheckPath: /
+    autoDeploy: true
+
+databases:
+  - name: db
+    databaseName: neondb
+    user: neondb_owner
+    postgreSQLVersion: "14"
