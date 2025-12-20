@@ -340,6 +340,39 @@
         }
     </div>
 
+    <!-- Modal Suggestion Compléments -->
+    <div id="complementModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:15px; padding:30px; max-width:500px; width:90%; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="color:#ff6b35; margin-bottom:20px;">🍟 Ajouter un complément ?</h3>
+            <p style="color:#666; margin-bottom:25px;">Voulez-vous accompagner votre commande ?</p>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
+                <div onclick="ajouterComplement(1, 'Frites Croustillantes', 1500)" style="background:#fff3e0; padding:15px; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.3s;" onmouseover="this.style.borderColor='#ff6b35'" onmouseout="this.style.borderColor='transparent'">
+                    <div style="font-size:2em;">🍟</div>
+                    <div style="font-weight:bold; color:#333;">Frites</div>
+                    <div style="color:#ff6b35; font-weight:bold;">1500 FCFA</div>
+                </div>
+                <div onclick="ajouterComplement(2, 'Boisson 50cl', 2000)" style="background:#e3f2fd; padding:15px; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.3s;" onmouseover="this.style.borderColor='#ff6b35'" onmouseout="this.style.borderColor='transparent'">
+                    <div style="font-size:2em;">🥤</div>
+                    <div style="font-weight:bold; color:#333;">Boisson</div>
+                    <div style="color:#ff6b35; font-weight:bold;">2000 FCFA</div>
+                </div>
+                <div onclick="ajouterComplement(3, 'Salade Fraîche', 1800)" style="background:#e8f5e9; padding:15px; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.3s;" onmouseover="this.style.borderColor='#ff6b35'" onmouseout="this.style.borderColor='transparent'">
+                    <div style="font-size:2em;">🥗</div>
+                    <div style="font-weight:bold; color:#333;">Salade</div>
+                    <div style="color:#ff6b35; font-weight:bold;">1800 FCFA</div>
+                </div>
+                <div onclick="ajouterComplement(4, 'Sauce Extra', 500)" style="background:#fce4ec; padding:15px; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.3s;" onmouseover="this.style.borderColor='#ff6b35'" onmouseout="this.style.borderColor='transparent'">
+                    <div style="font-size:2em;">🥫</div>
+                    <div style="font-weight:bold; color:#333;">Sauce</div>
+                    <div style="color:#ff6b35; font-weight:bold;">500 FCFA</div>
+                </div>
+            </div>
+            
+            <button onclick="fermerModal()" style="background:#95a5a6; color:white; border:none; padding:12px 30px; border-radius:8px; cursor:pointer; font-weight:bold;">Non merci</button>
+        </div>
+    </div>
+
     <script>
         function ajouterAuPanier(productId, nom, prix, type = 'Burger') {
             const params = new URLSearchParams();
@@ -364,10 +397,25 @@
             .then(data => {
                 if (data.success) {
                     document.getElementById('cartCount').textContent = `(${data.count})`;
-                    alert(`${nom} ajouté au panier !`);
+                    
+                    // Proposer un complément si c'est un Burger ou Menu
+                    if (type === 'Burger' || type === 'Menu') {
+                        document.getElementById('complementModal').style.display = 'flex';
+                    } else {
+                        alert(`${nom} ajouté au panier !`);
+                    }
                 }
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        function ajouterComplement(id, nom, prix) {
+            fermerModal();
+            ajouterAuPanier(id, nom, prix, 'Complement');
+        }
+
+        function fermerModal() {
+            document.getElementById('complementModal').style.display = 'none';
         }
     </script>
 </body>
