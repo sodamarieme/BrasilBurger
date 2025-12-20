@@ -15,12 +15,8 @@ namespace BrasilBurgerC.Controllers
 
         public IActionResult Index()
         {
-            // Rediriger vers la page de connexion ou le catalogue selon l'état de connexion
-            var userType = HttpContext.Session.GetString("UserType");
-            if (userType == "Client")
-                return RedirectToAction("Index", "Produit");
-            else
-                return RedirectToAction("Login", "Auth");
+            // Rediriger toujours vers le catalogue (authentification requise seulement au paiement)
+            return RedirectToAction("Index", "Produit");
         }
     }
 }
