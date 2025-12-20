@@ -16,8 +16,9 @@ namespace BrasilBurgerC.Controllers
         }
 
         // GET: Auth/Login
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
@@ -42,6 +43,10 @@ namespace BrasilBurgerC.Controllers
                 HttpContext.Session.SetString("UserId", client.Id.ToString());
                 HttpContext.Session.SetString("UserType", "Client");
                 HttpContext.Session.SetString("UserName", $"{client.Prenom} {client.Nom}");
+                
+                // Rediriger vers la page demandée (ex: paiement) ou le catalogue
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(Uri.UnescapeDataString(returnUrl));
                 return RedirectToAction("Index", "Produit");
             }
 

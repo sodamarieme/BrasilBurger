@@ -48,7 +48,9 @@ app.Use(async (context, next) =>
     {
         if (string.IsNullOrEmpty(userType))
         {
-            context.Response.Redirect("/Auth/Login");
+            // Sauvegarder l'URL de retour pour y revenir après connexion
+            var returnUrl = Uri.EscapeDataString(path + context.Request.QueryString);
+            context.Response.Redirect($"/Auth/Login?returnUrl={returnUrl}");
             return;
         }
     }
