@@ -36,11 +36,11 @@ app.UseAuthorization();
 // Middleware pour rediriger vers Login si pas connecté
 app.Use(async (context, next) =>
 {
-    var path = context.Request.Path.Value;
+    var path = context.Request.Path.Value ?? "/";
     var userType = context.Session.GetString("UserType");
     
-    // Permettre l'accès à Auth sans authentification
-    if (!path.StartsWith("/Auth") && !path.StartsWith("/css") && !path.StartsWith("/js") && !path.StartsWith("/images") && !path.StartsWith("/lib"))
+    // Permettre l'accès à /, Auth, Panier, Produit sans authentification
+    if (!path.StartsWith("/Auth") && !path.StartsWith("/Produit") && !path.StartsWith("/Panier") && path != "/" && !path.StartsWith("/css") && !path.StartsWith("/js") && !path.StartsWith("/images") && !path.StartsWith("/lib"))
     {
         if (string.IsNullOrEmpty(userType))
         {

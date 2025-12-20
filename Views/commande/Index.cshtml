@@ -103,7 +103,7 @@
 
         <div class="container" style="max-width:1000px; margin:0 auto; padding:20px;">
     <div style="background:white; border-radius:15px; padding:30px; border-left:5px solid #ff6b35;">
-        <h2 style="margin-bottom:20px; color:#333;">📦 Mes Commandes</h2>
+        <h2 style="margin-bottom:20px; color:#333;"> Mes Commandes</h2>
 
         <!-- Filtres -->
         <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
@@ -128,7 +128,7 @@
                     <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
                         <div>
                             <h4 style="margin:0; color:#333;">@commande.NumeroCommande</h4>
-                            <p style="margin:5px 0; color:#666; font-size:0.9em;">📅 @commande.DateCommande.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                            <p style="margin:5px 0; color:#666; font-size:0.9em;"> @commande.DateCommande.ToString("dd/MM/yyyy HH:mm:ss")</p>
                         </div>
                         <span class="badge" style="background:@(commande.Statut == BrasilBurgerC.Models.StatutCommande.EnCours ? "#3498db" : commande.Statut == BrasilBurgerC.Models.StatutCommande.Validee ? "#27ae60" : commande.Statut == BrasilBurgerC.Models.StatutCommande.Terminee ? "#2ecc71" : "#e74c3c"); color:white; padding:5px 15px; border-radius:20px; font-size:0.9em;">
                             @commande.Statut.ToString()
@@ -138,13 +138,13 @@
                     <div style="margin-bottom:15px;">
                         <p style="margin:5px 0; color:#666;">
                             <strong>Type:</strong> 
-                            @if (commande.TypeCommande == BrasilBurgerC.Models.TypeCommande.Livraison) { <span>🚚 Livraison</span> }
-                            else if (commande.TypeCommande == BrasilBurgerC.Models.TypeCommande.SurPlace) { <span>🏢 Sur place</span> }
-                            else { <span>🛍️ À emporter</span> }
+                            @if (commande.TypeCommande == BrasilBurgerC.Models.TypeCommande.Livraison) { <span> Livraison</span> }
+                            else if (commande.TypeCommande == BrasilBurgerC.Models.TypeCommande.SurPlace) { <span> Sur place</span> }
+                            else { <span> À emporter</span> }
                         </p>
                         @if (!string.IsNullOrEmpty(commande.AdresseLivraison))
                         {
-                            <p style="margin:5px 0; color:#666;"><strong>📍 Adresse:</strong> @commande.AdresseLivraison</p>
+                            <p style="margin:5px 0; color:#666;"><strong> Adresse:</strong> @commande.AdresseLivraison</p>
                         }
                         <p style="margin:5px 0; color:#666;">
                             <strong>💳 Paiement:</strong> 
