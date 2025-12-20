@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = "Inscription";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Brasil Burger</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+        }
+        .logo {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #ff6b35;
+        }
+        .btn-orange {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: bold;
+        }
+        .btn-orange:hover {
+            background: #e55a2b;
+            color: white;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">🍔 Brasil Burger</div>
+        <h2 class="text-center mb-4">Créer un compte</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        <form method="post" action="/Auth/Register">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label">Nom</label>
+                <input type="text" name="nom" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Prénom</label>
+                <input type="text" name="prenom" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Téléphone</label>
+                <input type="tel" name="telephone" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" name="motDePasse" class="form-control" required />
+            </div>
+            <button type="submit" class="btn-orange">S'inscrire</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Déjà un compte ? <a href="/Auth/Login">Se connecter</a></p>
+        </div>
+    </div>
+</body>
+</html>
+

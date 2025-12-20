@@ -1,50 +1,293 @@
 @{
     ViewData["Title"] = "Finaliser la commande";
+    Layout = null;
+    var panier = ViewBag.Panier as List<BrasilBurgerC.Models.PanierItem> ?? new List<BrasilBurgerC.Models.PanierItem>();
+    var client = ViewBag.Client as BrasilBurgerC.Models.Client;
+    var zones = ViewBag.Zones as List<BrasilBurgerC.Models.Zone> ?? new List<BrasilBurgerC.Models.Zone>();
+    var total = panier.Sum(p => p.Prix * p.Quantite);
 }
 
-<div class="container">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finaliser la commande</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/commande.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <h2 style="margin-bottom:20px;">💳 Finaliser votre commande</h2>
+        body {
+            background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    <!-- TYPE DE COMMANDE -->
-    <div class="box">
-        <h4> Type de commande</h4>
-        <div class="choice-group">
-            <button class="choice active" onclick="setType('Livraison')">Livraison</button>
-            <button class="choice" onclick="setType('Sur place')"> Sur place</button>
-            <button class="choice" onclick="setType('À emporter')"> À emporter</button>
+        .navbar-custom {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .navbar-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-nav-orange {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-nav-orange:hover {
+            background: #e55a2b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-nav-red {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-nav-red:hover {
+            background: #c0392b;
+            color: white;
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-custom">
+        <!-- NAVBAR -->
+        <div class="navbar-custom">
+            <div class="navbar-logo">🍔 Brasil Burger</div>
+            <div class="navbar-buttons">
+                <a href="/Produit" class="btn-nav btn-nav-orange">Catalogue</a>
+                <a href="/Panier" class="btn-nav btn-nav-orange">Panier</a>
+                <a href="/Commande" class="btn-nav btn-nav-orange">Commandes</a>
+                <a href="/Auth/Logout" class="btn-nav btn-nav-red">Déconnexion</a>
+            </div>
         </div>
-    </div>
 
-    <!-- RESUME -->
-    <div class="box">
-        <h4> Résumé de la commande</h4>
-        <p>Menu Classic x1 <span style="float:right;">4000 FCFA</span></p>
-        <hr>
-        <strong>Total <span style="float:right;">4000 FCFA</span></strong>
-    </div>
+        <div class="container" style="max-width:900px; margin:0 auto; padding:20px;">
 
-    <!-- INFOS LIVRAISON -->
-    <div class="box">
-        <h4> Informations de livraison</h4>
-        <input type="text" placeholder="Nom complet">
-        <input type="text" placeholder="Téléphone">
-        <textarea placeholder="Adresse de livraison complète"></textarea>
-    </div>
+    <h2 style="margin-bottom:20px; color:#333;">💳 Finaliser votre commande</h2>
 
-    <!-- MODE DE PAIEMENT -->
-    <div class="box">
-        <h4> Choisissez votre mode de paiement</h4>
-        <div class="choice-group">
-            <button class="choice" onclick="setPaiement('Wave')">Wave</button>
-            <button class="choice" onclick="setPaiement('Orange Money')">Orange Money</button>
+    <form method="post" action="/Commande/Finaliser" id="commandeForm">
+        @Html.AntiForgeryToken()
+
+        <!-- TYPE DE COMMANDE -->
+        <div class="box" style="background:white; padding:20px; border-radius:10px; margin-bottom:20px; border-left:5px solid #ff6b35;">
+            <h4 style="margin-bottom:15px;">Type de commande</h4>
+
+            <div class="choice-group" style="display:flex; gap:10px;">
+                @{
+                    var livraisonActive = ViewBag.TypeCommande?.ToString() == "Livraison";
+                    var livraisonBg = livraisonActive ? "#fff3e0" : "white";
+                }
+                <button type="button" class="choice @(livraisonActive ? "active" : "")" onclick="setType('Livraison')" style="flex:1; padding:15px; border:2px solid #ddd; border-radius:8px; background:@livraisonBg; cursor:pointer;">
+                    🚚 Livraison
+                </button>
+                @{
+                    var surPlaceActive = ViewBag.TypeCommande?.ToString() == "SurPlace";
+                    var surPlaceBg = surPlaceActive ? "#fff3e0" : "white";
+                }
+                <button type="button" class="choice @(surPlaceActive ? "active" : "")" onclick="setType('SurPlace')" style="flex:1; padding:15px; border:2px solid #ddd; border-radius:8px; background:@surPlaceBg; cursor:pointer;">
+                    🏢 Sur place
+                </button>
+                @{
+                    var emporterActive = ViewBag.TypeCommande?.ToString() == "Emporter";
+                    var emporterBg = emporterActive ? "#fff3e0" : "white";
+                }
+                <button type="button" class="choice @(emporterActive ? "active" : "")" onclick="setType('Emporter')" style="flex:1; padding:15px; border:2px solid #ddd; border-radius:8px; background:@emporterBg; cursor:pointer;">
+                    🛍️ À emporter
+                </button>
+            </div>
+            <input type="hidden" name="typeCommande" id="typeCommande" value="@(ViewBag.TypeCommande?.ToString() ?? "SurPlace")" required>
         </div>
-    </div>
 
-    <!-- ACTIONS -->
-    <button class="btn-orange full" onclick="payer()"> Confirmer et payer</button>
-    <a href="/Produit" class="btn-grey full">← Retour au panier</a>
+        <!-- RESUME -->
+        <div class="box" style="background:white; padding:20px; border-radius:10px; margin-bottom:20px; border-left:5px solid #ff6b35;">
+            <h4 style="margin-bottom:15px;">Résumé de la commande</h4>
+            @foreach (var item in panier)
+            {
+                <p style="display:flex; justify-content:space-between; margin:10px 0;">
+                    <span>@item.Nom x @item.Quantite</span>
+                    <span>@(item.Prix * item.Quantite) FCFA</span>
+                </p>
+            }
+            <hr style="margin:15px 0;">
+            <strong style="display:flex; justify-content:space-between; font-size:1.2em; color:#ff6b35;">
+                <span>Total</span>
+                <span>@total FCFA</span>
+            </strong>
+        </div>
+
+        <!-- INFOS LIVRAISON -->
+        <div class="box" style="background:white; padding:20px; border-radius:10px; margin-bottom:20px; border-left:5px solid #ff6b35;">
+            <h4 style="margin-bottom:15px;">Informations</h4>
+            <div style="margin-bottom:15px;">
+                <label class="form-label">Nom complet</label>
+                <input type="text" name="nomComplet" class="form-control" value="@(ViewBag.NomComplet ?? client?.Prenom + " " + client?.Nom)" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label class="form-label">Téléphone</label>
+                <input type="tel" name="telephone" class="form-control" value="@(ViewBag.Telephone ?? client?.Telephone)" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
+            </div>
+            <div id="livraisonFields" style="display:none;">
+                <div style="margin-bottom:15px;">
+                    <label class="form-label">Adresse de livraison</label>
+                    <textarea name="adresseLivraison" class="form-control" placeholder="Adresse complète" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px; min-height:80px;">@ViewBag.AdresseLivraison</textarea>
+                </div>
+
+
+
+
+                <div style="margin-bottom:15px;">
+                    <label class="form-label">Zone</label>
+
+
+                    <select name="zoneId" class="form-control" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                        <option value="">Sélectionner une zone</option>
+                        @foreach (var zone in zones)
+                        {
+                            var isSelected = ViewBag.ZoneId != null && ViewBag.ZoneId == zone.Id;
+                            if (isSelected)
+                            {
+                                <option value="@zone.Id" selected>@zone.Nom - @zone.PrixLivraison FCFA</option>
+                            }
+                            else
+                            {
+                                <option value="@zone.Id">@zone.Nom - @zone.PrixLivraison FCFA</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODE DE PAIEMENT -->
+        <div class="box" style="background:white; padding:20px; border-radius:10px; margin-bottom:20px; border-left:5px solid #ff6b35;">
+            <h4 style="margin-bottom:15px;">Choisissez votre mode de paiement</h4>
+            <div class="choice-group" style="display:flex; gap:10px;">
+                <button type="button" class="choice" onclick="setPaiement('Wave')" style="flex:1; padding:15px; border:2px solid #ddd; border-radius:8px; background:white; cursor:pointer;">
+                    Wave
+                </button>
+                <button type="button" class="choice active" onclick="setPaiement('OrangeMoney')" style="flex:1; padding:15px; border:2px solid #ff6b35; border-radius:8px; background:#fff3e0; cursor:pointer;">
+                    Orange Money
+                </button>
+            </div>
+            <input type="hidden" name="modePaiement" id="modePaiement" value="OrangeMoney" required>
+            
+            <div id="paiementDetails" style="margin-top:20px; padding:15px; background:#fff3e0; border-radius:8px;">
+                <div style="margin-bottom:15px;">
+                    <label class="form-label">Numéro de transaction</label>
+                    <input type="text" name="numeroTransaction" class="form-control" placeholder="Entrez le numéro de transaction" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                </div>
+                <div style="display:flex; align-items:start; gap:10px;">
+                    <input type="checkbox" id="notificationCheck" style="margin-top:5px;">
+                    <label for="notificationCheck" style="color:#666; font-size:0.9em;">Vous recevrez une notification de paiement sur votre téléphone</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div style="display:flex; gap:10px;">
+            <button type="submit" class="btn-orange full" style="background:#27ae60; color:white; padding:15px 30px; border-radius:8px; border:none; flex:2; cursor:pointer; font-size:1.1em;">
+                ✅ Confirmer et Payer
+            </button>
+            <a href="/Panier" class="btn-grey full" style="background:#95a5a6; color:white; padding:15px 30px; border-radius:8px; text-decoration:none; flex:1; text-align:center;">
+                ← Retour au panier
+            </a>
+        </div>
+    </form>
 
 </div>
 
-<script src="/js/paiement.js"></script>
+<script>
+let selectedType = '@(ViewBag.TypeCommande?.ToString() ?? "SurPlace")';
+let selectedPaiement = 'OrangeMoney';
+
+function setType(type) {
+    selectedType = type;
+    document.getElementById('typeCommande').value = type;
+    document.querySelectorAll('.choice-group button').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'white';
+        btn.style.borderColor = '#ddd';
+    });
+    event.target.classList.add('active');
+    event.target.style.background = '#fff3e0';
+    event.target.style.borderColor = '#ff6b35';
+    
+    // Afficher/masquer les champs de livraison
+    const livraisonFields = document.getElementById('livraisonFields');
+    if (type === 'Livraison') {
+        livraisonFields.style.display = 'block';
+        document.querySelector('textarea[name="adresseLivraison"]').required = true;
+        document.querySelector('select[name="zoneId"]').required = true;
+    } else {
+        livraisonFields.style.display = 'none';
+        document.querySelector('textarea[name="adresseLivraison"]').required = false;
+        document.querySelector('select[name="zoneId"]').required = false;
+    }
+}
+
+function setPaiement(mode) {
+    selectedPaiement = mode;
+    document.getElementById('modePaiement').value = mode;
+    document.querySelectorAll('.choice-group button').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'white';
+        btn.style.borderColor = '#ddd';
+    });
+    event.target.classList.add('active');
+    event.target.style.background = '#fff3e0';
+    event.target.style.borderColor = '#ff6b35';
+}
+
+// Initialiser l'affichage
+document.addEventListener('DOMContentLoaded', function() {
+    if (selectedType === 'Livraison') {
+        document.getElementById('livraisonFields').style.display = 'block';
+    }
+});
+</script>
+        </div>
+    </div>
+</body>
+</html>

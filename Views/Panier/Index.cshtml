@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Mon Panier";
+    var panier = ViewBag.Panier as List<BrasilBurgerC.Models.PanierItem> ?? new List<BrasilBurgerC.Models.PanierItem>();
+    var total = ViewBag.Total as int? ?? 0;
+}
+
+<link rel="stylesheet" href="~/css/burger.css" />
+
+<div class="container" style="max-width:900px; margin:0 auto; padding:20px;">
+    <div style="background:white; border-radius:15px; padding:30px; border-left:5px solid #ff6b35;">
+        <h2 style="margin-bottom:20px; color:#333;">🛒 Mon Panier</h2>
+        <hr style="margin-bottom:20px;">
+
+        @if (panier.Count == 0)
+        {
+            <p style="text-align:center; padding:40px; color:#999;">Votre panier est vide</p>
+            <div style="text-align:center;">
+                <a href="/Produit" class="btn-orange" style="background:#ff6b35; color:white; padding:12px 30px; border-radius:8px; text-decoration:none; display:inline-block;">Voir le catalogue</a>
+            </div>
+        }
+        else
+        {
+            @for (int i = 0; i < panier.Count; i++)
+            {
+                var item = panier[i];
+                <div class="cart-item" style="display:flex; align-items:center; padding:15px; border-bottom:1px solid #eee; margin-bottom:10px;">
+                    <div style="flex:1;">
+                        <h4 style="margin:0; color:#333;">@item.Nom</h4>
+                        <p style="margin:5px 0; color:#666;">@item.Prix FCFA × @item.Quantite = <strong>@(item.Prix * item.Quantite) FCFA</strong></p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <button onclick="modifierQuantite(@i, @(item.Quantite - 1))" style="background:#ff6b35; color:white; border:none; width:30px; height:30px; border-radius:5px; cursor:pointer;">-</button>
+                        <span style="min-width:30px; text-align:center;">@item.Quantite</span>
+                        <button onclick="modifierQuantite(@i, @(item.Quantite + 1))" style="background:#ff6b35; color:white; border:none; width:30px; height:30px; border-radius:5px; cursor:pointer;">+</button>
+                        <button onclick="retirer(@i)" style="background:#e74c3c; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; margin-left:10px;">🗑️</button>
+                    </div>
+                </div>
+            }
+
+            <div style="background:#ff6b35; color:white; padding:15px; border-radius:8px; margin-top:20px; text-align:right;">
+                <strong style="font-size:1.2em;">Total: @total FCFA</strong>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <form method="post" action="/Panier/Vider" style="flex:1;">
+                    <button type="submit" class="btn-panier danger" style="background:#e74c3c; color:white; padding:12px 30px; border-radius:8px; border:none; width:100%; cursor:pointer;">Vider</button>
+                </form>
+                <a href="/Commande/Finaliser" class="btn-panier success" style="background:#27ae60; color:white; padding:12px 30px; border-radius:8px; text-decoration:none; flex:2; text-align:center; display:block;">Procéder au Paiement →</a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+function modifierQuantite(index, quantite) {
+    if (quantite <= 0) {
+        retirer(index);
+        return;
+    }
+    
+    fetch('/Panier/ModifierQuantite', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `index=${index}&quantite=${quantite}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+function retirer(index) {
+    if (confirm('Retirer cet article du panier ?')) {
+        fetch('/Panier/Retirer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `index=${index}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+</script>

@@ -3,21 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - Brasil Burger</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="~/css/burger.css" />
-    <link rel="stylesheet" href="~/css/burger.css" />
-        
+    <link rel="stylesheet" href="/css/burger.css" />
 </head>
 <body>
 
-    @RenderBody()
+    <!-- NAVBAR GLOBALE -->
+    <nav class="navbar">
+        <div class="logo">🍔 Brasil Burger</div>
+        <div>
+            <a href="/Produit" class="nav-btn">Catalogue</a>
+            <a href="/Panier" class="nav-btn">Panier</a>
+            <a href="/Commande" class="nav-btn">Commandes</a>
 
-    <!-- JS -->
-    <script src="~/js/site.js"></script>
-    <script src="~/js/burger.js"></script>
+<a href="/Auth/Logout" class="nav-btn danger">Déconnexion</a>
+        </div>
+    </nav>
 
+    <!-- CONTENU DES PAGES -->
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <script src="/js/panier.js"></script>
+    <script src="/js/paiement.js"></script>
 </body>
 </html>

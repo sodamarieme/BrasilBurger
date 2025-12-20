@@ -1,0 +1,180 @@
+@{
+    ViewData["Title"] = "Mes Commandes";
+    Layout = null;
+    var commandes = Model as List<BrasilBurgerC.Models.Commande> ?? new List<BrasilBurgerC.Models.Commande>();
+    var filtreStatut = ViewBag.FiltreStatut as string;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mes Commandes</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/commande.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-custom {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .navbar-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-nav-orange {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-nav-orange:hover {
+            background: #e55a2b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-nav-red {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-nav-red:hover {
+            background: #c0392b;
+            color: white;
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-custom">
+        <!-- NAVBAR -->
+        <div class="navbar-custom">
+            <div class="navbar-logo">🍔 Brasil Burger</div>
+            <div class="navbar-buttons">
+                <a href="/Produit" class="btn-nav btn-nav-orange">Catalogue</a>
+                <a href="/Panier" class="btn-nav btn-nav-orange">Panier</a>
+                <a href="/Commande" class="btn-nav btn-nav-orange">Commandes</a>
+                <a href="/Auth/Logout" class="btn-nav btn-nav-red">Déconnexion</a>
+            </div>
+        </div>
+
+        <div class="container" style="max-width:1000px; margin:0 auto; padding:20px;">
+    <div style="background:white; border-radius:15px; padding:30px; border-left:5px solid #ff6b35;">
+        <h2 style="margin-bottom:20px; color:#333;">📦 Mes Commandes</h2>
+
+        <!-- Filtres -->
+        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+            <a href="/Commande" class="filter-btn @(string.IsNullOrEmpty(filtreStatut) ? "active" : "")" style="background:@(string.IsNullOrEmpty(filtreStatut) ? "#ff6b35" : "#ddd"); color:@(string.IsNullOrEmpty(filtreStatut) ? "white" : "#333"); padding:8px 20px; border-radius:8px; text-decoration:none;">Toutes</a>
+            <a href="/Commande?filtreStatut=EnCours" class="filter-btn @(filtreStatut == "EnCours" ? "active" : "")" style="background:@(filtreStatut == "EnCours" ? "#ff6b35" : "#ddd"); color:@(filtreStatut == "EnCours" ? "white" : "#333"); padding:8px 20px; border-radius:8px; text-decoration:none;">En cours</a>
+            <a href="/Commande?filtreStatut=Validee" class="filter-btn @(filtreStatut == "Validee" ? "active" : "")" style="background:@(filtreStatut == "Validee" ? "#ff6b35" : "#ddd"); color:@(filtreStatut == "Validee" ? "white" : "#333"); padding:8px 20px; border-radius:8px; text-decoration:none;">Validées</a>
+            <a href="/Commande?filtreStatut=Terminee" class="filter-btn @(filtreStatut == "Terminee" ? "active" : "")" style="background:@(filtreStatut == "Terminee" ? "#ff6b35" : "#ddd"); color:@(filtreStatut == "Terminee" ? "white" : "#333"); padding:8px 20px; border-radius:8px; text-decoration:none;">Terminées</a>
+            <a href="/Commande?filtreStatut=Annulee" class="filter-btn @(filtreStatut == "Annulee" ? "active" : "")" style="background:@(filtreStatut == "Annulee" ? "#ff6b35" : "#ddd"); color:@(filtreStatut == "Annulee" ? "white" : "#333"); padding:8px 20px; border-radius:8px; text-decoration:none;">Annulées</a>
+        </div>
+
+        <hr style="margin-bottom:20px;">
+
+        @if (commandes.Count == 0)
+        {
+            <p style="text-align:center; padding:40px; color:#999;">Aucune commande trouvée</p>
+        }
+        else
+        {
+            @foreach (var commande in commandes)
+            {
+                <div class="commande-card" style="background:#f9f9f9; padding:20px; border-radius:10px; margin-bottom:15px; border-left:4px solid @(commande.Statut == BrasilBurgerC.Models.StatutCommande.EnCours ? "#3498db" : commande.Statut == BrasilBurgerC.Models.StatutCommande.Validee ? "#27ae60" : commande.Statut == BrasilBurgerC.Models.StatutCommande.Terminee ? "#2ecc71" : "#e74c3c");">
+                    <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:15px;">
+                        <div>
+                            <h4 style="margin:0; color:#333;">@commande.NumeroCommande</h4>
+                            <p style="margin:5px 0; color:#666; font-size:0.9em;">📅 @commande.DateCommande.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                        </div>
+                        <span class="badge" style="background:@(commande.Statut == BrasilBurgerC.Models.StatutCommande.EnCours ? "#3498db" : commande.Statut == BrasilBurgerC.Models.StatutCommande.Validee ? "#27ae60" : commande.Statut == BrasilBurgerC.Models.StatutCommande.Terminee ? "#2ecc71" : "#e74c3c"); color:white; padding:5px 15px; border-radius:20px; font-size:0.9em;">
+                            @commande.Statut.ToString()
+                        </span>
+                    </div>
+
+                    <div style="margin-bottom:15px;">
+                        <p style="margin:5px 0; color:#666;">
+                            <strong>Type:</strong> 
+                            @if (commande.TypeCommande == BrasilBurgerC.Models.TypeCommande.Livraison) { <span>🚚 Livraison</span> }
+                            else if (commande.TypeCommande == BrasilBurgerC.Models.TypeCommande.SurPlace) { <span>🏢 Sur place</span> }
+                            else { <span>🛍️ À emporter</span> }
+                        </p>
+                        @if (!string.IsNullOrEmpty(commande.AdresseLivraison))
+                        {
+                            <p style="margin:5px 0; color:#666;"><strong>📍 Adresse:</strong> @commande.AdresseLivraison</p>
+                        }
+                        <p style="margin:5px 0; color:#666;">
+                            <strong>💳 Paiement:</strong> 
+                            @(commande.Paiement?.ModePaiement.ToString() ?? "Non payé")
+                            @if (!string.IsNullOrEmpty(commande.Paiement?.NumeroTransaction))
+                            {
+                                <span>(@commande.Paiement.NumeroTransaction)</span>
+                            }
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom:15px;">
+                        <strong style="color:#333;">Articles:</strong>
+                        <ul style="margin:10px 0; padding-left:20px;">
+                            @foreach (var item in commande.Items)
+                            {
+                                <li style="margin:5px 0; color:#666;">
+                                    @item.NomItem x @item.Quantite - @item.PrixTotal FCFA
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div style="text-align:right;">
+                        <strong style="color:#ff6b35; font-size:1.2em;">Total: @commande.Total FCFA</strong>
+                    </div>
+                </div>
+            }
+        }
+        </div>
+    </div>
+</body>
+</html>

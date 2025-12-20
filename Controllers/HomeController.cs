@@ -12,12 +12,15 @@ namespace BrasilBurgerC.Controllers
             _context = context;
         }
 
-        public IActionResult Logout()
+
+        public IActionResult Index()
         {
-            // Redirige vers le catalogue UML
-            return RedirectToAction("Index", "Home");
+            // Rediriger vers la page de connexion ou le catalogue selon l'état de connexion
+            var userType = HttpContext.Session.GetString("UserType");
+            if (userType == "Client")
+                return RedirectToAction("Index", "Produit");
+            else
+                return RedirectToAction("Login", "Auth");
         }
     }
 }
-
-

@@ -1,0 +1,99 @@
+body {
+    background: linear-gradient(135deg, #ff8c00, #ff6b35);
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px;
+}
+
+.title {
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* Filtres */
+.filters {
+    margin-bottom: 25px;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: none;
+    margin-right: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.filter-btn.active {
+    background: #ff7a00;
+    color: white;
+}
+
+/* Carte commande */
+.commande-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.commande-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.badge.en-cours {
+    background: #3498db;
+    color: white;
+}
+
+.commande-body p {
+    margin: 6px 0;
+}
+
+.articles {
+    margin-top: 10px;
+}
+
+.total {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff7a00;
+}
+
+/* Actions */
+.commande-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 25px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn.success {
+    background: #2ecc71;
+}
+
+.btn.danger {
+    background: #e74c3c;
+}

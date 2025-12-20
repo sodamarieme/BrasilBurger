@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Mes Commandes";
+}
+
+<link rel="stylesheet" href="~/css/commande.css" />
+
+<div class="container">
+
+    <h2 class="title">📦 Mes Commandes</h2>
+
+    <!-- Filtres -->
+    <div class="filters">
+        <button class="filter-btn active">Toutes</button>
+        <button class="filter-btn">En cours</button>
+        <button class="filter-btn">Validées</button>
+        <button class="filter-btn">Annulées</button>
+    </div>
+
+    <!-- COMMANDE -->
+    <div class="commande-card">
+
+        <div class="commande-header">
+            <strong>Commande #1766164539323</strong>
+            <span class="badge en-cours">En cours</span>
+        </div>
+
+        <div class="commande-body">
+            <p>📅 <strong>Date :</strong> 19/12/2025 17:15</p>
+            <p>🚚 <strong>Type :</strong> Livraison</p>
+            <p>👤 <strong>Client :</strong> bb - 778778877</p>
+            <p>📍 <strong>Adresse :</strong> HHH</p>
+            <p>💳 <strong>Paiement :</strong> Wave (444444)</p>
+
+            <div class="articles">
+                <strong>🍔 Articles :</strong>
+                <p>Menu Classic x2 — 8000 FCFA</p>
+            </div>
+
+            <div class="total">
+                Total : <span>8000 FCFA</span>
+            </div>
+        </div>
+
+        <div class="commande-actions">
+            <a href="/Commande/Valider/1" class="btn success">✔ Valider</a>
+            <a href="/Commande/Annuler/1" class="btn danger">✖ Annuler</a>
+        </div>
+
+    </div>
+
+</div>
