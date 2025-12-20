@@ -7,8 +7,8 @@ services:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: ASPNETCORE_URLS
-        value: http://0.0.0.0:$PORT
+        value: http://0.0.0.0:10000
       - key: DATABASE_URL
-        value: ""
+        sync: false
     healthCheckPath: /
     autoDeploy: true
