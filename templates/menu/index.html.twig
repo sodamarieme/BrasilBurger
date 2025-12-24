@@ -3,155 +3,258 @@
 {% block title %}Notre Carte - Brasil Burger{% endblock %}
 
 {% block body %}
+<!-- Page Header -->
+<section class="hero" style="padding: 50px 0;">
+    <div class="container">
+        <h1 class="hero-title" style="font-size: 42px;">🍔 Notre Carte</h1>
+        <p class="hero-subtitle">Découvrez nos délicieuses créations</p>
+        
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <a href="#burgers" class="category-tab active">🍔 Burgers</a>
+            <a href="#menus" class="category-tab">🍽️ Menus</a>
+            <a href="#complements" class="category-tab">🍟 Accompagnements</a>
+        </div>
+    </div>
+</section>
+
 <div class="container">
     <!-- Burgers Section -->
-    <div class="section">
-        <h2 class="section-title">🍔 Nos Burgers</h2>
+    <section class="admin-section animate-fade-up" id="burgers">
+        <div class="admin-section-header">
+            <h2 class="admin-section-title">
+                <span class="icon">🍔</span> Nos Burgers
+            </h2>
+            <span class="text-muted">{{ burgers|length }} produit(s)</span>
+        </div>
         
+        {% if burgers|length > 0 %}
         <div class="products-grid">
             {% for burger in burgers %}
-            <div class="product-card" data-id="{{ burger.id }}" data-type="burger">
+            <div class="product-card">
                 <div class="product-image">
-                    <img src="{{ burger.image ? asset('uploads/burgers/' ~ burger.image) : 'https://via.placeholder.com/300x200/ff8c00/ffffff?text=🍔' }}" alt="{{ burger.nom }}">
+                    {% if burger.image %}
+                        <img src="{{ asset(burger.image) }}" alt="{{ burger.nom }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="{{ burger.nom }}">
+                    {% endif %}
+                    <div class="product-overlay">
+                        <a href="{{ path('app_menu_burger', {id: burger.id}) }}" class="btn btn-primary">
+                            👁️ Voir les détails
+                        </a>
+                    </div>
                     {% if not burger.disponible %}
-                        <span class="product-badge badge-danger">Indisponible</span>
+                        <span class="card-badge" style="background: var(--danger);">Indisponible</span>
+                    {% elseif burger.category and burger.category.nom == 'Burgers Premium' %}
+                        <span class="card-badge">⭐ Premium</span>
                     {% endif %}
                 </div>
-                <div class="product-info">
-                    <h3 class="product-name">{{ burger.nom }}</h3>
-                    <p class="product-description">{{ burger.description|length > 80 ? burger.description|slice(0, 80) ~ '...' : burger.description }}</p>
+                <div class="product-content">
+                    <h3 class="product-title">{{ burger.nom }}</h3>
+                    <p class="product-description">{{ burger.description|length > 100 ? burger.description|slice(0, 100) ~ '...' : burger.description }}</p>
+                    {% if burger.category %}
+                        <span class="status-badge status-pending" style="margin-bottom: 10px;">{{ burger.category.nom }}</span>
+                    {% endif %}
                     <div class="product-footer">
-                        <span class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} FCFA</span>
+                        <div class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         {% if burger.disponible %}
-                            <button class="btn btn-sm add-to-cart" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom }}', {{ burger.prix }})">
-                                🛒 Ajouter
-                            </button>
+                        <button class="btn btn-primary btn-sm" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom|e('js') }}', {{ burger.prix }}, '{{ burger.image|e('js') }}')">
+                            🛒 Ajouter
+                        </button>
+                        {% else %}
+                        <button class="btn btn-sm" disabled style="opacity: 0.5;">Indisponible</button>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            {% else %}
-            <p style="grid-column: 1/-1; text-align: center; color: #666;">Aucun burger disponible pour le moment.</p>
             {% endfor %}
         </div>
-    </div>
-    
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🍔</div>
+            <h3 class="empty-state-title">Aucun burger disponible</h3>
+            <p class="empty-state-text">Nos délicieux burgers arrivent bientôt !</p>
+        </div>
+        {% endif %}
+    </section>
+
     <!-- Menus Section -->
-    <div class="section">
-        <h2 class="section-title">🍽️ Nos Menus</h2>
+    <section class="admin-section animate-fade-up" id="menus">
+        <div class="admin-section-header">
+            <h2 class="admin-section-title">
+                <span class="icon">🍽️</span> Nos Menus
+            </h2>
+            <span class="text-muted">{{ menus|length }} menu(s)</span>
+        </div>
         
+        {% if menus|length > 0 %}
         <div class="products-grid">
             {% for menu in menus %}
-            <div class="product-card" data-id="{{ menu.id }}" data-type="menu">
+            <div class="product-card">
                 <div class="product-image">
-                    <img src="{{ menu.image ? asset('uploads/menus/' ~ menu.image) : 'https://via.placeholder.com/300x200/ff6b35/ffffff?text=🍽️' }}" alt="{{ menu.nom }}">
-                    {% if not menu.disponible %}
-                        <span class="product-badge badge-danger">Indisponible</span>
+                    {% if menu.image %}
+                        <img src="{{ asset(menu.image) }}" alt="{{ menu.nom }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" alt="{{ menu.nom }}">
                     {% endif %}
+                    <div class="product-overlay">
+                        <a href="{{ path('app_menu_formule', {id: menu.id}) }}" class="btn btn-primary">
+                            👁️ Voir le menu
+                        </a>
+                    </div>
+                    <span class="card-badge promo">🏷️ Menu Complet</span>
                 </div>
-                <div class="product-info">
-                    <h3 class="product-name">{{ menu.nom }}</h3>
-                    <p class="product-description">{{ menu.description|length > 80 ? menu.description|slice(0, 80) ~ '...' : menu.description }}</p>
-                    <div class="menu-content" style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
-                        <div>🍔 {{ menu.burgers|length }} burger(s)</div>
-                        <div>🍟 {{ menu.complements|length }} complément(s)</div>
+                <div class="product-content">
+                    <h3 class="product-title">{{ menu.nom }}</h3>
+                    <p class="product-description">{{ menu.description }}</p>
+                    <div class="d-flex gap-1 mb-2">
+                        <span class="status-badge status-confirmed">🍔 {{ menu.burgers|length }}</span>
+                        <span class="status-badge status-ready">🍟 {{ menu.complements|length }}</span>
                     </div>
                     <div class="product-footer">
-                        <span class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} FCFA</span>
+                        <div class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         {% if menu.disponible %}
-                            <button class="btn btn-sm add-to-cart" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom }}', {{ menu.prix }})">
-                                🛒 Ajouter
-                            </button>
+                        <button class="btn btn-success btn-sm" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom|e('js') }}', {{ menu.prix }}, '{{ menu.image|e('js') }}')">
+                            🛒 Ajouter
+                        </button>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            {% else %}
-            <p style="grid-column: 1/-1; text-align: center; color: #666;">Aucun menu disponible pour le moment.</p>
             {% endfor %}
         </div>
-    </div>
-    
-    <!-- Compléments Section -->
-    <div class="section">
-        <h2 class="section-title">🍟 Compléments</h2>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🍽️</div>
+            <h3 class="empty-state-title">Aucun menu disponible</h3>
+            <p class="empty-state-text">Nos menus arrivent bientôt !</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Complements Section -->
+    <section class="admin-section animate-fade-up" id="complements">
+        <div class="admin-section-header">
+            <h2 class="admin-section-title">
+                <span class="icon">🍟</span> Accompagnements
+            </h2>
+            <span class="text-muted">{{ complements|length }} produit(s)</span>
+        </div>
         
+        {% if complements|length > 0 %}
         <div class="products-grid">
             {% for complement in complements %}
-            <div class="product-card" data-id="{{ complement.id }}" data-type="complement">
+            <div class="product-card">
                 <div class="product-image">
-                    <img src="{{ complement.image ? asset('uploads/complements/' ~ complement.image) : 'https://via.placeholder.com/300x200/ffb347/ffffff?text=🍟' }}" alt="{{ complement.nom }}">
-                    {% if not complement.disponible %}
-                        <span class="product-badge badge-danger">Indisponible</span>
+                    {% if complement.image %}
+                        <img src="{{ asset(complement.image) }}" alt="{{ complement.nom }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&h=300&fit=crop" alt="{{ complement.nom }}">
                     {% endif %}
+                    <div class="product-overlay">
+                        <button class="btn btn-primary" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
+                            🛒 Ajouter au panier
+                        </button>
+                    </div>
                 </div>
-                <div class="product-info">
-                    <h3 class="product-name">{{ complement.nom }}</h3>
+                <div class="product-content">
+                    <h3 class="product-title">{{ complement.nom }}</h3>
                     <p class="product-description">{{ complement.description }}</p>
+                    <span class="status-badge status-pending mb-2">{{ complement.type|capitalize }}</span>
                     <div class="product-footer">
-                        <span class="product-price">{{ complement.prix|number_format(0, ',', ' ') }} FCFA</span>
+                        <div class="product-price">{{ complement.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         {% if complement.disponible %}
-                            <button class="btn btn-sm add-to-cart" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom }}', {{ complement.prix }})">
-                                🛒 Ajouter
-                            </button>
+                        <button class="btn btn-primary btn-sm" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
+                            🛒 Ajouter
+                        </button>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            {% else %}
-            <p style="grid-column: 1/-1; text-align: center; color: #666;">Aucun complément disponible pour le moment.</p>
             {% endfor %}
         </div>
-    </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🍟</div>
+            <h3 class="empty-state-title">Aucun accompagnement disponible</h3>
+            <p class="empty-state-text">Nos accompagnements arrivent bientôt !</p>
+        </div>
+        {% endif %}
+    </section>
 </div>
 
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-logo">🍔 Brasil Burger</div>
+        <div class="footer-links">
+            <a href="{{ path('app_home') }}" class="footer-link">Accueil</a>
+            <a href="{{ path('app_menu') }}" class="footer-link">Menu</a>
+            <a href="{{ path('app_cart') }}" class="footer-link">Panier</a>
+        </div>
+        <p class="footer-copy">© {{ 'now'|date('Y') }} Brasil Burger. Tous droits réservés.</p>
+    </div>
+</footer>
+
 <script>
-function addToCart(type, id, nom, prix) {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+function addToCart(type, id, name, price, image) {
+    let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+    const existingIndex = cart.findIndex(item => item.type === type && item.id === id);
     
-    // Chercher si l'article existe déjà
-    let found = false;
-    for (let item of cart) {
-        if (item.type === type && item.id === id) {
-            item.quantity++;
-            found = true;
-            break;
-        }
-    }
-    
-    if (!found) {
+    if (existingIndex >= 0) {
+        cart[existingIndex].quantity += 1;
+    } else {
         cart.push({
             type: type,
             id: id,
-            nom: nom,
-            prix: prix,
+            name: name,
+            price: price,
+            image: image,
             quantity: 1
         });
     }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    
-    // Animation feedback
-    const btn = event.target;
-    btn.innerHTML = '✅ Ajouté';
-    btn.style.background = '#28a745';
-    setTimeout(() => {
-        btn.innerHTML = '🛒 Ajouter';
-        btn.style.background = '';
-    }, 1000);
+    localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
+    updateCartBadge();
+    showNotification('✅ ' + name + ' ajouté au panier !');
 }
 
-function updateCartCount() {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    let total = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const counter = document.querySelector('.cart-count');
-    if (counter) {
-        counter.textContent = total;
-        counter.style.display = total > 0 ? 'inline' : 'none';
+function updateCartBadge() {
+    const cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const badge = document.querySelector('.cart-count');
+    if (badge) {
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'flex' : 'none';
     }
 }
 
-document.addEventListener('DOMContentLoaded', updateCartCount);
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-success';
+    notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; animation: fadeInDown 0.4s ease-out;';
+    notification.innerHTML = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'fadeInUp 0.4s ease-out reverse';
+        setTimeout(() => notification.remove(), 400);
+    }, 3000);
+}
+
+// Smooth scroll for category tabs
+document.querySelectorAll('.category-tab').forEach(tab => {
+    tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+document.addEventListener('DOMContentLoaded', updateCartBadge);
 </script>
 {% endblock %}

@@ -95,11 +95,11 @@ class SeedDataCommand extends Command
         // 3. Burgers
         $io->section('Création des burgers');
         $burgers = [
-            ['nom' => 'Classic Burger', 'description' => 'Le classique: steak de boeuf, salade, tomate, oignon, sauce maison', 'prix' => 2500, 'category' => 0],
-            ['nom' => 'Cheese Burger', 'description' => 'Burger avec double cheddar fondu', 'prix' => 3000, 'category' => 0],
-            ['nom' => 'Bacon Burger', 'description' => 'Burger avec bacon croustillant', 'prix' => 3500, 'category' => 1],
-            ['nom' => 'Double Meat', 'description' => 'Double steak pour les gros appétits', 'prix' => 4500, 'category' => 1],
-            ['nom' => 'BBQ Burger', 'description' => 'Sauce BBQ, oignons caramélisés, bacon', 'prix' => 4000, 'category' => 2],
+            ['nom' => 'Classic Burger', 'description' => 'Le classique: steak de boeuf, salade, tomate, oignon, sauce maison', 'prix' => 2500, 'category' => 0, 'image' => 'images/products/burger-classic.jpg'],
+            ['nom' => 'Cheese Burger', 'description' => 'Burger avec double cheddar fondu', 'prix' => 3000, 'category' => 0, 'image' => 'images/products/burger-cheese.jpg'],
+            ['nom' => 'Bacon Burger', 'description' => 'Burger avec bacon croustillant', 'prix' => 3500, 'category' => 1, 'image' => 'images/products/burger-bacon.jpg'],
+            ['nom' => 'Double Meat', 'description' => 'Double steak pour les gros appétits', 'prix' => 4500, 'category' => 1, 'image' => 'images/products/burger-double.jpg'],
+            ['nom' => 'BBQ Burger', 'description' => 'Sauce BBQ, oignons caramélisés, bacon', 'prix' => 4000, 'category' => 2, 'image' => 'images/products/burger-bbq.jpg'],
         ];
 
         $burgerEntities = [];
@@ -110,6 +110,7 @@ class SeedDataCommand extends Command
                 $burger->setNom($b['nom']);
                 $burger->setDescription($b['description']);
                 $burger->setPrix($b['prix']);
+                $burger->setImage($b['image']);
                 $burger->setDisponible(true);
                 $burger->setArchived(false);
                 if (isset($categoryEntities[$b['category']])) {
@@ -126,11 +127,11 @@ class SeedDataCommand extends Command
         // 4. Compléments
         $io->section('Création des compléments');
         $complements = [
-            ['nom' => 'Frites', 'description' => 'Frites croustillantes', 'prix' => 1000],
-            ['nom' => 'Nuggets (6pcs)', 'description' => 'Nuggets de poulet', 'prix' => 1500],
-            ['nom' => 'Onion Rings', 'description' => 'Oignons frits', 'prix' => 1200],
-            ['nom' => 'Coleslaw', 'description' => 'Salade de chou', 'prix' => 800],
-            ['nom' => 'Boisson (33cl)', 'description' => 'Coca, Fanta, Sprite', 'prix' => 500],
+            ['nom' => 'Frites', 'description' => 'Frites croustillantes', 'prix' => 1000, 'type' => 'frites', 'image' => 'images/products/frites.jpg'],
+            ['nom' => 'Nuggets (6pcs)', 'description' => 'Nuggets de poulet', 'prix' => 1500, 'type' => 'snack', 'image' => 'images/products/nuggets.jpg'],
+            ['nom' => 'Onion Rings', 'description' => 'Oignons frits', 'prix' => 1200, 'type' => 'snack', 'image' => 'images/products/onion-rings.jpg'],
+            ['nom' => 'Coleslaw', 'description' => 'Salade de chou', 'prix' => 800, 'type' => 'salade', 'image' => null],
+            ['nom' => 'Boisson (33cl)', 'description' => 'Coca, Fanta, Sprite', 'prix' => 500, 'type' => 'boisson', 'image' => 'images/products/boisson.jpg'],
         ];
 
         $complementEntities = [];
@@ -141,6 +142,8 @@ class SeedDataCommand extends Command
                 $complement->setNom($c['nom']);
                 $complement->setDescription($c['description']);
                 $complement->setPrix($c['prix']);
+                $complement->setType($c['type']);
+                $complement->setImage($c['image']);
                 $complement->setDisponible(true);
                 $complement->setArchived(false);
                 $this->em->persist($complement);
@@ -154,9 +157,9 @@ class SeedDataCommand extends Command
         // 5. Menus
         $io->section('Création des menus');
         $menus = [
-            ['nom' => 'Menu Classic', 'description' => 'Classic Burger + Frites + Boisson', 'prix' => 4000],
-            ['nom' => 'Menu Cheese', 'description' => 'Cheese Burger + Frites + Boisson', 'prix' => 4500],
-            ['nom' => 'Menu Double', 'description' => 'Double Meat + Frites + Nuggets + Boisson', 'prix' => 7000],
+            ['nom' => 'Menu Classic', 'description' => 'Classic Burger + Frites + Boisson', 'prix' => 4000, 'image' => 'images/products/menu-classic.jpg'],
+            ['nom' => 'Menu Cheese', 'description' => 'Cheese Burger + Frites + Boisson', 'prix' => 4500, 'image' => 'images/products/menu-cheese.jpg'],
+            ['nom' => 'Menu Double', 'description' => 'Double Meat + Frites + Nuggets + Boisson', 'prix' => 7000, 'image' => 'images/products/menu-double.jpg'],
         ];
 
         foreach ($menus as $m) {
@@ -166,6 +169,7 @@ class SeedDataCommand extends Command
                 $menu->setNom($m['nom']);
                 $menu->setDescription($m['description']);
                 $menu->setPrix($m['prix']);
+                $menu->setImage($m['image']);
                 $menu->setDisponible(true);
                 $menu->setArchived(false);
                 

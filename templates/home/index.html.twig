@@ -3,57 +3,79 @@
 {% block title %}Accueil - Brasil Burger{% endblock %}
 
 {% block body %}
-<div class="container">
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>🍔 Bienvenue chez Brasil Burger</h1>
-        <p>Les meilleurs burgers brésiliens de la ville. Saveurs authentiques, ingrédients frais, livraison rapide !</p>
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <a href="{{ path('app_menu') }}" class="btn btn-lg">🍔 Voir le Menu</a>
-            <a href="#featured" class="btn btn-outline btn-lg">⭐ Nos Spécialités</a>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">🍔 Brasil Burger</h1>
+        <p class="hero-subtitle">Les meilleurs burgers artisanaux de Dakar. Ingrédients frais, recettes uniques, livraison express !</p>
+        <div class="hero-buttons">
+            <a href="{{ path('app_menu') }}" class="hero-btn hero-btn-primary">
+                🍔 Découvrir le Menu
+            </a>
+            <a href="#populaires" class="hero-btn hero-btn-outline">
+                ⭐ Nos Best-Sellers
+            </a>
         </div>
-    </section>
+    </div>
+</section>
 
+<div class="container">
     <!-- Stats Section -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon">🥬</div>
+    <div class="admin-stats-grid" style="margin-top: -40px;">
+        <div class="admin-stat-card animate-fade-up stagger-1">
+            <span class="stat-icon">🥬</span>
             <div class="stat-value">100%</div>
             <div class="stat-label">Ingrédients Frais</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">🚚</div>
+        <div class="admin-stat-card animate-fade-up stagger-2">
+            <span class="stat-icon">🚚</span>
             <div class="stat-value">30 min</div>
-            <div class="stat-label">Livraison Rapide</div>
+            <div class="stat-label">Livraison Express</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">❤️</div>
+        <div class="admin-stat-card animate-fade-up stagger-3">
+            <span class="stat-icon">❤️</span>
             <div class="stat-value">5000+</div>
             <div class="stat-label">Clients Satisfaits</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">⭐</div>
+        <div class="admin-stat-card animate-fade-up stagger-4">
+            <span class="stat-icon">⭐</span>
             <div class="stat-value">4.9/5</div>
             <div class="stat-label">Note Moyenne</div>
         </div>
     </div>
 
-    <!-- Featured Burgers -->
-    <section class="section" id="featured">
-        <h2 class="section-title">🍔 Nos Burgers Populaires</h2>
+    <!-- Popular Burgers Section -->
+    <section class="menu-section" id="populaires">
+        <div class="section-header">
+            <h2 class="section-title">🍔 Nos Burgers Populaires</h2>
+            <p class="section-subtitle">Découvrez nos créations les plus appréciées</p>
+        </div>
         
         {% if burgers|length > 0 %}
         <div class="products-grid">
             {% for burger in burgers %}
             <div class="product-card">
-                <img src="{{ burger.image ?? 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400' }}" alt="{{ burger.nom }}">
-                <div class="product-info">
-                    <h3 class="product-name">{{ burger.nom }}</h3>
-                    <p class="product-desc">{{ burger.description|length > 80 ? burger.description|slice(0, 80) ~ '...' : burger.description }}</p>
-                    <div class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} FCFA</div>
-                    <div class="product-actions">
-                        <a href="{{ path('app_menu_burger', {id: burger.id}) }}" class="btn-edit">👁️ Détails</a>
-                        <button class="btn-valider" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom|e('js') }}', {{ burger.prix }}, '{{ burger.image|e('js') }}')">
+                <div class="product-image">
+                    {% if burger.image %}
+                        <img src="{{ asset(burger.image) }}" alt="{{ burger.nom }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="{{ burger.nom }}">
+                    {% endif %}
+                    <div class="product-overlay">
+                        <a href="{{ path('app_menu_burger', {id: burger.id}) }}" class="btn btn-primary">
+                            👁️ Voir les détails
+                        </a>
+                    </div>
+                    {% if loop.index <= 2 %}
+                    <span class="card-badge new">🔥 Populaire</span>
+                    {% endif %}
+                </div>
+                <div class="product-content">
+                    <h3 class="product-title">{{ burger.nom }}</h3>
+                    <p class="product-description">{{ burger.description|length > 100 ? burger.description|slice(0, 100) ~ '...' : burger.description }}</p>
+                    <div class="product-footer">
+                        <div class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
+                        <button class="btn btn-primary btn-sm" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom|e('js') }}', {{ burger.prix }}, '{{ burger.image|e('js') }}')">
                             🛒 Ajouter
                         </button>
                     </div>
@@ -63,33 +85,49 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="icon">🍔</div>
-            <h3>Aucun burger disponible</h3>
-            <p>Nos burgers arrivent bientôt !</p>
+            <div class="empty-state-icon">🍔</div>
+            <h3 class="empty-state-title">Aucun burger disponible</h3>
+            <p class="empty-state-text">Nos délicieux burgers arrivent bientôt !</p>
         </div>
         {% endif %}
         
-        <div class="text-center mt-2">
-            <a href="{{ path('app_menu') }}" class="btn">Voir tous les burgers →</a>
+        <div class="text-center mt-4">
+            <a href="{{ path('app_menu') }}" class="btn btn-lg btn-outline" style="border-color: white; color: white;">
+                Voir tous les burgers →
+            </a>
         </div>
     </section>
 
-    <!-- Featured Menus -->
+    <!-- Menus Section -->
     {% if menus|length > 0 %}
-    <section class="section">
-        <h2 class="section-title">🎁 Nos Menus</h2>
+    <section class="menu-section">
+        <div class="section-header">
+            <h2 class="section-title">🎁 Nos Menus Complets</h2>
+            <p class="section-subtitle">Burger + Frites + Boisson à prix réduit</p>
+        </div>
         
         <div class="products-grid">
             {% for menu in menus %}
             <div class="product-card">
-                <img src="{{ menu.image ?? 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400' }}" alt="{{ menu.nom }}">
-                <div class="product-info">
-                    <h3 class="product-name">{{ menu.nom }}</h3>
-                    <p class="product-desc">{{ menu.description|length > 80 ? menu.description|slice(0, 80) ~ '...' : menu.description }}</p>
-                    <div class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} FCFA</div>
-                    <div class="product-actions">
-                        <a href="{{ path('app_menu_formule', {id: menu.id}) }}" class="btn-edit">👁️ Détails</a>
-                        <button class="btn-valider" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom|e('js') }}', {{ menu.prix }}, '{{ menu.image|e('js') }}')">
+                <div class="product-image">
+                    {% if menu.image %}
+                        <img src="{{ asset(menu.image) }}" alt="{{ menu.nom }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" alt="{{ menu.nom }}">
+                    {% endif %}
+                    <div class="product-overlay">
+                        <a href="{{ path('app_menu_formule', {id: menu.id}) }}" class="btn btn-primary">
+                            👁️ Voir les détails
+                        </a>
+                    </div>
+                    <span class="card-badge promo">🏷️ Menu</span>
+                </div>
+                <div class="product-content">
+                    <h3 class="product-title">{{ menu.nom }}</h3>
+                    <p class="product-description">{{ menu.description }}</p>
+                    <div class="product-footer">
+                        <div class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
+                        <button class="btn btn-success btn-sm" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom|e('js') }}', {{ menu.prix }}, '{{ menu.image|e('js') }}')">
                             🛒 Ajouter
                         </button>
                     </div>
@@ -99,17 +137,83 @@
         </div>
     </section>
     {% endif %}
-</div>
-{% endblock %}
 
-{% block javascripts_bottom %}
+    <!-- Complements Section -->
+    {% if complements|length > 0 %}
+    <section class="menu-section">
+        <div class="section-header">
+            <h2 class="section-title">🍟 Nos Accompagnements</h2>
+            <p class="section-subtitle">Pour compléter votre repas</p>
+        </div>
+        
+        <div class="products-grid">
+            {% for complement in complements %}
+            <div class="product-card">
+                <div class="product-image">
+                    {% if complement.image %}
+                        <img src="{{ asset(complement.image) }}" alt="{{ complement.nom }}">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&h=300&fit=crop" alt="{{ complement.nom }}">
+                    {% endif %}
+                    <div class="product-overlay">
+                        <button class="btn btn-primary" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
+                            🛒 Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3 class="product-title">{{ complement.nom }}</h3>
+                    <p class="product-description">{{ complement.description }}</p>
+                    <div class="product-footer">
+                        <div class="product-price">{{ complement.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
+                        <button class="btn btn-primary btn-sm" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
+                            🛒 Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- CTA Section -->
+    <section class="admin-section" style="text-align: center; padding: 60px;">
+        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 15px;">🚚 Livraison Gratuite</h2>
+        <p style="font-size: 18px; color: var(--text-light); margin-bottom: 30px;">Pour toute commande supérieure à 10 000 FCFA</p>
+        <a href="{{ path('app_menu') }}" class="btn btn-primary btn-lg">
+            Commander Maintenant →
+        </a>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-logo">🍔 Brasil Burger</div>
+        <div class="footer-links">
+            <a href="{{ path('app_home') }}" class="footer-link">Accueil</a>
+            <a href="{{ path('app_menu') }}" class="footer-link">Menu</a>
+            <a href="{{ path('app_cart') }}" class="footer-link">Panier</a>
+            {% if app.user %}
+                <a href="{{ path('app_profile') }}" class="footer-link">Mon Compte</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="footer-link">Connexion</a>
+            {% endif %}
+        </div>
+        <p class="footer-copy">© {{ 'now'|date('Y') }} Brasil Burger. Tous droits réservés. Fait avec ❤️ à Dakar</p>
+    </div>
+</footer>
+
 <script>
 function addToCart(type, id, name, price, image) {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    // Get current cart from localStorage
+    let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
     
+    // Check if item already exists
     const existingIndex = cart.findIndex(item => item.type === type && item.id === id);
     
-    if (existingIndex > -1) {
+    if (existingIndex >= 0) {
         cart[existingIndex].quantity += 1;
     } else {
         cart.push({
@@ -122,10 +226,42 @@ function addToCart(type, id, name, price, image) {
         });
     }
     
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
+    localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
     
-    alert('✅ ' + name + ' ajouté au panier !');
+    // Update cart badge
+    updateCartBadge();
+    
+    // Show notification
+    showNotification('✅ ' + name + ' ajouté au panier !');
 }
+
+function updateCartBadge() {
+    const cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const badge = document.querySelector('.cart-count');
+    if (badge) {
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+}
+
+function showNotification(message) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-success';
+    notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; animation: fadeInDown 0.4s ease-out;';
+    notification.innerHTML = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'fadeInUp 0.4s ease-out reverse';
+        setTimeout(() => notification.remove(), 400);
+    }, 3000);
+}
+
+// Update cart badge on page load
+document.addEventListener('DOMContentLoaded', updateCartBadge);
 </script>
 {% endblock %}
