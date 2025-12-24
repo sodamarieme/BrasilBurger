@@ -9,6 +9,9 @@ use App\Entity\Complement;
 use App\Entity\Menu;
 use App\Entity\Zone;
 use App\Entity\Livreur;
+use App\Entity\Order;
+use App\Entity\OrderItem;
+use App\Entity\Delivery;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -239,6 +242,90 @@ class SeedDataCommand extends Command
         }
 
         $this->em->flush();
+
+        // 8. Commandes de test
+        $io->section('Création des commandes de test');
+        
+        $client = $this->em->getRepository(User::class)->findOneBy(['email' => 'client@test.com']);
+        $zones = $this->em->getRepository(Zone::class)->findAll();
+        $livreurs = $this->em->getRepository(Livreur::class)->findAll();
+        $burgers = $this->em->getRepository(Burger::class)->findAll();
+        
+        // Vérifier si des commandes existent déjà
+        $existingOrders = $this->em->getRepository(Order::class)->findAll();
+        
+        if (count($existingOrders) === 0 && $client && count($burgers) > 0) {
+            $ordersData = [
+                ['ref' => 'CMD-001', 'type' => 'livraison', 'statut' => Order::STATUS_PENDING, 'total' => 4500, 'adresse' => 'Almadies, Villa 12, Dakar'],
+                ['ref' => 'CMD-002', 'type' => 'sur_place', 'statut' => Order::STATUS_CONFIRMED, 'total' => 7500, 'adresse' => 'Sur place - Table 5'],
+                ['ref' => 'CMD-003', 'type' => 'livraison', 'statut' => Order::STATUS_PREPARING, 'total' => 6000, 'adresse' => 'Sacré-Cœur 3, Immeuble Serigne Fallou'],
+                ['ref' => 'CMD-004', 'type' => 'a_emporter', 'statut' => Order::STATUS_READY, 'total' => 3500, 'adresse' => 'À emporter'],
+                ['ref' => 'CMD-005', 'type' => 'livraison', 'statut' => Order::STATUS_READY, 'total' => 9500, 'adresse' => 'Mermoz, Pyrotechnie'],
+                ['ref' => 'CMD-006', 'type' => 'livraison', 'statut' => Order::STATUS_DELIVERING, 'total' => 5500, 'adresse' => 'Ouakam, Cité Police'],
+                ['ref' => 'CMD-007', 'type' => 'sur_place', 'statut' => Order::STATUS_DELIVERED, 'total' => 4000, 'adresse' => 'Sur place - Table 2'],
+                ['ref' => 'CMD-008', 'type' => 'livraison', 'statut' => Order::STATUS_DELIVERED, 'total' => 8000, 'adresse' => 'Plateau, Avenue Pompidou'],
+            ];
+
+            $orderIndex = 0;
+            foreach ($ordersData as $od) {
+                $order = new Order();
+                $order->setReference($od['ref']);
+                $order->setType($od['type']);
+                $order->setStatut($od['statut']);
+                $order->setTotalProduits((string)($od['total'] - 500));
+                $order->setFraisLivraison('500');
+                $order->setTotal((string)$od['total']);
+                $order->setAdresseLivraison($od['adresse']);
+                $order->setClient($client);
+                $order->setCreatedAt(new \DateTimeImmutable('-' . (7 - $orderIndex) . ' days'));
+                
+                // Ajouter un article à chaque commande
+                if (isset($burgers[$orderIndex % count($burgers)])) {
+                    $burger = $burgers[$orderIndex % count($burgers)];
+                    $orderItem = new OrderItem();
+                    $orderItem->setCommande($order);
+                    $orderItem->setType('burger');
+                    $orderItem->setProduitId($burger->getId());
+                    $orderItem->setProduitNom($burger->getNom());
+                    $orderItem->setQuantite(rand(1, 3));
+                    $orderItem->setPrixUnitaire((string)$burger->getPrix());
+                    $orderItem->setSousTotal((string)($burger->getPrix() * $orderItem->getQuantite()));
+                    $this->em->persist($orderItem);
+                }
+                
+                $this->em->persist($order);
+                
+                // Créer une livraison pour les commandes en livraison
+                if ($od['type'] === 'livraison' && count($zones) > 0) {
+                    $zone = $zones[$orderIndex % count($zones)];
+                    $delivery = new Delivery();
+                    $delivery->setCommande($order);
+                    $delivery->setZone($zone);
+                    $delivery->setPrixLivraison((string)$zone->getPrixLivraison());
+                    
+                    if ($od['statut'] === Order::STATUS_DELIVERING || $od['statut'] === Order::STATUS_DELIVERED) {
+                        $delivery->setStatut(Delivery::STATUS_ASSIGNED);
+                        if (count($livreurs) > 0) {
+                            $delivery->setLivreur($livreurs[$orderIndex % count($livreurs)]);
+                            $delivery->setAssignedAt(new \DateTimeImmutable());
+                        }
+                    }
+                    if ($od['statut'] === Order::STATUS_DELIVERED) {
+                        $delivery->setStatut(Delivery::STATUS_DELIVERED);
+                        $delivery->setDeliveredAt(new \DateTimeImmutable());
+                    }
+                    
+                    $this->em->persist($delivery);
+                }
+                
+                $io->writeln("  ✅ {$od['ref']} - {$od['type']} - {$od['total']} FCFA");
+                $orderIndex++;
+            }
+            
+            $this->em->flush();
+        } else if (count($existingOrders) > 0) {
+            $io->warning('Des commandes existent déjà (' . count($existingOrders) . ' commandes)');
+        }
 
         $io->newLine();
         $io->success('Données créées avec succès!');

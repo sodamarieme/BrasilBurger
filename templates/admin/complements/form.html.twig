@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base_admin.html.twig' %}
 
 {% block title %}{{ complement ? 'Modifier' : 'Ajouter' }} un Complément - Admin{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="admin-container">
     <div class="section" style="max-width: 700px; margin: 0 auto;">
         <a href="{{ path('app_admin_complements') }}" class="back-link">← Retour aux compléments</a>
         

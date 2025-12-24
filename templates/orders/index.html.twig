@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes - Brasil Burger{% endblock %}
+
+{% block body %}
+<section class="hero-small">
+    <div class="container">
+        <h1 class="hero-title animate-fadeIn">📦 Mes Commandes</h1>
+        <p class="hero-subtitle animate-fadeIn">Suivez l'état de vos commandes</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if orders|length > 0 %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card animate-fadeInUp" style="animation-delay: {{ loop.index * 0.1 }}s">
+                <div class="order-header">
+                    <div class="order-id">
+                        <span class="order-label">Commande</span>
+                        <span class="order-number">{{ order.reference }}</span>
+                    </div>
+                    <div class="order-status status-{{ order.statut }}">
+                        {% if order.statut == 'en_attente' %}
+                            ⏳ En attente
+                        {% elseif order.statut == 'confirmee' %}
+                            ✅ Confirmée
+                        {% elseif order.statut == 'en_preparation' %}
+                            👨‍🍳 En préparation
+                        {% elseif order.statut == 'prete' %}
+                            ✅ Prête
+                        {% elseif order.statut == 'en_livraison' %}
+                            🚚 En livraison
+                        {% elseif order.statut == 'livree' %}
+                            ✔️ Livrée
+                        {% elseif order.statut == 'annulee' %}
+                            ❌ Annulée
+                        {% else %}
+                            {{ order.statutLabel }}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="order-info">
+                        <div class="order-date">
+                            <span class="info-icon">📅</span>
+                            {{ order.createdAt|date('d/m/Y à H:i') }}
+                        </div>
+                        <div class="order-address">
+                            <span class="info-icon">📍</span>
+                            {{ order.adresseLivraison }}
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        {% for item in order.orderItems %}
+                        <div class="order-item">
+                            <span class="item-quantity">{{ item.quantite }}x</span>
+                            <span class="item-name">
+                                {% if item.burger %}
+                                    {{ item.burger.nom }}
+                                {% elseif item.menu %}
+                                    {{ item.menu.nom }}
+                                {% elseif item.complement %}
+                                    {{ item.complement.nom }}
+                                {% endif %}
+                            </span>
+                            <span class="item-price">{{ item.sousTotal|number_format(0, ',', ' ') }} FCFA</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="order-footer">
+                    <div class="order-total">
+                        <span>Total</span>
+                        <strong>{{ order.total|number_format(0, ',', ' ') }} FCFA</strong>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state animate-fadeIn">
+            <div class="empty-icon">📦</div>
+            <h3>Aucune commande</h3>
+            <p>Vous n'avez pas encore passé de commande.</p>
+            <a href="{{ path('app_menu') }}" class="btn btn-primary">Voir le menu</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

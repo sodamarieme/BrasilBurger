@@ -183,19 +183,6 @@
     </section>
 </div>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="footer-logo">🍔 Brasil Burger</div>
-        <div class="footer-links">
-            <a href="{{ path('app_home') }}" class="footer-link">Accueil</a>
-            <a href="{{ path('app_menu') }}" class="footer-link">Menu</a>
-            <a href="{{ path('app_cart') }}" class="footer-link">Panier</a>
-        </div>
-        <p class="footer-copy">© {{ 'now'|date('Y') }} Brasil Burger. Tous droits réservés.</p>
-    </div>
-</footer>
-
 <script>
 function addToCart(type, id, name, price, image) {
     let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');

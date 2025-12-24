@@ -1,0 +1,159 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Catalogue - Admin{% endblock %}
+
+{% block body %}
+
+<div class="admin-container">
+    <div class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title">🍔 Gestion du Catalogue</h2>
+            <a href="{{ path('app_admin_burger_new') }}" class="btn btn-primary">+ Ajouter un produit</a>
+        </div>
+
+        <!-- Section Burgers -->
+        <div class="catalogue-section">
+            <h3 class="catalogue-title">Burgers</h3>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>IMAGE</th>
+                        <th>NOM</th>
+                        <th>DESCRIPTION</th>
+                        <th>PRIX</th>
+                        <th>STATUT</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for burger in burgers %}
+                    <tr>
+                        <td>
+                            <img src="{{ burger.image ? asset(burger.image) : 'https://via.placeholder.com/60x60?text=🍔' }}" 
+                                 alt="{{ burger.nom }}" class="product-thumb">
+                        </td>
+                        <td><strong>{{ burger.nom }}</strong></td>
+                        <td class="description-cell">{{ burger.description|slice(0, 50) }}{% if burger.description|length > 50 %}...{% endif %}</td>
+                        <td><strong>{{ burger.prix|number_format(0, ' ', ' ') }} FCFA</strong></td>
+                        <td>
+                            {% if burger.disponible %}
+                                <span class="badge badge-success">✅ Actif</span>
+                            {% else %}
+                                <span class="badge badge-secondary">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions-cell">
+                            <a href="{{ path('app_admin_burger_edit', {id: burger.id}) }}" class="btn-action btn-edit">✏️ Modifier</a>
+                            <form action="{{ path('app_admin_burger_archive', {id: burger.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Archiver ce burger ?')">
+                                <button type="submit" class="btn-action btn-archive">📦 Archiver</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-cell">Aucun burger trouvé</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Compléments -->
+        <div class="catalogue-section">
+            <h3 class="catalogue-title">Compléments</h3>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>IMAGE</th>
+                        <th>NOM</th>
+                        <th>DESCRIPTION</th>
+                        <th>PRIX</th>
+                        <th>STATUT</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complement in complements %}
+                    <tr>
+                        <td>
+                            <img src="{{ complement.image ? asset(complement.image) : 'https://via.placeholder.com/60x60?text=🍟' }}" 
+                                 alt="{{ complement.nom }}" class="product-thumb">
+                        </td>
+                        <td><strong>{{ complement.nom }}</strong></td>
+                        <td class="description-cell">{{ complement.description|slice(0, 50) }}{% if complement.description|length > 50 %}...{% endif %}</td>
+                        <td><strong>{{ complement.prix|number_format(0, ' ', ' ') }} FCFA</strong></td>
+                        <td>
+                            {% if complement.disponible %}
+                                <span class="badge badge-success">✅ Actif</span>
+                            {% else %}
+                                <span class="badge badge-secondary">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions-cell">
+                            <a href="{{ path('app_admin_complement_edit', {id: complement.id}) }}" class="btn-action btn-edit">✏️ Modifier</a>
+                            <form action="{{ path('app_admin_complement_archive', {id: complement.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Archiver ce complément ?')">
+                                <button type="submit" class="btn-action btn-archive">📦 Archiver</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-cell">Aucun complément trouvé</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Menus -->
+        <div class="catalogue-section">
+            <h3 class="catalogue-title">Menus</h3>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>IMAGE</th>
+                        <th>NOM</th>
+                        <th>DESCRIPTION</th>
+                        <th>PRIX</th>
+                        <th>STATUT</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in menus %}
+                    <tr>
+                        <td>
+                            <img src="{{ menu.image ? asset(menu.image) : 'https://via.placeholder.com/60x60?text=🍔' }}" 
+                                 alt="{{ menu.nom }}" class="product-thumb">
+                        </td>
+                        <td><strong>{{ menu.nom }}</strong></td>
+                        <td class="description-cell">{{ menu.description|slice(0, 50) }}{% if menu.description|length > 50 %}...{% endif %}</td>
+                        <td><strong>{{ menu.prix|number_format(0, ' ', ' ') }} FCFA</strong></td>
+                        <td>
+                            {% if menu.disponible %}
+                                <span class="badge badge-success">✅ Actif</span>
+                            {% else %}
+                                <span class="badge badge-secondary">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions-cell">
+                            <a href="{{ path('app_admin_menu_edit', {id: menu.id}) }}" class="btn-action btn-edit">✏️ Modifier</a>
+                            <form action="{{ path('app_admin_menu_archive', {id: menu.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Archiver ce menu ?')">
+                                <button type="submit" class="btn-action btn-archive">📦 Archiver</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-cell">Aucun menu trouvé</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

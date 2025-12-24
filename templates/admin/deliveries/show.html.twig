@@ -1,0 +1,127 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Détails Livraison - Admin{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1 class="admin-title">🚚 Détails de la Livraison</h1>
+        <a href="{{ path('app_admin_deliveries') }}" class="btn btn-secondary">← Retour aux livraisons</a>
+    </div>
+
+    <div class="admin-section">
+        <div class="detail-grid">
+            <!-- Info Livraison -->
+            <div class="detail-card">
+                <h3>📋 Informations Livraison</h3>
+                <div class="detail-content">
+                    <div class="detail-row">
+                        <span class="label">Statut:</span>
+                        <span class="status-badge status-{{ delivery.statut }}">{{ delivery.statutLabel }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Zone:</span>
+                        <span>{{ delivery.zone ? delivery.zone.nom : 'Non définie' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Prix livraison:</span>
+                        <span class="price">{{ delivery.zone ? delivery.zone.prixLivraison|number_format(0, ',', ' ') ~ ' FCFA' : '-' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Créée le:</span>
+                        <span>{{ delivery.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    {% if delivery.assignedAt %}
+                    <div class="detail-row">
+                        <span class="label">Assignée le:</span>
+                        <span>{{ delivery.assignedAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    {% endif %}
+                    {% if delivery.deliveredAt %}
+                    <div class="detail-row">
+                        <span class="label">Livrée le:</span>
+                        <span>{{ delivery.deliveredAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Info Livreur -->
+            <div class="detail-card">
+                <h3>👤 Livreur</h3>
+                <div class="detail-content">
+                    {% if delivery.livreur %}
+                        <div class="detail-row">
+                            <span class="label">Nom:</span>
+                            <span>{{ delivery.livreur.prenom }} {{ delivery.livreur.nom }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Téléphone:</span>
+                            <span>{{ delivery.livreur.telephone }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Email:</span>
+                            <span>{{ delivery.livreur.email }}</span>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Aucun livreur assigné</p>
+                        <form action="{{ path('app_admin_delivery_assign', {id: delivery.id}) }}" method="POST" class="mt-2">
+                            <select name="livreur_id" class="form-control" required>
+                                <option value="">Choisir un livreur</option>
+                                {% for livreur in livreurs %}
+                                    {% if livreur.disponible and livreur.active %}
+                                    <option value="{{ livreur.id }}">{{ livreur.prenom }} {{ livreur.nom }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary mt-2">Assigner</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Info Commande -->
+            <div class="detail-card">
+                <h3>📦 Commande Associée</h3>
+                <div class="detail-content">
+                    {% if delivery.commande %}
+                        <div class="detail-row">
+                            <span class="label">Référence:</span>
+                            <a href="{{ path('app_admin_order_show', {id: delivery.commande.id}) }}">{{ delivery.commande.reference }}</a>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Total:</span>
+                            <span class="price">{{ delivery.commande.total|number_format(0, ',', ' ') }} FCFA</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Adresse:</span>
+                            <span>{{ delivery.commande.adresseLivraison }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Client:</span>
+                            <span>{{ delivery.commande.client.prenom }} {{ delivery.commande.client.nom }}</span>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Pas de commande associée</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="detail-actions mt-3">
+            {% if delivery.statut == 'en_attente' %}
+                <form action="{{ path('app_admin_delivery_assign', {id: delivery.id}) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-primary">Assigner un livreur</button>
+                </form>
+            {% endif %}
+            
+            {% if delivery.commande %}
+                <form action="{{ path('app_admin_order_cancel', {id: delivery.commande.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Annuler cette commande ?')">
+                    <button type="submit" class="btn btn-danger">Annuler la commande</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,16 +7,16 @@
         </div>
         
         <div class="admin-navbar-menu">
-            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-btn {{ app.request.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">
+            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">
                 <span class="nav-icon">📊</span> Dashboard
             </a>
-            <a href="{{ path('app_admin_burgers') }}" class="admin-nav-btn {{ app.request.get('_route') starts with 'app_admin_burger' or app.request.get('_route') starts with 'app_admin_menu' or app.request.get('_route') starts with 'app_admin_complement' or app.request.get('_route') starts with 'app_admin_categor' ? 'active' : '' }}">
+            <a href="{{ path('app_admin_catalogue') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') == 'app_admin_catalogue' or app.request.attributes.get('_route') starts with 'app_admin_burger' or app.request.attributes.get('_route') starts with 'app_admin_menu' or app.request.attributes.get('_route') starts with 'app_admin_complement' ? 'active' : '' }}">
                 <span class="nav-icon">🍔</span> Catalogue
             </a>
-            <a href="{{ path('app_admin_orders') }}" class="admin-nav-btn {{ app.request.get('_route') starts with 'app_admin_order' ? 'active' : '' }}">
+            <a href="{{ path('app_admin_orders') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') starts with 'app_admin_order' ? 'active' : '' }}">
                 <span class="nav-icon">📦</span> Commandes
             </a>
-            <a href="{{ path('app_admin_deliveries') }}" class="admin-nav-btn {{ app.request.get('_route') starts with 'app_admin_deliver' or app.request.get('_route') starts with 'app_admin_livreur' or app.request.get('_route') starts with 'app_admin_zone' ? 'active' : '' }}">
+            <a href="{{ path('app_admin_deliveries') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') starts with 'app_admin_deliver' or app.request.attributes.get('_route') starts with 'app_admin_livreur' or app.request.attributes.get('_route') starts with 'app_admin_zone' ? 'active' : '' }}">
                 <span class="nav-icon">🚚</span> Livraisons
             </a>
         </div>

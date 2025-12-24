@@ -1,214 +1,88 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base_admin.html.twig' %}
 
 {% block title %}Dashboard - Admin Brasil Burger{% endblock %}
 
 {% block body %}
-{% include 'admin/_navbar.html.twig' %}
 
-<div class="admin-content">
-    <!-- Page Header -->
-    <div class="admin-header animate-fade-down">
-        <h1 class="admin-title">📊 Tableau de Bord</h1>
-        <p class="admin-subtitle">Bienvenue {{ app.user.prenom }} ! Voici un aperçu de votre activité.</p>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="admin-stats-grid">
-        <div class="admin-stat-card animate-fade-up stagger-1">
-            <span class="stat-icon">⏳</span>
+<div class="admin-container">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
             <div class="stat-value">{{ stats.pending|default(0) }}</div>
             <div class="stat-label">Commandes en cours</div>
-            <div class="stat-trend up">📈 En attente</div>
         </div>
-        <div class="admin-stat-card animate-fade-up stagger-2">
-            <span class="stat-icon">✅</span>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-success">✅</div>
             <div class="stat-value">{{ stats.completed|default(0) }}</div>
             <div class="stat-label">Commandes validées</div>
-            <div class="stat-trend up">✓ Complétées</div>
         </div>
-        <div class="admin-stat-card animate-fade-up stagger-3">
-            <span class="stat-icon">💰</span>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-money">💰</div>
             <div class="stat-value">{{ stats.revenue|default(0)|number_format(0, ',', ' ') }}</div>
-            <div class="stat-label">Recettes (FCFA)</div>
-            <div class="stat-trend up">📊 Aujourd'hui</div>
+            <div class="stat-label">Recettes journalières (FCFA)</div>
         </div>
-        <div class="admin-stat-card animate-fade-up stagger-4">
-            <span class="stat-icon">❌</span>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-danger">❌</div>
             <div class="stat-value">{{ stats.cancelled|default(0) }}</div>
             <div class="stat-label">Commandes annulées</div>
-            <div class="stat-trend down">⚠️ À surveiller</div>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-        <!-- Top Produits -->
-        <div class="admin-section animate-fade-up" style="animation-delay: 0.3s;">
-            <div class="admin-section-header">
-                <h2 class="admin-section-title">
-                    <span class="icon">🏆</span> Top 5 - Produits du jour
-                </h2>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                {% if stats.topProducts|default([])|length > 0 %}
-                    {% for product in stats.topProducts %}
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%); border-radius: 12px; transition: all 0.3s ease;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 24px;">{{ product.type == 'burger' ? '🍔' : '🎁' }}</span>
-                            <span style="font-weight: 600;">{{ product.name }}</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; color: var(--primary);">{{ product.quantity }} vendus</div>
-                            <div style="font-size: 13px; color: var(--text-light);">{{ product.total|number_format(0, ',', ' ') }} FCFA</div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%); border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 24px;">🍔</span>
-                            <span style="font-weight: 600;">Classic Burger</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; color: var(--primary);">15 vendus</div>
-                            <div style="font-size: 13px; color: var(--text-light);">37 500 FCFA</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%); border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 24px;">🎁</span>
-                            <span style="font-weight: 600;">Menu Classic</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; color: var(--primary);">12 vendus</div>
-                            <div style="font-size: 13px; color: var(--text-light);">48 000 FCFA</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%); border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 24px;">🧀</span>
-                            <span style="font-weight: 600;">Cheese Burger</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; color: var(--primary);">10 vendus</div>
-                            <div style="font-size: 13px; color: var(--text-light);">30 000 FCFA</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%); border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 24px;">🥓</span>
-                            <span style="font-weight: 600;">Bacon Burger</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; color: var(--primary);">8 vendus</div>
-                            <div style="font-size: 13px; color: var(--text-light);">28 000 FCFA</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%); border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 24px;">🔥</span>
-                            <span style="font-weight: 600;">BBQ Burger</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; color: var(--primary);">7 vendus</div>
-                            <div style="font-size: 13px; color: var(--text-light);">28 000 FCFA</div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="admin-section animate-fade-up" style="animation-delay: 0.4s;">
-            <div class="admin-section-header">
-                <h2 class="admin-section-title">
-                    <span class="icon">⚡</span> Actions Rapides
-                </h2>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                <a href="{{ path('app_admin_burgers') }}" class="btn btn-primary btn-lg" style="flex-direction: column; padding: 30px;">
-                    <span style="font-size: 32px; margin-bottom: 10px;">🍔</span>
-                    Gérer les Burgers
-                </a>
-                <a href="{{ path('app_admin_menus') }}" class="btn btn-success btn-lg" style="flex-direction: column; padding: 30px;">
-                    <span style="font-size: 32px; margin-bottom: 10px;">🎁</span>
-                    Gérer les Menus
-                </a>
-                <a href="{{ path('app_admin_orders') }}" class="btn btn-lg" style="flex-direction: column; padding: 30px; background: linear-gradient(135deg, #2196f3, #1976d2); color: white;">
-                    <span style="font-size: 32px; margin-bottom: 10px;">📦</span>
-                    Voir Commandes
-                </a>
-                <a href="{{ path('app_admin_deliveries') }}" class="btn btn-lg" style="flex-direction: column; padding: 30px; background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white;">
-                    <span style="font-size: 32px; margin-bottom: 10px;">🚚</span>
-                    Livraisons
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dernières commandes -->
-    <div class="admin-section animate-fade-up" style="animation-delay: 0.5s;">
-        <div class="admin-section-header">
-            <h2 class="admin-section-title">
-                <span class="icon">📦</span> Dernières Commandes
-            </h2>
-            <a href="{{ path('app_admin_orders') }}" class="btn btn-sm btn-outline">Voir tout →</a>
-        </div>
+    <!-- Top 5 Produits -->
+    <div class="admin-section">
+        <h2 class="section-title">🏆 Top 5 - Produits les plus vendus du jour</h2>
         
-        {% if recentOrders|default([])|length > 0 %}
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>#ID</th>
-                    <th>Client</th>
-                    <th>Date</th>
-                    <th>Total</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in recentOrders %}
-                <tr>
-                    <td><strong>#{{ order.id }}</strong></td>
-                    <td>
-                        <div class="admin-product-row">
-                            <div class="admin-product-info">
-                                <h4>{{ order.user.prenom }} {{ order.user.nom }}</h4>
-                                <p>{{ order.user.telephone }}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
-                    <td><strong>{{ order.total|number_format(0, ',', ' ') }} FCFA</strong></td>
-                    <td>
-                        {% if order.status == 'pending' %}
-                            <span class="status-badge status-pending">⏳ En attente</span>
-                        {% elseif order.status == 'confirmed' %}
-                            <span class="status-badge status-confirmed">✅ Confirmée</span>
-                        {% elseif order.status == 'preparing' %}
-                            <span class="status-badge status-preparing">👨‍🍳 En préparation</span>
-                        {% elseif order.status == 'ready' %}
-                            <span class="status-badge status-ready">📦 Prête</span>
-                        {% elseif order.status == 'delivered' %}
-                            <span class="status-badge status-delivered">🚚 Livrée</span>
-                        {% elseif order.status == 'cancelled' %}
-                            <span class="status-badge status-cancelled">❌ Annulée</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{{ path('app_admin_order_show', {id: order.id}) }}" class="btn btn-sm btn-outline">Voir</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="empty-state" style="padding: 40px;">
-            <div class="empty-state-icon">📦</div>
-            <h3 class="empty-state-title">Aucune commande</h3>
-            <p class="empty-state-text">Les commandes apparaîtront ici</p>
+        <div class="top-products-list">
+            {% for product in topProducts|default([]) %}
+            <div class="top-product-item">
+                <div class="product-info">
+                    <span class="product-icon">{{ product.type == 'burger' ? '🍔' : (product.type == 'menu' ? '🎁' : '🍟') }}</span>
+                    <span class="product-name">{{ product.nom }}</span>
+                </div>
+                <div class="product-stats">
+                    {{ product.quantite }} vendus - {{ product.total|number_format(0, ' ', ' ') }} FCFA
+                </div>
+            </div>
+            {% else %}
+            <!-- Données de démonstration -->
+            <div class="top-product-item">
+                <div class="product-info">
+                    <span class="product-icon">🍔</span>
+                    <span class="product-name">Classic Burger</span>
+                </div>
+                <div class="product-stats">15 vendus - 37 500 FCFA</div>
+            </div>
+            <div class="top-product-item">
+                <div class="product-info">
+                    <span class="product-icon">🎁</span>
+                    <span class="product-name">Menu Classic</span>
+                </div>
+                <div class="product-stats">12 vendus - 48 000 FCFA</div>
+            </div>
+            <div class="top-product-item">
+                <div class="product-info">
+                    <span class="product-icon">🧀</span>
+                    <span class="product-name">Cheese Burger</span>
+                </div>
+                <div class="product-stats">10 vendus - 30 000 FCFA</div>
+            </div>
+            <div class="top-product-item">
+                <div class="product-info">
+                    <span class="product-icon">🎁</span>
+                    <span class="product-name">Menu Cheese</span>
+                </div>
+                <div class="product-stats">8 vendus - 36 000 FCFA</div>
+            </div>
+            <div class="top-product-item">
+                <div class="product-info">
+                    <span class="product-icon">🥓</span>
+                    <span class="product-name">Bacon Burger</span>
+                </div>
+                <div class="product-stats">7 vendus - 24 500 FCFA</div>
+            </div>
+            {% endfor %}
         </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

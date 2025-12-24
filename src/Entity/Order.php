@@ -40,6 +40,9 @@ class Order
     #[ORM\Column(length: 30)]
     private ?string $statut = self::STATUS_PENDING;
 
+    #[ORM\Column(length: 30)]
+    private ?string $type = 'livraison';
+
     #[ORM\Column(length: 255)]
     private ?string $adresseLivraison = null;
 
@@ -127,6 +130,27 @@ class Order
     {
         $this->statut = $statut;
         return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getTypeLabel(): string
+    {
+        return match($this->type) {
+            'livraison' => 'Livraison',
+            'sur_place' => 'Sur place',
+            'a_emporter' => 'À emporter',
+            default => $this->type
+        };
     }
 
     public function getAdresseLivraison(): ?string

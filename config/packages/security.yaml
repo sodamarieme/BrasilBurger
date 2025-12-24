@@ -22,12 +22,12 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                default_target_path: app_home
+                default_target_path: app_admin_dashboard
                 enable_csrf: true
             
             logout:
                 path: app_logout
-                target: app_home
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -35,10 +35,9 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profil, roles: ROLE_USER }
-        - { path: ^/commandes, roles: ROLE_USER }
-        - { path: ^/panier/valider, roles: ROLE_USER }
+        - { path: ^/connexion, roles: PUBLIC_ACCESS }
+        - { path: ^/inscription, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_ADMIN }
 
 when@test:
     security:

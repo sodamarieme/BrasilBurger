@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base_admin.html.twig' %}
 
 {% block title %}Commande #{{ order.id }} - Admin{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="admin-container">
     <div class="section">
         <a href="{{ path('app_admin_orders') }}" class="back-link">← Retour aux commandes</a>
         

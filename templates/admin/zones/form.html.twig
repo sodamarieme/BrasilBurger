@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base_admin.html.twig' %}
 
 {% block title %}{{ zone ? 'Modifier' : 'Ajouter' }} une Zone - Admin{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="admin-container">
     <div class="section" style="max-width: 600px; margin: 0 auto;">
         <a href="{{ path('app_admin_zones') }}" class="back-link">← Retour aux zones</a>
         

@@ -29,23 +29,13 @@
                 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="{{ path('app_home') }}" class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">🏠 Accueil</a></li>
-                    <li><a href="{{ path('app_menu') }}" class="nav-link {% if 'menu' in app.request.attributes.get('_route') %}active{% endif %}">🍔 Menu</a></li>
                     <li><a href="{{ path('app_cart') }}" class="nav-link cart-link {% if 'cart' in app.request.attributes.get('_route') %}active{% endif %}">
                         🛒 Panier
                         <span class="cart-count" id="cartCount">0</span>
                     </a></li>
-                    
-                    {% if app.user %}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li><a href="{{ path('app_admin_dashboard') }}" class="nav-link">👨‍💼 Admin</a></li>
-                        {% endif %}
-                        <li><a href="{{ path('app_profile') }}" class="nav-link">👤 {{ app.user.prenom }}</a></li>
-                        <li><a href="{{ path('app_orders') }}" class="nav-link">📦 Commandes</a></li>
-                        <li><a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a></li>
-                    {% else %}
-                        <li><a href="{{ path('app_login') }}" class="nav-link">🔐 Connexion</a></li>
-                        <li><a href="{{ path('app_register') }}" class="btn btn-sm">Inscription</a></li>
-                    {% endif %}
+                    <li><a href="{{ path('app_orders') }}" class="nav-link {% if 'order' in app.request.attributes.get('_route') %}active{% endif %}">📦 Commande</a></li>
+                    <li><a href="{{ path('app_livraison') }}" class="nav-link {% if 'livraison' in app.request.attributes.get('_route') %}active{% endif %}">🚚 Livraison</a></li>
+                    <li><a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a></li>
                 </ul>
             </div>
         </nav>

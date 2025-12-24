@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: brasil-burger
+    runtime: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php bin/console asset-map:compile
+      php bin/console cache:clear --env=prod
+    startCommand: php -S 0.0.0.0:$PORT -t public
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: brasil-burger-db
+          property: connectionString
+    healthCheckPath: /connexion
+
+databases:
+  - name: brasil-burger-db
+    databaseName: brasil_burger
+    user: brasil_burger_user

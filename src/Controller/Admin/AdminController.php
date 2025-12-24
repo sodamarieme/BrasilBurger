@@ -45,6 +45,21 @@ class AdminController extends AbstractController
         ]);
     }
 
+    // ========== CATALOGUE ==========
+    
+    #[Route('/catalogue', name: 'app_admin_catalogue')]
+    public function catalogue(
+        BurgerRepository $burgerRepository,
+        ComplementRepository $complementRepository,
+        MenuRepository $menuRepository
+    ): Response {
+        return $this->render('admin/catalogue/index.html.twig', [
+            'burgers' => $burgerRepository->findBy(['archived' => false], ['createdAt' => 'DESC']),
+            'complements' => $complementRepository->findBy(['archived' => false], ['createdAt' => 'DESC']),
+            'menus' => $menuRepository->findBy(['archived' => false], ['createdAt' => 'DESC']),
+        ]);
+    }
+
     // ========== CATALOGUE - BURGERS ==========
     
     #[Route('/burgers', name: 'app_admin_burgers')]
@@ -355,21 +370,71 @@ class AdminController extends AbstractController
     // ========== COMMANDES ==========
     
     #[Route('/commandes', name: 'app_admin_orders')]
-    public function orders(Request $request, OrderRepository $orderRepository): Response
+    public function orders(Request $request, OrderRepository $orderRepository, BurgerRepository $burgerRepository, MenuRepository $menuRepository): Response
     {
         $statut = $request->query->get('statut');
         $date = $request->query->get('date');
+        $clientSearch = $request->query->get('client');
+        $burgerId = $request->query->get('burger');
+        $menuId = $request->query->get('menu');
         
         $orders = $orderRepository->findBy([], ['createdAt' => 'DESC']);
         
-        // Filtrer par statut si spécifié
+        // Filtrer par statut
         if ($statut) {
             $orders = array_filter($orders, fn($o) => $o->getStatut() === $statut);
+        }
+        
+        // Filtrer par date
+        if ($date) {
+            $filterDate = new \DateTime($date);
+            $orders = array_filter($orders, fn($o) => $o->getCreatedAt()->format('Y-m-d') === $filterDate->format('Y-m-d'));
+        }
+        
+        // Filtrer par client (nom, prénom ou email)
+        if ($clientSearch) {
+            $search = strtolower($clientSearch);
+            $orders = array_filter($orders, function($o) use ($search) {
+                $client = $o->getClient();
+                return str_contains(strtolower($client->getNom()), $search) ||
+                       str_contains(strtolower($client->getPrenom()), $search) ||
+                       str_contains(strtolower($client->getEmail()), $search);
+            });
+        }
+        
+        // Filtrer par burger
+        if ($burgerId) {
+            $orders = array_filter($orders, function($o) use ($burgerId) {
+                foreach ($o->getOrderItems() as $item) {
+                    if ($item->getBurger() && $item->getBurger()->getId() == $burgerId) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        
+        // Filtrer par menu
+        if ($menuId) {
+            $orders = array_filter($orders, function($o) use ($menuId) {
+                foreach ($o->getOrderItems() as $item) {
+                    if ($item->getMenu() && $item->getMenu()->getId() == $menuId) {
+                        return true;
+                    }
+                }
+                return false;
+            });
         }
         
         return $this->render('admin/orders/index.html.twig', [
             'orders' => $orders,
             'currentStatut' => $statut,
+            'currentDate' => $date,
+            'currentClient' => $clientSearch,
+            'currentBurger' => $burgerId,
+            'currentMenu' => $menuId,
+            'burgers' => $burgerRepository->findAll(),
+            'menus' => $menuRepository->findAll(),
         ]);
     }
 
@@ -421,11 +486,45 @@ class AdminController extends AbstractController
     // ========== LIVRAISONS ==========
     
     #[Route('/livraisons', name: 'app_admin_deliveries')]
-    public function deliveries(DeliveryRepository $deliveryRepository, ZoneRepository $zoneRepository): Response
-    {
+    public function deliveries(
+        DeliveryRepository $deliveryRepository, 
+        ZoneRepository $zoneRepository,
+        OrderRepository $orderRepository,
+        LivreurRepository $livreurRepository
+    ): Response {
+        // Récupérer les commandes prêtes sans livraison groupées par zone
+        $ordersReady = $orderRepository->findBy(['statut' => Order::STATUS_READY]);
+        $ordersByZone = [];
+        
+        foreach ($ordersReady as $order) {
+            // Trouver la zone de la commande via la livraison ou l'adresse
+            $delivery = $order->getDelivery();
+            if ($delivery && $delivery->getZone()) {
+                $zoneName = $delivery->getZone()->getNom();
+                if (!isset($ordersByZone[$zoneName])) {
+                    $ordersByZone[$zoneName] = [
+                        'zone' => $delivery->getZone(),
+                        'orders' => []
+                    ];
+                }
+                $ordersByZone[$zoneName]['orders'][] = $order;
+            }
+        }
+        
         return $this->render('admin/deliveries/index.html.twig', [
             'deliveries' => $deliveryRepository->findBy([], ['createdAt' => 'DESC']),
             'zones' => $zoneRepository->findActive(),
+            'ordersByZone' => $ordersByZone,
+            'livreurs' => $livreurRepository->findBy(['disponible' => true]),
+        ]);
+    }
+
+    #[Route('/livraisons/{id}', name: 'app_admin_delivery_show')]
+    public function showDelivery(Delivery $delivery, LivreurRepository $livreurRepository): Response
+    {
+        return $this->render('admin/deliveries/show.html.twig', [
+            'delivery' => $delivery,
+            'livreurs' => $livreurRepository->findBy(['active' => true]),
         ]);
     }
 
