@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ burger.nom }} - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="section">
+        <a href="{{ path('app_menu') }}" class="back-link">← Retour à la carte</a>
+        
+        <div class="product-detail" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;">
+            <div class="product-image-large">
+                <img src="{{ burger.image ? asset('uploads/burgers/' ~ burger.image) : 'https://via.placeholder.com/500x400/ff8c00/ffffff?text=🍔' }}" 
+                     alt="{{ burger.nom }}" 
+                     style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            </div>
+            
+            <div class="product-details">
+                <h1 style="font-size: 2.5rem; color: var(--dark); margin-bottom: 10px;">{{ burger.nom }}</h1>
+                
+                {% if burger.category %}
+                    <span class="badge" style="margin-bottom: 20px;">{{ burger.category.nom }}</span>
+                {% endif %}
+                
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8; margin: 20px 0;">
+                    {{ burger.description }}
+                </p>
+                
+                <div class="price-section" style="background: linear-gradient(135deg, #fff5eb 0%, #fff0e0 100%); padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <span style="font-size: 2rem; font-weight: bold; color: var(--primary);">
+                        {{ burger.prix|number_format(0, ',', ' ') }} FCFA
+                    </span>
+                </div>
+                
+                {% if burger.disponible %}
+                    <div class="quantity-section" style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <label style="font-weight: 600;">Quantité:</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" class="btn btn-secondary" onclick="changeQty(-1)" style="width: 40px; height: 40px; padding: 0;">-</button>
+                            <input type="number" id="quantity" value="1" min="1" max="10" style="width: 60px; text-align: center; padding: 10px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1rem;">
+                            <button type="button" class="btn btn-secondary" onclick="changeQty(1)" style="width: 40px; height: 40px; padding: 0;">+</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" style="width: 100%; padding: 15px; font-size: 1.2rem;" onclick="addToCartWithQty()">
+                        🛒 Ajouter au panier
+                    </button>
+                {% else %}
+                    <div style="background: #f8d7da; color: #842029; padding: 15px; border-radius: 10px; text-align: center;">
+                        ❌ Ce burger n'est pas disponible actuellement
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function changeQty(delta) {
+    const input = document.getElementById('quantity');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    if (val > 10) val = 10;
+    input.value = val;
+}
+
+function addToCartWithQty() {
+    const qty = parseInt(document.getElementById('quantity').value);
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    let found = false;
+    for (let item of cart) {
+        if (item.type === 'burger' && item.id === {{ burger.id }}) {
+            item.quantity += qty;
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        cart.push({
+            type: 'burger',
+            id: {{ burger.id }},
+            nom: '{{ burger.nom|e('js') }}',
+            prix: {{ burger.prix }},
+            quantity: qty
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.location.href = '{{ path('app_cart') }}';
+}
+</script>
+
+<style>
+@media (max-width: 768px) {
+    .product-detail {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

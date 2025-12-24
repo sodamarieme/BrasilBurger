@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue - Compléments{% endblock %}
+
+{% block body %}
+{% include 'admin/_navbar.html.twig' %}
+
+<div class="admin-container">
+    <div class="admin-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 class="admin-section-title" style="margin-bottom: 0; border: none; padding: 0;">🍟 Gestion des Compléments</h2>
+            <a href="{{ path('app_admin_complement_new') }}" class="btn">➕ Nouveau Complément</a>
+        </div>
+        
+        <!-- Sous-navigation Catalogue -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
+            <a href="{{ path('app_admin_burgers') }}" class="btn btn-secondary">🍔 Burgers</a>
+            <a href="{{ path('app_admin_menus') }}" class="btn btn-secondary">🍽️ Menus</a>
+            <a href="{{ path('app_admin_complements') }}" class="btn">🍟 Compléments</a>
+            <a href="{{ path('app_admin_categories') }}" class="btn btn-secondary">📁 Catégories</a>
+        </div>
+        
+        {% if complements|length > 0 %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Prix</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for complement in complements %}
+                <tr>
+                    <td>
+                        <img src="{{ complement.image ? asset('uploads/complements/' ~ complement.image) : 'https://via.placeholder.com/50x50/ffb347/ffffff?text=🍟' }}" 
+                             alt="{{ complement.nom }}" 
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                    </td>
+                    <td><strong>{{ complement.nom }}</strong></td>
+                    <td>{{ complement.description|length > 40 ? complement.description|slice(0, 40) ~ '...' : complement.description }}</td>
+                    <td><strong>{{ complement.prix|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    <td>
+                        {% if complement.disponible %}
+                            <span class="badge badge-success">✅ Disponible</span>
+                        {% else %}
+                            <span class="badge badge-danger">❌ Indisponible</span>
+                        {% endif %}
+                    </td>
+                    <td class="action-btns">
+                        <a href="{{ path('app_admin_complement_edit', {id: complement.id}) }}" class="btn-edit">✏️</a>
+                        <form method="post" action="{{ path('app_admin_complement_archive', {id: complement.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ complement.id) }}">
+                            <button type="submit" class="btn-archive" onclick="return confirm('Archiver ce complément ?')">📦</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: #888;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">🍟</div>
+            <h3>Aucun complément</h3>
+            <p>Ajoutez votre premier complément</p>
+            <a href="{{ path('app_admin_complement_new') }}" class="btn" style="margin-top: 15px;">➕ Ajouter un complément</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zones de livraison - Admin{% endblock %}
+
+{% block body %}
+{% include 'admin/_navbar.html.twig' %}
+
+<div class="admin-container">
+    <div class="admin-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 class="admin-section-title" style="margin-bottom: 0; border: none; padding: 0;">📍 Gestion des Zones</h2>
+            <a href="{{ path('app_admin_zone_new') }}" class="btn">➕ Nouvelle Zone</a>
+        </div>
+        
+        <!-- Sous-navigation Livraisons -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
+            <a href="{{ path('app_admin_deliveries') }}" class="btn btn-secondary">🚚 Livraisons</a>
+            <a href="{{ path('app_admin_livreurs') }}" class="btn btn-secondary">👨‍💼 Livreurs</a>
+            <a href="{{ path('app_admin_zones') }}" class="btn">📍 Zones</a>
+        </div>
+        
+        {% if zones|length > 0 %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nom de la zone</th>
+                    <th>Frais de livraison</th>
+                    <th>Délai estimé</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for zone in zones %}
+                <tr>
+                    <td><strong>📍 {{ zone.nom }}</strong></td>
+                    <td><strong style="color: var(--primary);">{{ zone.fraisLivraison|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    <td>{{ zone.delaiEstime|default('30-45') }} min</td>
+                    <td class="action-btns">
+                        <a href="{{ path('app_admin_zone_edit', {id: zone.id}) }}" class="btn-edit">✏️</a>
+                        <form method="post" action="{{ path('app_admin_zone_delete', {id: zone.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ zone.id) }}">
+                            <button type="submit" class="btn-delete" onclick="return confirm('Supprimer cette zone ?')">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: #888;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">📍</div>
+            <h3>Aucune zone</h3>
+            <p>Ajoutez votre première zone de livraison</p>
+            <a href="{{ path('app_admin_zone_new') }}" class="btn" style="margin-top: 15px;">➕ Ajouter une zone</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

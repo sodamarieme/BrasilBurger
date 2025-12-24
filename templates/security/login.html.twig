@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="section" style="max-width: 450px; margin: 50px auto;">
+        <h2 class="section-title" style="text-align: center;">🔐 Connexion</h2>
+        
+        {% if error %}
+            <div style="background: #f8d7da; color: #842029; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+        
+        <form method="post">
+            <div class="form-group">
+                <label>📧 Email</label>
+                <input type="email" name="_username" class="form-control" value="{{ last_username }}" required autofocus placeholder="votre@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label>🔑 Mot de passe</label>
+                <input type="password" name="_password" class="form-control" required placeholder="Votre mot de passe">
+            </div>
+            
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" name="_remember_me">
+                    <span>Se souvenir de moi</span>
+                </label>
+            </div>
+            
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            
+            <button type="submit" class="btn" style="width: 100%;">🔓 Se connecter</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #666;">Pas encore de compte ?</p>
+            <a href="{{ path('app_register') }}" class="btn btn-secondary" style="margin-top: 10px;">📝 Créer un compte</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

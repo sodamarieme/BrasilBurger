@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ menu.nom }} - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="section">
+        <a href="{{ path('app_menu') }}" class="back-link">← Retour à la carte</a>
+        
+        <div class="product-detail" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;">
+            <div class="product-image-large">
+                <img src="{{ menu.image ? asset('uploads/menus/' ~ menu.image) : 'https://via.placeholder.com/500x400/ff6b35/ffffff?text=🍽️' }}" 
+                     alt="{{ menu.nom }}" 
+                     style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            </div>
+            
+            <div class="product-details">
+                <h1 style="font-size: 2.5rem; color: var(--dark); margin-bottom: 20px;">{{ menu.nom }}</h1>
+                
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8; margin-bottom: 30px;">
+                    {{ menu.description }}
+                </p>
+                
+                <!-- Contenu du menu -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--dark); margin-bottom: 15px;">📦 Ce menu contient:</h3>
+                    
+                    {% if menu.burgers|length > 0 %}
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="color: var(--primary); font-size: 1rem;">🍔 Burgers</h4>
+                            <ul style="list-style: none; padding-left: 20px;">
+                                {% for burger in menu.burgers %}
+                                    <li style="padding: 5px 0;">• {{ burger.nom }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    {% if menu.complements|length > 0 %}
+                        <div>
+                            <h4 style="color: var(--primary); font-size: 1rem;">🍟 Compléments</h4>
+                            <ul style="list-style: none; padding-left: 20px;">
+                                {% for complement in menu.complements %}
+                                    <li style="padding: 5px 0;">• {{ complement.nom }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="price-section" style="background: linear-gradient(135deg, #fff5eb 0%, #fff0e0 100%); padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <span style="font-size: 2rem; font-weight: bold; color: var(--primary);">
+                        {{ menu.prix|number_format(0, ',', ' ') }} FCFA
+                    </span>
+                </div>
+                
+                {% if menu.disponible %}
+                    <div class="quantity-section" style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <label style="font-weight: 600;">Quantité:</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" class="btn btn-secondary" onclick="changeQty(-1)" style="width: 40px; height: 40px; padding: 0;">-</button>
+                            <input type="number" id="quantity" value="1" min="1" max="10" style="width: 60px; text-align: center; padding: 10px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1rem;">
+                            <button type="button" class="btn btn-secondary" onclick="changeQty(1)" style="width: 40px; height: 40px; padding: 0;">+</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" style="width: 100%; padding: 15px; font-size: 1.2rem;" onclick="addToCartWithQty()">
+                        🛒 Ajouter au panier
+                    </button>
+                {% else %}
+                    <div style="background: #f8d7da; color: #842029; padding: 15px; border-radius: 10px; text-align: center;">
+                        ❌ Ce menu n'est pas disponible actuellement
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function changeQty(delta) {
+    const input = document.getElementById('quantity');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    if (val > 10) val = 10;
+    input.value = val;
+}
+
+function addToCartWithQty() {
+    const qty = parseInt(document.getElementById('quantity').value);
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    let found = false;
+    for (let item of cart) {
+        if (item.type === 'menu' && item.id === {{ menu.id }}) {
+            item.quantity += qty;
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        cart.push({
+            type: 'menu',
+            id: {{ menu.id }},
+            nom: '{{ menu.nom|e('js') }}',
+            prix: {{ menu.prix }},
+            quantity: qty
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.location.href = '{{ path('app_cart') }}';
+}
+</script>
+
+<style>
+@media (max-width: 768px) {
+    .product-detail {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

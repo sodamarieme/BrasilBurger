@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">📦 Mes Commandes</h2>
+        
+        {% if orders|length > 0 %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>N° Commande</th>
+                        <th>Date</th>
+                        <th>Articles</th>
+                        <th>Montant</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>{{ order.createdAt|date('d/m/Y à H:i') }}</td>
+                        <td>{{ order.items|length }} article(s)</td>
+                        <td><strong>{{ order.total|number_format(0, ',', ' ') }} FCFA</strong></td>
+                        <td>
+                            {% set statusConfig = {
+                                'en_attente': {'class': 'badge-warning', 'icon': '⏳'},
+                                'confirmee': {'class': 'badge-info', 'icon': '✅'},
+                                'en_preparation': {'class': 'badge-info', 'icon': '👨‍🍳'},
+                                'en_livraison': {'class': 'badge-primary', 'icon': '🚚'},
+                                'livree': {'class': 'badge-success', 'icon': '✔️'},
+                                'annulee': {'class': 'badge-danger', 'icon': '❌'}
+                            } %}
+                            {% set config = statusConfig[order.statut] ?? {'class': 'badge-secondary', 'icon': '📦'} %}
+                            <span class="badge {{ config.class }}">
+                                {{ config.icon }} {{ order.statut|replace({'_': ' '})|capitalize }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_order_show', {id: order.id}) }}" class="btn-edit">👁️ Détails</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 60px 20px;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
+                <h3 style="color: #666; margin-bottom: 10px;">Aucune commande</h3>
+                <p style="color: #888; margin-bottom: 30px;">Vous n'avez pas encore passé de commande.</p>
+                <a href="{{ path('app_menu') }}" class="btn">🍔 Découvrir notre carte</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

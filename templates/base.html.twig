@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Brasil Burger{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍔</text></svg>">
+        
         {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         {% endblock %}
 
         {% block javascripts %}
@@ -12,6 +15,85 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="{{ path('app_home') }}" class="logo">
+                    <span class="logo-icon">🍔</span>
+                    <span class="logo-text">Brasil Burger</span>
+                </a>
+                
+                <button class="nav-toggle" id="navToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+                    ☰
+                </button>
+                
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="{{ path('app_home') }}" class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">🏠 Accueil</a></li>
+                    <li><a href="{{ path('app_menu') }}" class="nav-link {% if 'menu' in app.request.attributes.get('_route') %}active{% endif %}">🍔 Menu</a></li>
+                    <li><a href="{{ path('app_cart') }}" class="nav-link cart-link {% if 'cart' in app.request.attributes.get('_route') %}active{% endif %}">
+                        🛒 Panier
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a></li>
+                    
+                    {% if app.user %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('app_admin_dashboard') }}" class="nav-link">👨‍💼 Admin</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('app_profile') }}" class="nav-link">👤 {{ app.user.prenom }}</a></li>
+                        <li><a href="{{ path('app_orders') }}" class="nav-link">📦 Commandes</a></li>
+                        <li><a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a></li>
+                    {% else %}
+                        <li><a href="{{ path('app_login') }}" class="nav-link">🔐 Connexion</a></li>
+                        <li><a href="{{ path('app_register') }}" class="btn btn-sm">Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Flash Messages -->
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    <div class="container">
+                        {{ message }}
+                        <button class="alert-close">&times;</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Main Content -->
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p class="footer-text">
+                    &copy; {{ 'now'|date('Y') }} <span class="footer-brand">🍔 Brasil Burger</span>. Tous droits réservés.
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            // Close alerts
+            document.querySelectorAll('.alert-close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            });
+            
+            // Update cart count from localStorage
+            function updateCartCount() {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const countEl = document.getElementById('cartCount');
+                if (countEl) countEl.textContent = count;
+            }
+            updateCartCount();
+        </script>
+        
+        {% block javascripts_bottom %}{% endblock %}
     </body>
 </html>

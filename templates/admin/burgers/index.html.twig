@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue - Burgers{% endblock %}
+
+{% block body %}
+{% include 'admin/_navbar.html.twig' %}
+
+<div class="admin-container">
+    <div class="admin-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 class="admin-section-title" style="margin-bottom: 0; border: none; padding: 0;">🍔 Gestion des Burgers</h2>
+            <a href="{{ path('app_admin_burger_new') }}" class="btn">➕ Nouveau Burger</a>
+        </div>
+        
+        <!-- Sous-navigation Catalogue -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
+            <a href="{{ path('app_admin_burgers') }}" class="btn" style="background: var(--primary);">🍔 Burgers</a>
+            <a href="{{ path('app_admin_menus') }}" class="btn btn-secondary">🍽️ Menus</a>
+            <a href="{{ path('app_admin_complements') }}" class="btn btn-secondary">🍟 Compléments</a>
+            <a href="{{ path('app_admin_categories') }}" class="btn btn-secondary">📁 Catégories</a>
+        </div>
+        
+        {% if burgers|length > 0 %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Catégorie</th>
+                    <th>Prix</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for burger in burgers %}
+                <tr>
+                    <td>
+                        <img src="{{ burger.image ? asset('uploads/burgers/' ~ burger.image) : 'https://via.placeholder.com/50x50/ff8c00/ffffff?text=🍔' }}" 
+                             alt="{{ burger.nom }}" 
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                    </td>
+                    <td><strong>{{ burger.nom }}</strong></td>
+                    <td>{{ burger.category ? burger.category.nom : '-' }}</td>
+                    <td><strong>{{ burger.prix|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    <td>
+                        {% if burger.disponible %}
+                            <span class="badge badge-success">✅ Disponible</span>
+                        {% else %}
+                            <span class="badge badge-danger">❌ Indisponible</span>
+                        {% endif %}
+                    </td>
+                    <td class="action-btns">
+                        <a href="{{ path('app_admin_burger_edit', {id: burger.id}) }}" class="btn-edit">✏️</a>
+                        <form method="post" action="{{ path('app_admin_burger_archive', {id: burger.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ burger.id) }}">
+                            <button type="submit" class="btn-archive" onclick="return confirm('Archiver ce burger ?')">📦</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: #888;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">🍔</div>
+            <h3>Aucun burger</h3>
+            <p>Ajoutez votre premier burger</p>
+            <a href="{{ path('app_admin_burger_new') }}" class="btn" style="margin-top: 15px;">➕ Ajouter un burger</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

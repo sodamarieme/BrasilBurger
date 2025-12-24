@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - Admin Brasil Burger{% endblock %}
+
+{% block body %}
+{% include 'admin/_navbar.html.twig' %}
+
+<div class="admin-container">
+    <!-- Stats Grid -->
+    <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon">⏳</div>
+            <div class="admin-stat-value">{{ stats.pending|default(0) }}</div>
+            <div class="admin-stat-label">Commandes en cours</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon admin-stat-icon-success">✅</div>
+            <div class="admin-stat-value">{{ stats.completed|default(0) }}</div>
+            <div class="admin-stat-label">Commandes validées</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon">💰</div>
+            <div class="admin-stat-value">{{ stats.revenue|default(0)|number_format(0, ',', ' ') }}</div>
+            <div class="admin-stat-label">Recettes journalières (FCFA)</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-icon admin-stat-icon-danger">❌</div>
+            <div class="admin-stat-value">{{ stats.cancelled|default(0) }}</div>
+            <div class="admin-stat-label">Commandes annulées</div>
+        </div>
+    </div>
+
+    <!-- Top Produits -->
+    <div class="admin-section">
+        <h2 class="admin-section-title">🏆 Top 5 - Produits les plus vendus du jour</h2>
+        <div class="admin-top-products">
+            {% if stats.topProducts|default([])|length > 0 %}
+                {% for product in stats.topProducts %}
+                <div class="admin-product-row">
+                    <span class="admin-product-name">{{ product.type == 'burger' ? '🍔' : '🎁' }} {{ product.name }}</span>
+                    <span class="admin-product-stats">{{ product.quantity }} vendus - {{ product.total|number_format(0, ',', ' ') }} FCFA</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="admin-product-row">
+                    <span class="admin-product-name">🍔 Classic Burger</span>
+                    <span class="admin-product-stats">15 vendus - 37 500 FCFA</span>
+                </div>
+                <div class="admin-product-row">
+                    <span class="admin-product-name">🎁 Menu Classic</span>
+                    <span class="admin-product-stats">12 vendus - 48 000 FCFA</span>
+                </div>
+                <div class="admin-product-row">
+                    <span class="admin-product-name">🧀 Cheese Burger</span>
+                    <span class="admin-product-stats">10 vendus - 30 000 FCFA</span>
+                </div>
+                <div class="admin-product-row">
+                    <span class="admin-product-name">🎁 Menu Cheese</span>
+                    <span class="admin-product-stats">8 vendus - 36 000 FCFA</span>
+                </div>
+                <div class="admin-product-row">
+                    <span class="admin-product-name">🥓 Bacon Burger</span>
+                    <span class="admin-product-stats">7 vendus - 24 500 FCFA</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Dernières commandes -->
+    <div class="admin-section">
+        <h2 class="admin-section-title">📦 Dernières Commandes</h2>
+        
+        {% if recentOrders|length > 0 %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recentOrders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>{{ order.user ? order.user.prenom ~ ' ' ~ order.user.nom : 'Client' }}</td>
+                        <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                        <td><strong>{{ order.total|number_format(0, ',', ' ') }} FCFA</strong></td>
+                        <td>
+                            {% if order.statut == 'en_attente' %}
+                                <span class="badge badge-warning">⏳ En attente</span>
+                            {% elseif order.statut == 'confirmee' %}
+                                <span class="badge badge-info">✅ Confirmée</span>
+                            {% elseif order.statut == 'en_preparation' %}
+                                <span class="badge badge-info">👨‍🍳 Préparation</span>
+                            {% elseif order.statut == 'en_livraison' %}
+                                <span class="badge badge-primary">🚚 Livraison</span>
+                            {% elseif order.statut == 'livree' %}
+                                <span class="badge badge-success">✔️ Livrée</span>
+                            {% elseif order.statut == 'annulee' %}
+                                <span class="badge badge-danger">❌ Annulée</span>
+                            {% else %}
+                                <span class="badge">{{ order.statut }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_admin_order_show', {id: order.id}) }}" class="btn-edit">👁️</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: #888;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
+            <h3>Aucune commande</h3>
+            <p>Les commandes apparaîtront ici</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

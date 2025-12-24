@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livraisons - Admin{% endblock %}
+
+{% block body %}
+{% include 'admin/_navbar.html.twig' %}
+
+<div class="admin-container">
+    <div class="admin-section">
+        <h2 class="admin-section-title">🚚 Gestion des Livraisons</h2>
+        
+        <!-- Sous-navigation -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
+            <a href="{{ path('app_admin_deliveries') }}" class="btn">🚚 Livraisons</a>
+            <a href="{{ path('app_admin_livreurs') }}" class="btn btn-secondary">👨‍💼 Livreurs</a>
+            <a href="{{ path('app_admin_zones') }}" class="btn btn-secondary">📍 Zones</a>
+        </div>
+        
+        <!-- Commandes à livrer -->
+        <h3 style="margin-bottom: 15px; color: var(--primary);">📦 Commandes en attente de livraison</h3>
+        
+        {% if pendingOrders|default([])|length > 0 %}
+        <table class="data-table" style="margin-bottom: 40px;">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Client</th>
+                    <th>Adresse</th>
+                    <th>Zone</th>
+                    <th>Montant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in pendingOrders %}
+                <tr>
+                    <td><strong>#{{ order.id }}</strong></td>
+                    <td>
+                        <strong>{{ order.user ? order.user.prenom ~ ' ' ~ order.user.nom : 'Client' }}</strong><br>
+                        <small style="color: #888;">📞 {{ order.telephone|default('N/A') }}</small>
+                    </td>
+                    <td>{{ order.adresseLivraison|default('N/A') }}</td>
+                    <td>{{ order.zone ? order.zone.nom : '-' }}</td>
+                    <td><strong>{{ order.total|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    <td class="action-btns">
+                        <a href="{{ path('app_admin_order_show', {id: order.id}) }}" class="btn-edit">👁️</a>
+                        <button type="button" class="btn btn-sm" onclick="assignDelivery({{ order.id }})">🚚 Assigner</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 40px 20px; color: #888; background: #f9f9f9; border-radius: 15px; margin-bottom: 40px;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">✅</div>
+            <h4>Aucune commande en attente</h4>
+        </div>
+        {% endif %}
+        
+        <!-- Livreurs disponibles -->
+        <h3 style="margin-bottom: 15px; color: var(--primary);">👨‍💼 Livreurs disponibles</h3>
+        
+        {% if availableDrivers|default([])|length > 0 %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+            {% for livreur in availableDrivers %}
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; border-left: 4px solid var(--success);">
+                <h4 style="margin-bottom: 10px;">{{ livreur.prenom }} {{ livreur.nom }}</h4>
+                <p style="color: #666; margin-bottom: 5px;">📞 {{ livreur.telephone }}</p>
+                <p style="color: #666;">🏍️ {{ livreur.vehicule|default('Non spécifié') }}</p>
+                <span class="badge badge-success" style="margin-top: 10px;">✅ Disponible</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px 20px; color: #888; background: #f9f9f9; border-radius: 15px;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">👨‍💼</div>
+            <h4>Aucun livreur disponible</h4>
+            <a href="{{ path('app_admin_livreur_new') }}" class="btn btn-secondary" style="margin-top: 15px;">➕ Ajouter un livreur</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

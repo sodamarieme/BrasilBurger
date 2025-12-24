@@ -1,0 +1,15 @@
+<!-- Admin Navigation Bar -->
+<div class="admin-navbar">
+    <div class="admin-navbar-container">
+        <a href="{{ path('app_admin_dashboard') }}" class="admin-logo">
+            👨‍💼 <span>Gestionnaire BurgerShop</span>
+        </a>
+        <div class="admin-nav-links">
+            <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-btn {{ app.request.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">📊 Dashboard</a>
+            <a href="{{ path('app_admin_burgers') }}" class="admin-nav-btn {{ app.request.get('_route') starts with 'app_admin_burger' or app.request.get('_route') starts with 'app_admin_menu' or app.request.get('_route') starts with 'app_admin_complement' or app.request.get('_route') starts with 'app_admin_categor' ? 'active' : '' }}">🍔 Catalogue</a>
+            <a href="{{ path('app_admin_orders') }}" class="admin-nav-btn {{ app.request.get('_route') starts with 'app_admin_order' ? 'active' : '' }}">📦 Commandes</a>
+            <a href="{{ path('app_admin_deliveries') }}" class="admin-nav-btn {{ app.request.get('_route') starts with 'app_admin_deliver' or app.request.get('_route') starts with 'app_admin_livreur' or app.request.get('_route') starts with 'app_admin_zone' ? 'active' : '' }}">🚚 Livraisons</a>
+            <a href="{{ path('app_logout') }}" class="admin-nav-btn-logout">Déconnexion</a>
+        </div>
+    </div>
+</div>

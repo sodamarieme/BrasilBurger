@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes - Admin{% endblock %}
+
+{% block body %}
+{% include 'admin/_navbar.html.twig' %}
+
+<div class="admin-container">
+    <div class="admin-section">
+        <h2 class="admin-section-title">📦 Gestion des Commandes</h2>
+        
+        <!-- Filtres -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
+            <a href="{{ path('app_admin_orders') }}" class="btn {{ filter|default('all') == 'all' ? '' : 'btn-secondary' }}">Toutes</a>
+            <a href="{{ path('app_admin_orders', {filter: 'pending'}) }}" class="btn {{ filter|default('') == 'pending' ? '' : 'btn-secondary' }}">⏳ En attente</a>
+            <a href="{{ path('app_admin_orders', {filter: 'confirmed'}) }}" class="btn {{ filter|default('') == 'confirmed' ? '' : 'btn-secondary' }}">✅ Confirmées</a>
+            <a href="{{ path('app_admin_orders', {filter: 'preparing'}) }}" class="btn {{ filter|default('') == 'preparing' ? '' : 'btn-secondary' }}">👨‍🍳 Préparation</a>
+            <a href="{{ path('app_admin_orders', {filter: 'delivering'}) }}" class="btn {{ filter|default('') == 'delivering' ? '' : 'btn-secondary' }}">🚚 Livraison</a>
+            <a href="{{ path('app_admin_orders', {filter: 'delivered'}) }}" class="btn {{ filter|default('') == 'delivered' ? '' : 'btn-secondary' }}">✔️ Livrées</a>
+        </div>
+        
+        {% if orders|length > 0 %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Articles</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><strong>#{{ order.id }}</strong></td>
+                    <td>
+                        <strong>{{ order.user ? order.user.prenom ~ ' ' ~ order.user.nom : 'Client' }}</strong><br>
+                        <small style="color: #888;">📞 {{ order.telephone|default('N/A') }}</small>
+                    </td>
+                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>{{ order.items|length }} article(s)</td>
+                    <td><strong>{{ order.total|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    <td>
+                        {% if order.statut == 'en_attente' %}
+                            <span class="badge badge-warning">⏳ En attente</span>
+                        {% elseif order.statut == 'confirmee' %}
+                            <span class="badge badge-info">✅ Confirmée</span>
+                        {% elseif order.statut == 'en_preparation' %}
+                            <span class="badge badge-info">👨‍🍳 Préparation</span>
+                        {% elseif order.statut == 'en_livraison' %}
+                            <span class="badge badge-primary">🚚 Livraison</span>
+                        {% elseif order.statut == 'livree' %}
+                            <span class="badge badge-success">✔️ Livrée</span>
+                        {% elseif order.statut == 'annulee' %}
+                            <span class="badge badge-danger">❌ Annulée</span>
+                        {% else %}
+                            <span class="badge">{{ order.statut }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="action-btns">
+                        <a href="{{ path('app_admin_order_show', {id: order.id}) }}" class="btn-edit">👁️ Voir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 60px 20px; color: #888;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
+            <h3>Aucune commande</h3>
+            <p>Les commandes apparaîtront ici</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

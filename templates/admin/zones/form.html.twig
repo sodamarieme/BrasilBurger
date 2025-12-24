@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ zone ? 'Modifier' : 'Ajouter' }} une Zone - Admin{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="section" style="max-width: 600px; margin: 0 auto;">
+        <a href="{{ path('app_admin_zones') }}" class="back-link">← Retour aux zones</a>
+        
+        <h2 class="section-title">{{ zone ? '✏️ Modifier la Zone' : '➕ Ajouter une Zone' }}</h2>
+        
+        <form method="post">
+            <div class="form-group">
+                <label>Nom de la zone</label>
+                <input type="text" name="nom" class="form-control" value="{{ zone ? zone.nom : '' }}" required placeholder="Ex: Zone A (Plateau, Médina)">
+            </div>
+            
+            <div class="form-group">
+                <label>Frais de livraison (FCFA)</label>
+                <input type="number" name="fraisLivraison" class="form-control" value="{{ zone ? zone.fraisLivraison : '' }}" required placeholder="Ex: 1000">
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%;">
+                {{ zone ? '💾 Enregistrer' : '➕ Ajouter la zone' }}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

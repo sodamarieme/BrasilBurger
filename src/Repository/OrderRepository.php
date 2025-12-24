@@ -60,38 +60,54 @@ class OrderRepository extends ServiceEntityRepository
 
     public function getStatistics(): array
     {
-        $qb = $this->createQueryBuilder('o');
-
-        $totalOrders = $qb->select('COUNT(o.id)')
+        $today = new \DateTimeImmutable('today');
+        
+        // Commandes en cours (en_attente, confirmee, en_preparation, en_livraison)
+        $pending = $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.statut IN (:pendingStatuts)')
+            ->andWhere('o.createdAt >= :today')
+            ->setParameter('pendingStatuts', [Order::STATUS_PENDING, Order::STATUS_CONFIRMED, Order::STATUS_PREPARING, Order::STATUS_DELIVERING])
+            ->setParameter('today', $today)
             ->getQuery()
             ->getSingleScalarResult();
 
-        $totalRevenue = $this->createQueryBuilder('o')
+        // Commandes validées/livrées aujourd'hui
+        $completed = $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.statut = :delivered')
+            ->andWhere('o.createdAt >= :today')
+            ->setParameter('delivered', Order::STATUS_DELIVERED)
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Recettes journalières
+        $revenue = $this->createQueryBuilder('o')
             ->select('SUM(o.total)')
             ->andWhere('o.statut = :delivered')
-            ->setParameter('delivered', Order::STATUS_DELIVERED)
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        $pendingOrders = $this->createQueryBuilder('o')
-            ->select('COUNT(o.id)')
-            ->andWhere('o.statut = :pending')
-            ->setParameter('pending', Order::STATUS_PENDING)
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        $todayOrders = $this->createQueryBuilder('o')
-            ->select('COUNT(o.id)')
             ->andWhere('o.createdAt >= :today')
-            ->setParameter('today', new \DateTimeImmutable('today'))
+            ->setParameter('delivered', Order::STATUS_DELIVERED)
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Commandes annulées aujourd'hui
+        $cancelled = $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.statut = :cancelled')
+            ->andWhere('o.createdAt >= :today')
+            ->setParameter('cancelled', Order::STATUS_CANCELLED)
+            ->setParameter('today', $today)
             ->getQuery()
             ->getSingleScalarResult();
 
         return [
-            'totalOrders' => $totalOrders,
-            'totalRevenue' => $totalRevenue ?? 0,
-            'pendingOrders' => $pendingOrders,
-            'todayOrders' => $todayOrders,
+            'pending' => (int) $pending,
+            'completed' => (int) $completed,
+            'revenue' => (float) ($revenue ?? 0),
+            'cancelled' => (int) $cancelled,
+            'topProducts' => [],
         ];
     }
 }

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ complement ? 'Modifier' : 'Ajouter' }} un Complément - Admin{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="section" style="max-width: 700px; margin: 0 auto;">
+        <a href="{{ path('app_admin_complements') }}" class="back-link">← Retour aux compléments</a>
+        
+        <h2 class="section-title">{{ complement ? '✏️ Modifier le Complément' : '➕ Ajouter un Complément' }}</h2>
+        
+        <form method="post">
+            <div class="form-group">
+                <label>Nom du complément</label>
+                <input type="text" name="nom" class="form-control" value="{{ complement ? complement.nom : '' }}" required placeholder="Ex: Frites">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-control" placeholder="Description...">{{ complement ? complement.description : '' }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Prix (FCFA)</label>
+                <input type="number" name="prix" class="form-control" value="{{ complement ? complement.prix : '' }}" required placeholder="Ex: 1000">
+            </div>
+            
+            <div class="form-group">
+                <label>URL de l'image</label>
+                <input type="text" name="image" class="form-control" value="{{ complement ? complement.image : '' }}" placeholder="https://...">
+            </div>
+            
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="disponible" {{ (not complement or complement.disponible) ? 'checked' : '' }}>
+                    Disponible à la vente
+                </label>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%;">
+                {{ complement ? '💾 Enregistrer' : '➕ Ajouter' }}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

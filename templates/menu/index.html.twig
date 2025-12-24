@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notre Carte - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="container">
+    <!-- Burgers Section -->
+    <div class="section">
+        <h2 class="section-title">🍔 Nos Burgers</h2>
+        
+        <div class="products-grid">
+            {% for burger in burgers %}
+            <div class="product-card" data-id="{{ burger.id }}" data-type="burger">
+                <div class="product-image">
+                    <img src="{{ burger.image ? asset('uploads/burgers/' ~ burger.image) : 'https://via.placeholder.com/300x200/ff8c00/ffffff?text=🍔' }}" alt="{{ burger.nom }}">
+                    {% if not burger.disponible %}
+                        <span class="product-badge badge-danger">Indisponible</span>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ burger.nom }}</h3>
+                    <p class="product-description">{{ burger.description|length > 80 ? burger.description|slice(0, 80) ~ '...' : burger.description }}</p>
+                    <div class="product-footer">
+                        <span class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} FCFA</span>
+                        {% if burger.disponible %}
+                            <button class="btn btn-sm add-to-cart" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom }}', {{ burger.prix }})">
+                                🛒 Ajouter
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p style="grid-column: 1/-1; text-align: center; color: #666;">Aucun burger disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Menus Section -->
+    <div class="section">
+        <h2 class="section-title">🍽️ Nos Menus</h2>
+        
+        <div class="products-grid">
+            {% for menu in menus %}
+            <div class="product-card" data-id="{{ menu.id }}" data-type="menu">
+                <div class="product-image">
+                    <img src="{{ menu.image ? asset('uploads/menus/' ~ menu.image) : 'https://via.placeholder.com/300x200/ff6b35/ffffff?text=🍽️' }}" alt="{{ menu.nom }}">
+                    {% if not menu.disponible %}
+                        <span class="product-badge badge-danger">Indisponible</span>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ menu.nom }}</h3>
+                    <p class="product-description">{{ menu.description|length > 80 ? menu.description|slice(0, 80) ~ '...' : menu.description }}</p>
+                    <div class="menu-content" style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
+                        <div>🍔 {{ menu.burgers|length }} burger(s)</div>
+                        <div>🍟 {{ menu.complements|length }} complément(s)</div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} FCFA</span>
+                        {% if menu.disponible %}
+                            <button class="btn btn-sm add-to-cart" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom }}', {{ menu.prix }})">
+                                🛒 Ajouter
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p style="grid-column: 1/-1; text-align: center; color: #666;">Aucun menu disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Compléments Section -->
+    <div class="section">
+        <h2 class="section-title">🍟 Compléments</h2>
+        
+        <div class="products-grid">
+            {% for complement in complements %}
+            <div class="product-card" data-id="{{ complement.id }}" data-type="complement">
+                <div class="product-image">
+                    <img src="{{ complement.image ? asset('uploads/complements/' ~ complement.image) : 'https://via.placeholder.com/300x200/ffb347/ffffff?text=🍟' }}" alt="{{ complement.nom }}">
+                    {% if not complement.disponible %}
+                        <span class="product-badge badge-danger">Indisponible</span>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ complement.nom }}</h3>
+                    <p class="product-description">{{ complement.description }}</p>
+                    <div class="product-footer">
+                        <span class="product-price">{{ complement.prix|number_format(0, ',', ' ') }} FCFA</span>
+                        {% if complement.disponible %}
+                            <button class="btn btn-sm add-to-cart" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom }}', {{ complement.prix }})">
+                                🛒 Ajouter
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p style="grid-column: 1/-1; text-align: center; color: #666;">Aucun complément disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+function addToCart(type, id, nom, prix) {
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // Chercher si l'article existe déjà
+    let found = false;
+    for (let item of cart) {
+        if (item.type === type && item.id === id) {
+            item.quantity++;
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        cart.push({
+            type: type,
+            id: id,
+            nom: nom,
+            prix: prix,
+            quantity: 1
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    
+    // Animation feedback
+    const btn = event.target;
+    btn.innerHTML = '✅ Ajouté';
+    btn.style.background = '#28a745';
+    setTimeout(() => {
+        btn.innerHTML = '🛒 Ajouter';
+        btn.style.background = '';
+    }, 1000);
+}
+
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let total = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const counter = document.querySelector('.cart-count');
+    if (counter) {
+        counter.textContent = total;
+        counter.style.display = total > 0 ? 'inline' : 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+{% endblock %}
