@@ -25,12 +25,14 @@ RUN echo "APP_ENV=prod" > .env.local && echo "APP_DEBUG=0" >> .env.local
 # Install dependencies without scripts to avoid cache:clear error
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
-# Configure Apache
+# Configure Apache with proper rewrite rules
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
-RUN echo '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>' >> /etc/apache2/sites-available/000-default.conf
+RUN sed -i '/<\/VirtualHost>/i \
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+        FallbackResource /index.php\n\
+    </Directory>' /etc/apache2/sites-available/000-default.conf
 
 # Set permissions and create directories
 RUN mkdir -p /var/www/html/var/cache/prod /var/www/html/var/log
