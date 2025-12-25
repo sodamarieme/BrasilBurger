@@ -19,13 +19,11 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Set environment to production BEFORE composer install
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
+# Create .env.local for production
+RUN echo "APP_ENV=prod" > .env.local && echo "APP_DEBUG=0" >> .env.local
 
-# Install dependencies (including dev for build, then remove cache)
-RUN composer install --no-dev --optimize-autoloader --no-scripts
-RUN composer dump-autoload --optimize
+# Install dependencies without scripts to avoid cache:clear error
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
 # Configure Apache
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
@@ -34,13 +32,12 @@ RUN echo '<Directory /var/www/html/public>\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/var || true
-RUN mkdir -p /var/www/html/var/cache /var/www/html/var/log && chown -R www-data:www-data /var/www/html/var
+# Set permissions and create directories
+RUN mkdir -p /var/www/html/var/cache/prod /var/www/html/var/log
+RUN chown -R www-data:www-data /var/www/html/var
 
-# Clear and warm up cache
-RUN php bin/console cache:clear --env=prod --no-debug || true
-RUN php bin/console cache:warmup --env=prod --no-debug || true
+# Warm up cache for production
+RUN APP_ENV=prod APP_DEBUG=0 php bin/console cache:warmup --no-debug || true
 
 EXPOSE 80
 
