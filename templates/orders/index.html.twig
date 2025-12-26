@@ -5,8 +5,8 @@
 {% block body %}
 <section class="hero-small">
     <div class="container">
-        <h1 class="hero-title animate-fadeIn">📦 Mes Commandes</h1>
-        <p class="hero-subtitle animate-fadeIn">Suivez l'état de vos commandes</p>
+        <h1 class="hero-title animate-fadeIn">Mes Commandes</h1>
+        <p class="hero-subtitle animate-fadeIn">Suivez l'etat de vos commandes</p>
     </div>
 </section>
 
@@ -23,19 +23,19 @@
                     </div>
                     <div class="order-status status-{{ order.statut }}">
                         {% if order.statut == 'en_attente' %}
-                            ⏳ En attente
+                            En attente
                         {% elseif order.statut == 'confirmee' %}
-                            ✅ Confirmée
+                            Confirmee
                         {% elseif order.statut == 'en_preparation' %}
-                            👨‍🍳 En préparation
+                            En preparation
                         {% elseif order.statut == 'prete' %}
-                            ✅ Prête
+                            Prete
                         {% elseif order.statut == 'en_livraison' %}
-                            🚚 En livraison
+                            En livraison
                         {% elseif order.statut == 'livree' %}
-                            ✔️ Livrée
+                            Livree
                         {% elseif order.statut == 'annulee' %}
-                            ❌ Annulée
+                            Annulee
                         {% else %}
                             {{ order.statutLabel }}
                         {% endif %}
@@ -45,11 +45,9 @@
                 <div class="order-body">
                     <div class="order-info">
                         <div class="order-date">
-                            <span class="info-icon">📅</span>
-                            {{ order.createdAt|date('d/m/Y à H:i') }}
+                            {{ order.createdAt|date('d/m/Y a H:i') }}
                         </div>
                         <div class="order-address">
-                            <span class="info-icon">📍</span>
                             {{ order.adresseLivraison }}
                         </div>
                     </div>
@@ -84,12 +82,12 @@
         </div>
         {% else %}
         <div class="empty-state animate-fadeIn">
-            <div class="empty-icon">📦</div>
             <h3>Aucune commande</h3>
-            <p>Vous n'avez pas encore passé de commande.</p>
+            <p>Vous n'avez pas encore passe de commande.</p>
             <a href="{{ path('app_menu') }}" class="btn btn-primary">Voir le menu</a>
         </div>
         {% endif %}
     </div>
 </section>
 {% endblock %}
+

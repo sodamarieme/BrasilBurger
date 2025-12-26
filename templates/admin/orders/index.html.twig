@@ -6,7 +6,7 @@
 
 <div class="admin-container">
     <div class="admin-section">
-        <h2 class="section-title">📦 Gestion des Commandes</h2>
+        <h2 class="section-title">Gestion des Commandes</h2>
         
         <!-- Filtre simple -->
         <div class="filter-bar">
@@ -15,99 +15,101 @@
                 <select name="statut" class="filter-select" onchange="this.form.submit()">
                     <option value="">Tous</option>
                     <option value="en_attente" {{ currentStatut == 'en_attente' ? 'selected' : '' }}>En attente</option>
-                    <option value="en_preparation" {{ currentStatut == 'en_preparation' ? 'selected' : '' }}>En préparation</option>
-                    <option value="prete" {{ currentStatut == 'prete' ? 'selected' : '' }}>Prête</option>
+                    <option value="en_preparation" {{ currentStatut == 'en_preparation' ? 'selected' : '' }}>En preparation</option>
+                    <option value="prete" {{ currentStatut == 'prete' ? 'selected' : '' }}>Prete</option>
                     <option value="en_livraison" {{ currentStatut == 'en_livraison' ? 'selected' : '' }}>En livraison</option>
-                    <option value="livree" {{ currentStatut == 'livree' ? 'selected' : '' }}>Livrée</option>
-                    <option value="annulee" {{ currentStatut == 'annulee' ? 'selected' : '' }}>Annulée</option>
+                    <option value="livree" {{ currentStatut == 'livree' ? 'selected' : '' }}>Livree</option>
+                    <option value="annulee" {{ currentStatut == 'annulee' ? 'selected' : '' }}>Annulee</option>
                 </select>
                 <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
             </form>
         </div>
         
         {% if orders|length > 0 %}
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>#ID</th>
-                    <th>CLIENT</th>
-                    <th>DATE</th>
-                    <th>TYPE</th>
-                    <th>MONTANT</th>
-                    <th>STATUT</th>
-                    <th>ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td><strong>#{{ order.id }}</strong></td>
-                    <td>
-                        <div class="client-info">
-                            <strong>{{ order.client.prenom }} {{ order.client.nom }}</strong>
-                            <small>📞 {{ order.client.telephone|default('N/A') }}</small>
-                        </div>
-                    </td>
-                    <td>{{ order.createdAt|date('d/m/Y H:i:s') }}</td>
-                    <td>
-                        {% if order.type == 'livraison' %}
-                            <span class="type-badge type-livraison">🚚 Livraison</span>
-                        {% elseif order.type == 'sur_place' %}
-                            <span class="type-badge type-surplace">🍽️ Sur place</span>
-                        {% elseif order.type == 'a_emporter' %}
-                            <span class="type-badge type-emporter">📦 À emporter</span>
-                        {% else %}
-                            <span class="type-badge">{{ order.typeLabel|default('N/A') }}</span>
-                        {% endif %}
-                    </td>
-                    <td><strong>{{ order.total|number_format(0, ' ', ' ') }} FCFA</strong></td>
-                    <td>
-                        {% if order.statut == 'en_attente' %}
-                            <span class="status-pill status-pending">En cours</span>
-                        {% elseif order.statut == 'en_preparation' %}
-                            <span class="status-pill status-preparing">En préparation</span>
-                        {% elseif order.statut == 'prete' %}
-                            <span class="status-pill status-ready">Prête</span>
-                        {% elseif order.statut == 'en_livraison' %}
-                            <span class="status-pill status-delivering">En livraison</span>
-                        {% elseif order.statut == 'livree' %}
-                            <span class="status-pill status-delivered">Terminée</span>
-                        {% elseif order.statut == 'annulee' %}
-                            <span class="status-pill status-cancelled">Annulée</span>
-                        {% else %}
-                            <span class="status-pill">{{ order.statut }}</span>
-                        {% endif %}
-                    </td>
-                    <td class="actions-cell">
-                        {% if order.statut == 'en_attente' or order.statut == 'en_preparation' %}
-                            <form action="{{ path('app_admin_order_status', {id: order.id}) }}" method="POST" style="display: inline;">
-                                <input type="hidden" name="statut" value="prete">
-                                <button type="submit" class="btn-action btn-success">✅ Prête</button>
-                            </form>
-                        {% elseif order.statut == 'prete' or order.statut == 'en_livraison' %}
-                            <form action="{{ path('app_admin_order_status', {id: order.id}) }}" method="POST" style="display: inline;">
-                                <input type="hidden" name="statut" value="livree">
-                                <button type="submit" class="btn-action btn-success">✅ Terminer</button>
-                            </form>
-                        {% endif %}
-                        
-                        {% if order.statut != 'livree' and order.statut != 'annulee' %}
-                            <form action="{{ path('app_admin_order_cancel', {id: order.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Annuler cette commande ?')">
-                                <button type="submit" class="btn-action btn-danger">❌ Annuler</button>
-                            </form>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>CLIENT</th>
+                        <th class="hide-mobile">DATE</th>
+                        <th>TYPE</th>
+                        <th>MONTANT</th>
+                        <th>STATUT</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>
+                            <div class="client-info">
+                                <strong>{{ order.client.prenom }} {{ order.client.nom }}</strong>
+                                <small>{{ order.client.telephone|default('N/A') }}</small>
+                            </div>
+                        </td>
+                        <td class="hide-mobile">{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% if order.type == 'livraison' %}
+                                <span class="type-badge type-livraison">Livraison</span>
+                            {% elseif order.type == 'sur_place' %}
+                                <span class="type-badge type-surplace">Sur place</span>
+                            {% elseif order.type == 'a_emporter' %}
+                                <span class="type-badge type-emporter">A emporter</span>
+                            {% else %}
+                                <span class="type-badge">{{ order.typeLabel|default('N/A') }}</span>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ order.total|number_format(0, ' ', ' ') }} F</strong></td>
+                        <td>
+                            {% if order.statut == 'en_attente' %}
+                                <span class="status-pill status-pending">En cours</span>
+                            {% elseif order.statut == 'en_preparation' %}
+                                <span class="status-pill status-preparing">Preparation</span>
+                            {% elseif order.statut == 'prete' %}
+                                <span class="status-pill status-ready">Prete</span>
+                            {% elseif order.statut == 'en_livraison' %}
+                                <span class="status-pill status-delivering">Livraison</span>
+                            {% elseif order.statut == 'livree' %}
+                                <span class="status-pill status-delivered">Terminee</span>
+                            {% elseif order.statut == 'annulee' %}
+                                <span class="status-pill status-cancelled">Annulee</span>
+                            {% else %}
+                                <span class="status-pill">{{ order.statut }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="actions-cell">
+                            {% if order.statut == 'en_attente' or order.statut == 'en_preparation' %}
+                                <form action="{{ path('app_admin_order_status', {id: order.id}) }}" method="POST" style="display: inline;">
+                                    <input type="hidden" name="statut" value="prete">
+                                    <button type="submit" class="btn-action btn-success">Prete</button>
+                                </form>
+                            {% elseif order.statut == 'prete' or order.statut == 'en_livraison' %}
+                                <form action="{{ path('app_admin_order_status', {id: order.id}) }}" method="POST" style="display: inline;">
+                                    <input type="hidden" name="statut" value="livree">
+                                    <button type="submit" class="btn-action btn-success">Terminer</button>
+                                </form>
+                            {% endif %}
+                            
+                            {% if order.statut != 'livree' and order.statut != 'annulee' %}
+                                <form action="{{ path('app_admin_order_cancel', {id: order.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Annuler cette commande ?')">
+                                    <button type="submit" class="btn-action btn-danger">Annuler</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">📦</div>
             <h3>Aucune commande</h3>
-            <p>Les commandes apparaîtront ici</p>
+            <p>Les commandes apparaitront ici</p>
         </div>
         {% endif %}
     </div>
 </div>
 {% endblock %}
+

@@ -6,14 +6,14 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <h1 class="hero-title">🍔 Brasil Burger</h1>
-        <p class="hero-subtitle">Les meilleurs burgers artisanaux de Dakar. Ingrédients frais, recettes uniques, livraison express !</p>
+        <h1 class="hero-title">Brasil Burger</h1>
+        <p class="hero-subtitle">Les meilleurs burgers artisanaux de Dakar. Ingredients frais, recettes uniques, livraison express !</p>
         <div class="hero-buttons">
             <a href="{{ path('app_menu') }}" class="hero-btn hero-btn-primary">
-                🍔 Découvrir le Menu
+                Decouvrir le Menu
             </a>
             <a href="#populaires" class="hero-btn hero-btn-outline">
-                ⭐ Nos Best-Sellers
+                Nos Best-Sellers
             </a>
         </div>
     </div>
@@ -23,22 +23,18 @@
     <!-- Stats Section -->
     <div class="admin-stats-grid" style="margin-top: -40px;">
         <div class="admin-stat-card animate-fade-up stagger-1">
-            <span class="stat-icon">🥬</span>
             <div class="stat-value">100%</div>
-            <div class="stat-label">Ingrédients Frais</div>
+            <div class="stat-label">Ingredients Frais</div>
         </div>
         <div class="admin-stat-card animate-fade-up stagger-2">
-            <span class="stat-icon">🚚</span>
             <div class="stat-value">30 min</div>
             <div class="stat-label">Livraison Express</div>
         </div>
         <div class="admin-stat-card animate-fade-up stagger-3">
-            <span class="stat-icon">❤️</span>
             <div class="stat-value">5000+</div>
             <div class="stat-label">Clients Satisfaits</div>
         </div>
         <div class="admin-stat-card animate-fade-up stagger-4">
-            <span class="stat-icon">⭐</span>
             <div class="stat-value">4.9/5</div>
             <div class="stat-label">Note Moyenne</div>
         </div>
@@ -47,8 +43,8 @@
     <!-- Popular Burgers Section -->
     <section class="menu-section" id="populaires">
         <div class="section-header">
-            <h2 class="section-title">🍔 Nos Burgers Populaires</h2>
-            <p class="section-subtitle">Découvrez nos créations les plus appréciées</p>
+            <h2 class="section-title">Nos Burgers Populaires</h2>
+            <p class="section-subtitle">Decouvrez nos creations les plus appreciees</p>
         </div>
         
         {% if burgers|length > 0 %}
@@ -63,11 +59,11 @@
                     {% endif %}
                     <div class="product-overlay">
                         <a href="{{ path('app_menu_burger', {id: burger.id}) }}" class="btn btn-primary">
-                            👁️ Voir les détails
+                            Voir les details
                         </a>
                     </div>
                     {% if loop.index <= 2 %}
-                    <span class="card-badge new">🔥 Populaire</span>
+                    <span class="card-badge new">Populaire</span>
                     {% endif %}
                 </div>
                 <div class="product-content">
@@ -76,7 +72,7 @@
                     <div class="product-footer">
                         <div class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         <button class="btn btn-primary btn-sm" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom|e('js') }}', {{ burger.prix }}, '{{ burger.image|e('js') }}')">
-                            🛒 Ajouter
+                            Ajouter
                         </button>
                     </div>
                 </div>
@@ -85,15 +81,14 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-state-icon">🍔</div>
             <h3 class="empty-state-title">Aucun burger disponible</h3>
-            <p class="empty-state-text">Nos délicieux burgers arrivent bientôt !</p>
+            <p class="empty-state-text">Nos delicieux burgers arrivent bientot !</p>
         </div>
         {% endif %}
         
         <div class="text-center mt-4">
             <a href="{{ path('app_menu') }}" class="btn btn-lg btn-outline" style="border-color: white; color: white;">
-                Voir tous les burgers →
+                Voir tous les burgers
             </a>
         </div>
     </section>
@@ -102,8 +97,8 @@
     {% if menus|length > 0 %}
     <section class="menu-section">
         <div class="section-header">
-            <h2 class="section-title">🎁 Nos Menus Complets</h2>
-            <p class="section-subtitle">Burger + Frites + Boisson à prix réduit</p>
+            <h2 class="section-title">Nos Menus Complets</h2>
+            <p class="section-subtitle">Burger + Frites + Boisson a prix reduit</p>
         </div>
         
         <div class="products-grid">
@@ -117,10 +112,10 @@
                     {% endif %}
                     <div class="product-overlay">
                         <a href="{{ path('app_menu_formule', {id: menu.id}) }}" class="btn btn-primary">
-                            👁️ Voir les détails
+                            Voir les details
                         </a>
                     </div>
-                    <span class="card-badge promo">🏷️ Menu</span>
+                    <span class="card-badge promo">Menu</span>
                 </div>
                 <div class="product-content">
                     <h3 class="product-title">{{ menu.nom }}</h3>
@@ -128,7 +123,7 @@
                     <div class="product-footer">
                         <div class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         <button class="btn btn-success btn-sm" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom|e('js') }}', {{ menu.prix }}, '{{ menu.image|e('js') }}')">
-                            🛒 Ajouter
+                            Ajouter
                         </button>
                     </div>
                 </div>
@@ -142,8 +137,8 @@
     {% if complements|length > 0 %}
     <section class="menu-section">
         <div class="section-header">
-            <h2 class="section-title">🍟 Nos Accompagnements</h2>
-            <p class="section-subtitle">Pour compléter votre repas</p>
+            <h2 class="section-title">Nos Accompagnements</h2>
+            <p class="section-subtitle">Pour completer votre repas</p>
         </div>
         
         <div class="products-grid">
@@ -157,7 +152,7 @@
                     {% endif %}
                     <div class="product-overlay">
                         <button class="btn btn-primary" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
-                            🛒 Ajouter au panier
+                            Ajouter au panier
                         </button>
                     </div>
                 </div>
@@ -167,7 +162,7 @@
                     <div class="product-footer">
                         <div class="product-price">{{ complement.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         <button class="btn btn-primary btn-sm" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
-                            🛒 Ajouter
+                            Ajouter
                         </button>
                     </div>
                 </div>
@@ -179,20 +174,17 @@
 
     <!-- CTA Section -->
     <section class="admin-section" style="text-align: center; padding: 60px;">
-        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 15px;">🚚 Livraison Gratuite</h2>
-        <p style="font-size: 18px; color: var(--text-light); margin-bottom: 30px;">Pour toute commande supérieure à 10 000 FCFA</p>
+        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 15px;">Livraison Gratuite</h2>
+        <p style="font-size: 18px; color: var(--text-light); margin-bottom: 30px;">Pour toute commande superieure a 10 000 FCFA</p>
         <a href="{{ path('app_menu') }}" class="btn btn-primary btn-lg">
-            Commander Maintenant →
+            Commander Maintenant
         </a>
     </section>
 </div>
 
 <script>
 function addToCart(type, id, name, price, image) {
-    // Get current cart from localStorage
     let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
-    
-    // Check if item already exists
     const existingIndex = cart.findIndex(item => item.type === type && item.id === id);
     
     if (existingIndex >= 0) {
@@ -209,12 +201,8 @@ function addToCart(type, id, name, price, image) {
     }
     
     localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
-    
-    // Update cart badge
     updateCartBadge();
-    
-    // Show notification
-    showNotification('✅ ' + name + ' ajouté au panier !');
+    showNotification(name + ' ajoute au panier !');
 }
 
 function updateCartBadge() {
@@ -228,22 +216,19 @@ function updateCartBadge() {
 }
 
 function showNotification(message) {
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = 'alert alert-success';
     notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; animation: fadeInDown 0.4s ease-out;';
     notification.innerHTML = message;
-    
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'fadeInUp 0.4s ease-out reverse';
         setTimeout(() => notification.remove(), 400);
     }, 3000);
 }
 
-// Update cart badge on page load
 document.addEventListener('DOMContentLoaded', updateCartBadge);
 </script>
 {% endblock %}
+

@@ -5,30 +5,32 @@
 {% block body %}
 <div class="container">
     <div class="section">
-        <h2 class="section-title">🛒 Votre Panier</h2>
+        <h2 class="section-title">Votre Panier</h2>
         
         <div id="cart-content">
             <div id="cart-empty" style="text-align: center; padding: 60px 20px; display: none;">
-                <div style="font-size: 4rem; margin-bottom: 20px;">🛒</div>
+                <div style="font-size: 4rem; margin-bottom: 20px; color: var(--primary);">[ ]</div>
                 <h3 style="color: #666; margin-bottom: 20px;">Votre panier est vide</h3>
-                <a href="{{ path('app_menu') }}" class="btn">🍔 Voir notre carte</a>
+                <a href="{{ path('app_menu') }}" class="btn">Voir notre carte</a>
             </div>
             
             <div id="cart-items">
-                <table class="data-table" id="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Produit</th>
-                            <th>Prix unitaire</th>
-                            <th>Quantité</th>
-                            <th>Total</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cart-body">
-                        <!-- Dynamically filled -->
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="data-table" id="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Prix unitaire</th>
+                                <th>Quantité</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-body">
+                            <!-- Dynamically filled -->
+                        </tbody>
+                    </table>
+                </div>
                 
                 <div class="cart-summary" style="background: linear-gradient(135deg, #fff5eb 0%, #fff0e0 100%); padding: 30px; border-radius: 15px; margin-top: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
@@ -37,11 +39,11 @@
                             <span id="cart-total" style="font-size: 2rem; font-weight: bold; color: var(--primary); margin-left: 10px;">0 FCFA</span>
                         </div>
                         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                            <button class="btn btn-danger" onclick="clearCart()">🗑️ Vider le panier</button>
+                            <button class="btn btn-danger" onclick="clearCart()">Vider le panier</button>
                             {% if app.user %}
-                                <a href="{{ path('app_cart_checkout') }}" class="btn">✅ Commander</a>
+                                <a href="{{ path('app_cart_checkout') }}" class="btn">Commander</a>
                             {% else %}
-                                <a href="{{ path('app_login') }}" class="btn">🔐 Se connecter pour commander</a>
+                                <a href="{{ path('app_login') }}" class="btn">Se connecter pour commander</a>
                             {% endif %}
                         </div>
                     </div>
@@ -74,16 +76,15 @@ function renderCart() {
         const itemTotal = item.prix * item.quantity;
         total += itemTotal;
         
-        const typeIcon = item.type === 'burger' ? '🍔' : (item.type === 'menu' ? '🍽️' : '🍟');
+        const typeLabel = item.type === 'burger' ? 'Burger' : (item.type === 'menu' ? 'Menu' : 'Complement');
         
         html += `
             <tr>
                 <td>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.5rem;">${typeIcon}</span>
                         <div>
                             <strong>${item.nom}</strong>
-                            <div style="font-size: 0.8rem; color: #888;">${item.type}</div>
+                            <div style="font-size: 0.8rem; color: #888;">${typeLabel}</div>
                         </div>
                     </div>
                 </td>
@@ -97,7 +98,7 @@ function renderCart() {
                 </td>
                 <td><strong>${itemTotal.toLocaleString('fr-FR')} FCFA</strong></td>
                 <td>
-                    <button class="btn-delete" onclick="removeItem(${index})">🗑️</button>
+                    <button class="btn-delete" onclick="removeItem(${index})">X</button>
                 </td>
             </tr>
         `;
@@ -124,7 +125,7 @@ function removeItem(index) {
 }
 
 function clearCart() {
-    if (confirm('Êtes-vous sûr de vouloir vider votre panier ?')) {
+    if (confirm('Etes-vous sur de vouloir vider votre panier ?')) {
         localStorage.removeItem('cart');
         renderCart();
     }

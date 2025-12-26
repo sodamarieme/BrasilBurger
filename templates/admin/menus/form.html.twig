@@ -5,9 +5,9 @@
 {% block body %}
 <div class="admin-container">
     <div class="section" style="max-width: 700px; margin: 0 auto;">
-        <a href="{{ path('app_admin_menus') }}" class="back-link">← Retour aux menus</a>
+        <a href="{{ path('app_admin_menus') }}" class="back-link">Retour aux menus</a>
         
-        <h2 class="section-title">{{ menu ? '✏️ Modifier le Menu' : '➕ Ajouter un Menu' }}</h2>
+        <h2 class="section-title">{{ menu ? 'Modifier le Menu' : 'Ajouter un Menu' }}</h2>
         
         <form method="post">
             <div class="form-group">
@@ -37,20 +37,20 @@
                     <label class="checkbox-item">
                         <input type="checkbox" name="burgers[]" value="{{ burger.id }}" 
                             {{ menu and burger in menu.burgers.toArray() ? 'checked' : '' }}>
-                        🍔 {{ burger.nom }} ({{ burger.prix|number_format(0, ',', ' ') }} FCFA)
+                        {{ burger.nom }} ({{ burger.prix|number_format(0, ',', ' ') }} FCFA)
                     </label>
                     {% endfor %}
                 </div>
             </div>
             
             <div class="form-group">
-                <label>Compléments inclus</label>
+                <label>Complements inclus</label>
                 <div class="checkbox-grid">
                     {% for complement in complements %}
                     <label class="checkbox-item">
                         <input type="checkbox" name="complements[]" value="{{ complement.id }}"
                             {{ menu and complement in menu.complements.toArray() ? 'checked' : '' }}>
-                        🍟 {{ complement.nom }} ({{ complement.prix|number_format(0, ',', ' ') }} FCFA)
+                        {{ complement.nom }} ({{ complement.prix|number_format(0, ',', ' ') }} FCFA)
                     </label>
                     {% endfor %}
                 </div>
@@ -59,14 +59,15 @@
             <div class="form-group">
                 <label class="checkbox-label">
                     <input type="checkbox" name="disponible" {{ (not menu or menu.disponible) ? 'checked' : '' }}>
-                    Disponible à la vente
+                    Disponible a la vente
                 </label>
             </div>
             
             <button type="submit" class="btn" style="width: 100%;">
-                {{ menu ? '💾 Enregistrer' : '➕ Ajouter le menu' }}
+                {{ menu ? 'Enregistrer' : 'Ajouter le menu' }}
             </button>
         </form>
     </div>
 </div>
 {% endblock %}
+

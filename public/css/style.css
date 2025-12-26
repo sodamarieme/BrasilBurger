@@ -3071,3 +3071,80 @@ textarea.form-control {
         font-size: 3.5rem;
     }
 }
+
+/* ===========================================
+   TABLE RESPONSIVE
+   =========================================== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.data-table th {
+    background: var(--bg-light);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(255,140,0,0.05);
+}
+
+.description-cell {
+    max-width: 200px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.empty-cell {
+    text-align: center;
+    color: var(--text-light);
+    padding: 40px !important;
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+    
+    .data-table {
+        min-width: 500px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .product-thumb {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .actions-cell {
+        min-width: 150px;
+    }
+    
+    .btn-action {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+}

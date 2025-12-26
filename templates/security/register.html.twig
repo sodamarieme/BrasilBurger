@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Brasil Burger</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍔</text></svg>">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,6 +37,11 @@
             font-size: 5rem;
             margin-bottom: 20px;
             animation: bounce 2s ease-in-out infinite;
+        }
+        
+        .brand-logo img {
+            width: 100px;
+            height: 100px;
         }
         
         @keyframes bounce {
@@ -238,9 +243,11 @@
 <body>
     <div class="register-container">
         <div class="register-left">
-            <div class="brand-logo">🍔</div>
+            <div class="brand-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Brasil Burger" onerror="this.style.display='none'">
+            </div>
             <h1 class="brand-name">Brasil Burger</h1>
-            <p class="brand-tagline">Rejoignez notre communauté de gourmands et profitez de nos délicieux burgers !</p>
+            <p class="brand-tagline">Rejoignez notre communaute de gourmands et profitez de nos delicieux burgers !</p>
             
             <div class="burger-images">
                 <img src="{{ asset('images/burgers/classic-burger.jpg') }}" alt="Classic Burger" class="burger-img">
@@ -251,8 +258,8 @@
         
         <div class="register-right">
             <div class="register-header">
-                <h1>📝 Créer un compte</h1>
-                <p>Inscrivez-vous pour commander vos burgers préférés</p>
+                <h1>Creer un compte</h1>
+                <p>Inscrivez-vous pour commander vos burgers preferes</p>
             </div>
             
             <div class="flash-messages">
@@ -266,39 +273,39 @@
             <form method="post">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>👤 Nom</label>
+                        <label>Nom</label>
                         <input type="text" name="nom" class="form-control" value="{{ nom|default('') }}" required placeholder="Votre nom">
                     </div>
                     
                     <div class="form-group">
-                        <label>👤 Prénom</label>
-                        <input type="text" name="prenom" class="form-control" value="{{ prenom|default('') }}" required placeholder="Votre prénom">
+                        <label>Prenom</label>
+                        <input type="text" name="prenom" class="form-control" value="{{ prenom|default('') }}" required placeholder="Votre prenom">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label>📧 Adresse email</label>
+                    <label>Adresse email</label>
                     <input type="email" name="email" class="form-control" value="{{ email|default('') }}" required placeholder="exemple@email.com">
                 </div>
                 
                 <div class="form-group">
-                    <label>📱 Téléphone</label>
+                    <label>Telephone</label>
                     <input type="tel" name="telephone" class="form-control" value="{{ telephone|default('') }}" placeholder="77 123 45 67">
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>🔐 Mot de passe</label>
-                        <input type="password" name="password" class="form-control" required placeholder="Min. 6 caractères">
+                        <label>Mot de passe</label>
+                        <input type="password" name="password" class="form-control" required placeholder="Min. 6 caracteres">
                     </div>
                     
                     <div class="form-group">
-                        <label>🔐 Confirmer</label>
+                        <label>Confirmer</label>
                         <input type="password" name="confirm_password" class="form-control" required placeholder="Confirmer le mot de passe">
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-register">✅ Créer mon compte</button>
+                <button type="submit" class="btn-register">Creer mon compte</button>
             </form>
             
             <div class="divider">
@@ -306,9 +313,10 @@
             </div>
             
             <div class="login-link">
-                <a href="{{ path('app_login') }}">🔐 J'ai déjà un compte</a>
+                <a href="{{ path('app_login') }}">J'ai deja un compte</a>
             </div>
         </div>
     </div>
 </body>
 </html>
+

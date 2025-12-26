@@ -5,11 +5,11 @@
 {% block body %}
 <div class="container">
     <div class="section">
-        <a href="{{ path('app_menu') }}" class="back-link">← Retour à la carte</a>
+        <a href="{{ path('app_menu') }}" class="back-link">Retour a la carte</a>
         
         <div class="product-detail" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;">
             <div class="product-image-large">
-                <img src="{{ burger.image ? asset('uploads/burgers/' ~ burger.image) : 'https://via.placeholder.com/500x400/ff8c00/ffffff?text=🍔' }}" 
+                <img src="{{ burger.image ? asset('uploads/burgers/' ~ burger.image) : 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&h=400&fit=crop' }}" 
                      alt="{{ burger.nom }}" 
                      style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             </div>
@@ -33,7 +33,7 @@
                 
                 {% if burger.disponible %}
                     <div class="quantity-section" style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-                        <label style="font-weight: 600;">Quantité:</label>
+                        <label style="font-weight: 600;">Quantite:</label>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <button type="button" class="btn btn-secondary" onclick="changeQty(-1)" style="width: 40px; height: 40px; padding: 0;">-</button>
                             <input type="number" id="quantity" value="1" min="1" max="10" style="width: 60px; text-align: center; padding: 10px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1rem;">
@@ -42,11 +42,11 @@
                     </div>
                     
                     <button class="btn" style="width: 100%; padding: 15px; font-size: 1.2rem;" onclick="addToCartWithQty()">
-                        🛒 Ajouter au panier
+                        Ajouter au panier
                     </button>
                 {% else %}
                     <div style="background: #f8d7da; color: #842029; padding: 15px; border-radius: 10px; text-align: center;">
-                        ❌ Ce burger n'est pas disponible actuellement
+                        Ce burger n'est pas disponible actuellement
                     </div>
                 {% endif %}
             </div>
@@ -99,3 +99,4 @@ function addToCartWithQty() {
 }
 </style>
 {% endblock %}
+

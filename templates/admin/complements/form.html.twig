@@ -1,17 +1,17 @@
 {% extends 'admin/base_admin.html.twig' %}
 
-{% block title %}{{ complement ? 'Modifier' : 'Ajouter' }} un Complément - Admin{% endblock %}
+{% block title %}{{ complement ? 'Modifier' : 'Ajouter' }} un Complement - Admin{% endblock %}
 
 {% block body %}
 <div class="admin-container">
     <div class="section" style="max-width: 700px; margin: 0 auto;">
-        <a href="{{ path('app_admin_complements') }}" class="back-link">← Retour aux compléments</a>
+        <a href="{{ path('app_admin_complements') }}" class="back-link">Retour aux complements</a>
         
-        <h2 class="section-title">{{ complement ? '✏️ Modifier le Complément' : '➕ Ajouter un Complément' }}</h2>
+        <h2 class="section-title">{{ complement ? 'Modifier le Complement' : 'Ajouter un Complement' }}</h2>
         
         <form method="post">
             <div class="form-group">
-                <label>Nom du complément</label>
+                <label>Nom du complement</label>
                 <input type="text" name="nom" class="form-control" value="{{ complement ? complement.nom : '' }}" required placeholder="Ex: Frites">
             </div>
             
@@ -33,14 +33,15 @@
             <div class="form-group">
                 <label class="checkbox-label">
                     <input type="checkbox" name="disponible" {{ (not complement or complement.disponible) ? 'checked' : '' }}>
-                    Disponible à la vente
+                    Disponible a la vente
                 </label>
             </div>
             
             <button type="submit" class="btn" style="width: 100%;">
-                {{ complement ? '💾 Enregistrer' : '➕ Ajouter' }}
+                {{ complement ? 'Enregistrer' : 'Ajouter' }}
             </button>
         </form>
     </div>
 </div>
 {% endblock %}
+

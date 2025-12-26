@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Brasil Burger</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍔</text></svg>">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,6 +37,11 @@
             font-size: 5rem;
             margin-bottom: 20px;
             animation: bounce 2s ease-in-out infinite;
+        }
+        
+        .brand-logo img {
+            width: 100px;
+            height: 100px;
         }
         
         @keyframes bounce {
@@ -236,9 +241,11 @@
 <body>
     <div class="login-container">
         <div class="login-left">
-            <div class="brand-logo">🍔</div>
+            <div class="brand-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Brasil Burger" onerror="this.style.display='none'">
+            </div>
             <h1 class="brand-name">Brasil Burger</h1>
-            <p class="brand-tagline">Les meilleurs burgers artisanaux, préparés avec passion et livrés chez vous !</p>
+            <p class="brand-tagline">Les meilleurs burgers artisanaux, prepares avec passion et livres chez vous !</p>
             
             <div class="burger-images">
                 <img src="{{ asset('images/burgers/classic-burger.jpg') }}" alt="Classic Burger" class="burger-img">
@@ -249,24 +256,24 @@
         
         <div class="login-right">
             <div class="login-header">
-                <h1>👋 Bienvenue !</h1>
-                <p>Connectez-vous pour accéder à votre compte</p>
+                <h1>Bienvenue !</h1>
+                <p>Connectez-vous pour acceder a votre compte</p>
             </div>
             
             {% if error %}
             <div class="error-message">
-                ❌ {{ error.messageKey|trans(error.messageData, 'security') }}
+                {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
             {% endif %}
             
             <form method="post">
                 <div class="form-group">
-                    <label>📧 Adresse email</label>
+                    <label>Adresse email</label>
                     <input type="email" name="_username" class="form-control" value="{{ last_username }}" required autofocus placeholder="exemple@email.com">
                 </div>
                 
                 <div class="form-group">
-                    <label>🔒 Mot de passe</label>
+                    <label>Mot de passe</label>
                     <input type="password" name="_password" class="form-control" required placeholder="Votre mot de passe">
                 </div>
                 
@@ -279,7 +286,7 @@
                 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 
-                <button type="submit" class="btn-login">🚀 Se connecter</button>
+                <button type="submit" class="btn-login">Se connecter</button>
             </form>
             
             <div class="divider">
@@ -287,9 +294,10 @@
             </div>
             
             <div class="register-link">
-                <a href="{{ path('app_register') }}">📝 Créer un nouveau compte</a>
+                <a href="{{ path('app_register') }}">Creer un nouveau compte</a>
             </div>
         </div>
     </div>
 </body>
 </html>
+

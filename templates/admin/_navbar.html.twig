@@ -2,27 +2,26 @@
 <nav class="admin-navbar">
     <div class="admin-navbar-container">
         <div class="admin-navbar-brand">
-            <span class="brand-icon">👤</span>
             <span class="brand-text">Gestionnaire BurgerShop</span>
         </div>
         
         <div class="admin-navbar-menu">
             <a href="{{ path('app_admin_dashboard') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">
-                <span class="nav-icon">📊</span> Dashboard
+                Dashboard
             </a>
             <a href="{{ path('app_admin_catalogue') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') == 'app_admin_catalogue' or app.request.attributes.get('_route') starts with 'app_admin_burger' or app.request.attributes.get('_route') starts with 'app_admin_menu' or app.request.attributes.get('_route') starts with 'app_admin_complement' ? 'active' : '' }}">
-                <span class="nav-icon">🍔</span> Catalogue
+                Catalogue
             </a>
             <a href="{{ path('app_admin_orders') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') starts with 'app_admin_order' ? 'active' : '' }}">
-                <span class="nav-icon">📦</span> Commandes
+                Commandes
             </a>
             <a href="{{ path('app_admin_deliveries') }}" class="admin-nav-btn {{ app.request.attributes.get('_route') starts with 'app_admin_deliver' or app.request.attributes.get('_route') starts with 'app_admin_livreur' or app.request.attributes.get('_route') starts with 'app_admin_zone' ? 'active' : '' }}">
-                <span class="nav-icon">🚚</span> Livraisons
+                Livraisons
             </a>
         </div>
         
         <div class="admin-navbar-actions">
-            <a href="{{ path('app_logout') }}" class="admin-nav-btn-logout">Déconnexion</a>
+            <a href="{{ path('app_logout') }}" class="admin-nav-btn-logout">Deconnexion</a>
         </div>
     </div>
 </nav>

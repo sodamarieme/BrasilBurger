@@ -8,36 +8,31 @@
     <!-- Stats Cards -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon">⏳</div>
             <div class="stat-value">{{ stats.pending|default(0) }}</div>
             <div class="stat-label">Commandes en cours</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon stat-icon-success">✅</div>
             <div class="stat-value">{{ stats.completed|default(0) }}</div>
-            <div class="stat-label">Commandes validées</div>
+            <div class="stat-label">Commandes validees</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon stat-icon-money">💰</div>
             <div class="stat-value">{{ stats.revenue|default(0)|number_format(0, ',', ' ') }}</div>
-            <div class="stat-label">Recettes journalières (FCFA)</div>
+            <div class="stat-label">Recettes (FCFA)</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon stat-icon-danger">❌</div>
             <div class="stat-value">{{ stats.cancelled|default(0) }}</div>
-            <div class="stat-label">Commandes annulées</div>
+            <div class="stat-label">Commandes annulees</div>
         </div>
     </div>
 
     <!-- Top 5 Produits -->
     <div class="admin-section">
-        <h2 class="section-title">🏆 Top 5 - Produits les plus vendus du jour</h2>
+        <h2 class="section-title">Top 5 - Produits les plus vendus</h2>
         
         <div class="top-products-list">
             {% for product in topProducts|default([]) %}
             <div class="top-product-item">
                 <div class="product-info">
-                    <span class="product-icon">{{ product.type == 'burger' ? '🍔' : (product.type == 'menu' ? '🎁' : '🍟') }}</span>
                     <span class="product-name">{{ product.nom }}</span>
                 </div>
                 <div class="product-stats">
@@ -45,38 +40,32 @@
                 </div>
             </div>
             {% else %}
-            <!-- Données de démonstration -->
             <div class="top-product-item">
                 <div class="product-info">
-                    <span class="product-icon">🍔</span>
                     <span class="product-name">Classic Burger</span>
                 </div>
                 <div class="product-stats">15 vendus - 37 500 FCFA</div>
             </div>
             <div class="top-product-item">
                 <div class="product-info">
-                    <span class="product-icon">🎁</span>
                     <span class="product-name">Menu Classic</span>
                 </div>
                 <div class="product-stats">12 vendus - 48 000 FCFA</div>
             </div>
             <div class="top-product-item">
                 <div class="product-info">
-                    <span class="product-icon">🧀</span>
                     <span class="product-name">Cheese Burger</span>
                 </div>
                 <div class="product-stats">10 vendus - 30 000 FCFA</div>
             </div>
             <div class="top-product-item">
                 <div class="product-info">
-                    <span class="product-icon">🎁</span>
                     <span class="product-name">Menu Cheese</span>
                 </div>
                 <div class="product-stats">8 vendus - 36 000 FCFA</div>
             </div>
             <div class="top-product-item">
                 <div class="product-info">
-                    <span class="product-icon">🥓</span>
                     <span class="product-name">Bacon Burger</span>
                 </div>
                 <div class="product-stats">7 vendus - 24 500 FCFA</div>
@@ -86,3 +75,4 @@
     </div>
 </div>
 {% endblock %}
+

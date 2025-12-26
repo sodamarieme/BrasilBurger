@@ -1,19 +1,19 @@
 {% extends 'admin/base_admin.html.twig' %}
 
-{% block title %}Détails Livraison - Admin{% endblock %}
+{% block title %}Details Livraison - Admin{% endblock %}
 
 {% block body %}
 <div class="admin-container">
     <div class="admin-header">
-        <h1 class="admin-title">🚚 Détails de la Livraison</h1>
-        <a href="{{ path('app_admin_deliveries') }}" class="btn btn-secondary">← Retour aux livraisons</a>
+        <h1 class="admin-title">Details de la Livraison</h1>
+        <a href="{{ path('app_admin_deliveries') }}" class="btn btn-secondary">Retour aux livraisons</a>
     </div>
 
     <div class="admin-section">
         <div class="detail-grid">
             <!-- Info Livraison -->
             <div class="detail-card">
-                <h3>📋 Informations Livraison</h3>
+                <h3>Informations Livraison</h3>
                 <div class="detail-content">
                     <div class="detail-row">
                         <span class="label">Statut:</span>
@@ -21,25 +21,25 @@
                     </div>
                     <div class="detail-row">
                         <span class="label">Zone:</span>
-                        <span>{{ delivery.zone ? delivery.zone.nom : 'Non définie' }}</span>
+                        <span>{{ delivery.zone ? delivery.zone.nom : 'Non definie' }}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Prix livraison:</span>
                         <span class="price">{{ delivery.zone ? delivery.zone.prixLivraison|number_format(0, ',', ' ') ~ ' FCFA' : '-' }}</span>
                     </div>
                     <div class="detail-row">
-                        <span class="label">Créée le:</span>
+                        <span class="label">Creee le:</span>
                         <span>{{ delivery.createdAt|date('d/m/Y H:i') }}</span>
                     </div>
                     {% if delivery.assignedAt %}
                     <div class="detail-row">
-                        <span class="label">Assignée le:</span>
+                        <span class="label">Assignee le:</span>
                         <span>{{ delivery.assignedAt|date('d/m/Y H:i') }}</span>
                     </div>
                     {% endif %}
                     {% if delivery.deliveredAt %}
                     <div class="detail-row">
-                        <span class="label">Livrée le:</span>
+                        <span class="label">Livree le:</span>
                         <span>{{ delivery.deliveredAt|date('d/m/Y H:i') }}</span>
                     </div>
                     {% endif %}
@@ -48,7 +48,7 @@
 
             <!-- Info Livreur -->
             <div class="detail-card">
-                <h3>👤 Livreur</h3>
+                <h3>Livreur</h3>
                 <div class="detail-content">
                     {% if delivery.livreur %}
                         <div class="detail-row">
@@ -56,7 +56,7 @@
                             <span>{{ delivery.livreur.prenom }} {{ delivery.livreur.nom }}</span>
                         </div>
                         <div class="detail-row">
-                            <span class="label">Téléphone:</span>
+                            <span class="label">Telephone:</span>
                             <span>{{ delivery.livreur.telephone }}</span>
                         </div>
                         <div class="detail-row">
@@ -64,7 +64,7 @@
                             <span>{{ delivery.livreur.email }}</span>
                         </div>
                     {% else %}
-                        <p class="text-muted">Aucun livreur assigné</p>
+                        <p class="text-muted">Aucun livreur assigne</p>
                         <form action="{{ path('app_admin_delivery_assign', {id: delivery.id}) }}" method="POST" class="mt-2">
                             <select name="livreur_id" class="form-control" required>
                                 <option value="">Choisir un livreur</option>
@@ -82,11 +82,11 @@
 
             <!-- Info Commande -->
             <div class="detail-card">
-                <h3>📦 Commande Associée</h3>
+                <h3>Commande Associee</h3>
                 <div class="detail-content">
                     {% if delivery.commande %}
                         <div class="detail-row">
-                            <span class="label">Référence:</span>
+                            <span class="label">Reference:</span>
                             <a href="{{ path('app_admin_order_show', {id: delivery.commande.id}) }}">{{ delivery.commande.reference }}</a>
                         </div>
                         <div class="detail-row">
@@ -97,28 +97,26 @@
                             <span class="label">Adresse:</span>
                             <span>{{ delivery.commande.adresseLivraison }}</span>
                         </div>
-                        <div class="detail-row">
-                            <span class="label">Client:</span>
-                            <span>{{ delivery.commande.client.prenom }} {{ delivery.commande.client.nom }}</span>
-                        </div>
                     {% else %}
-                        <p class="text-muted">Pas de commande associée</p>
+                        <p class="text-muted">Aucune commande associee</p>
                     {% endif %}
                 </div>
             </div>
         </div>
-
+        
         <!-- Actions -->
-        <div class="detail-actions mt-3">
-            {% if delivery.statut == 'en_attente' %}
-                <form action="{{ path('app_admin_delivery_assign', {id: delivery.id}) }}" method="POST" style="display: inline;">
-                    <button type="submit" class="btn btn-primary">Assigner un livreur</button>
+        <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+            {% if delivery.statut == 'en_attente' and delivery.livreur %}
+                <form action="{{ path('app_admin_delivery_status', {id: delivery.id}) }}" method="POST">
+                    <input type="hidden" name="statut" value="en_livraison">
+                    <button type="submit" class="btn btn-success">Lancer la livraison</button>
                 </form>
             {% endif %}
             
-            {% if delivery.commande %}
-                <form action="{{ path('app_admin_order_cancel', {id: delivery.commande.id}) }}" method="POST" style="display: inline;" onsubmit="return confirm('Annuler cette commande ?')">
-                    <button type="submit" class="btn btn-danger">Annuler la commande</button>
+            {% if delivery.statut == 'en_livraison' %}
+                <form action="{{ path('app_admin_delivery_status', {id: delivery.id}) }}" method="POST">
+                    <input type="hidden" name="statut" value="livree">
+                    <button type="submit" class="btn btn-success">Marquer comme livree</button>
                 </form>
             {% endif %}
         </div>

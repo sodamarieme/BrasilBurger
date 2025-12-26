@@ -5,17 +5,17 @@
 {% block body %}
 <div class="container">
     <div class="section" style="max-width: 800px; margin: 0 auto;">
-        <a href="{{ path('app_cart') }}" class="back-link">← Retour au panier</a>
+        <a href="{{ path('app_cart') }}" class="back-link">Retour au panier</a>
         
-        <h2 class="section-title">✅ Finaliser votre commande</h2>
+        <h2 class="section-title">Finaliser votre commande</h2>
         
         <form method="post" id="checkout-form">
             <input type="hidden" name="_token" value="{{ csrf_token('checkout') }}">
             <input type="hidden" name="cart" id="cart-data">
             
-            <!-- Récapitulatif -->
+            <!-- Recapitulatif -->
             <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 15px;">📦 Récapitulatif de votre commande</h3>
+                <h3 style="margin-bottom: 15px;">Recapitulatif de votre commande</h3>
                 <div id="checkout-items"></div>
                 <hr style="margin: 15px 0; border: none; border-top: 2px dashed #ddd;">
                 <div style="display: flex; justify-content: space-between; font-size: 1.3rem;">
@@ -26,22 +26,22 @@
             
             <!-- Informations de livraison -->
             <div style="background: #fff; border: 2px solid #eee; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 20px;">🚚 Informations de livraison</h3>
+                <h3 style="margin-bottom: 20px;">Informations de livraison</h3>
                 
                 <div class="form-group">
-                    <label>📍 Adresse de livraison</label>
-                    <textarea name="adresse" class="form-control" required rows="3" placeholder="Adresse complète de livraison...">{{ app.user.adresse }}</textarea>
+                    <label>Adresse de livraison</label>
+                    <textarea name="adresse" class="form-control" required rows="3" placeholder="Adresse complete de livraison...">{{ app.user.adresse }}</textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>📱 Téléphone</label>
-                    <input type="tel" name="telephone" class="form-control" value="{{ app.user.telephone }}" required placeholder="Votre numéro de téléphone">
+                    <label>Telephone</label>
+                    <input type="tel" name="telephone" class="form-control" value="{{ app.user.telephone }}" required placeholder="Votre numero de telephone">
                 </div>
                 
                 <div class="form-group">
-                    <label>🗺️ Zone de livraison</label>
+                    <label>Zone de livraison</label>
                     <select name="zone" class="form-control" required id="zone-select">
-                        <option value="">-- Sélectionnez votre zone --</option>
+                        <option value="">-- Selectionnez votre zone --</option>
                         {% for zone in zones %}
                             <option value="{{ zone.id }}" data-frais="{{ zone.fraisLivraison }}">
                                 {{ zone.nom }} (+{{ zone.fraisLivraison|number_format(0, ',', ' ') }} FCFA)
@@ -51,28 +51,28 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>📝 Instructions spéciales (optionnel)</label>
+                    <label>Instructions speciales (optionnel)</label>
                     <textarea name="instructions" class="form-control" rows="2" placeholder="Instructions pour le livreur, allergies, etc."></textarea>
                 </div>
             </div>
             
             <!-- Mode de paiement -->
             <div style="background: #fff; border: 2px solid #eee; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 20px;">💳 Mode de paiement</h3>
+                <h3 style="margin-bottom: 20px;">Mode de paiement</h3>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <label style="display: flex; align-items: center; gap: 15px; padding: 20px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s;">
                         <input type="radio" name="paiement" value="especes" checked style="width: 20px; height: 20px;">
                         <div>
-                            <strong>💵 Espèces</strong>
-                            <div style="font-size: 0.85rem; color: #666;">Paiement à la livraison</div>
+                            <strong>Especes</strong>
+                            <div style="font-size: 0.85rem; color: #666;">Paiement a la livraison</div>
                         </div>
                     </label>
                     
                     <label style="display: flex; align-items: center; gap: 15px; padding: 20px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s;">
                         <input type="radio" name="paiement" value="mobile" style="width: 20px; height: 20px;">
                         <div>
-                            <strong>📱 Mobile Money</strong>
+                            <strong>Mobile Money</strong>
                             <div style="font-size: 0.85rem; color: #666;">Orange Money, Wave...</div>
                         </div>
                     </label>
@@ -91,13 +91,13 @@
                 </div>
                 <hr style="border: none; border-top: 2px dashed var(--primary); margin: 15px 0;">
                 <div style="display: flex; justify-content: space-between; font-size: 1.5rem;">
-                    <strong>Total à payer:</strong>
+                    <strong>Total a payer:</strong>
                     <strong id="final-total" style="color: var(--primary);">0 FCFA</strong>
                 </div>
             </div>
             
             <button type="submit" class="btn" style="width: 100%; padding: 18px; font-size: 1.2rem;">
-                ✅ Confirmer la commande
+                Confirmer la commande
             </button>
         </form>
     </div>
@@ -124,12 +124,12 @@ function renderCheckout() {
         const itemTotal = item.prix * item.quantity;
         subtotal += itemTotal;
         
-        const typeIcon = item.type === 'burger' ? '🍔' : (item.type === 'menu' ? '🍽️' : '🍟');
+        const typeLabel = item.type === 'burger' ? 'Burger' : (item.type === 'menu' ? 'Menu' : 'Complement');
         
         html += `
             <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
                 <div>
-                    <span>${typeIcon}</span>
+                    <span>[${typeLabel}]</span>
                     <strong>${item.nom}</strong>
                     <span style="color: #888;">x${item.quantity}</span>
                 </div>

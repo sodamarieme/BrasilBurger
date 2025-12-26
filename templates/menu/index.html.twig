@@ -6,14 +6,14 @@
 <!-- Page Header -->
 <section class="hero" style="padding: 50px 0;">
     <div class="container">
-        <h1 class="hero-title" style="font-size: 42px;">🍔 Notre Carte</h1>
-        <p class="hero-subtitle">Découvrez nos délicieuses créations</p>
+        <h1 class="hero-title" style="font-size: 42px;">Notre Carte</h1>
+        <p class="hero-subtitle">Decouvrez nos delicieuses creations</p>
         
         <!-- Category Tabs -->
         <div class="category-tabs">
-            <a href="#burgers" class="category-tab active">🍔 Burgers</a>
-            <a href="#menus" class="category-tab">🍽️ Menus</a>
-            <a href="#complements" class="category-tab">🍟 Accompagnements</a>
+            <a href="#burgers" class="category-tab active">Burgers</a>
+            <a href="#menus" class="category-tab">Menus</a>
+            <a href="#complements" class="category-tab">Accompagnements</a>
         </div>
     </div>
 </section>
@@ -23,7 +23,7 @@
     <section class="admin-section animate-fade-up" id="burgers">
         <div class="admin-section-header">
             <h2 class="admin-section-title">
-                <span class="icon">🍔</span> Nos Burgers
+                Nos Burgers
             </h2>
             <span class="text-muted">{{ burgers|length }} produit(s)</span>
         </div>
@@ -40,13 +40,13 @@
                     {% endif %}
                     <div class="product-overlay">
                         <a href="{{ path('app_menu_burger', {id: burger.id}) }}" class="btn btn-primary">
-                            👁️ Voir les détails
+                            Voir les details
                         </a>
                     </div>
                     {% if not burger.disponible %}
                         <span class="card-badge" style="background: var(--danger);">Indisponible</span>
                     {% elseif burger.category and burger.category.nom == 'Burgers Premium' %}
-                        <span class="card-badge">⭐ Premium</span>
+                        <span class="card-badge">Premium</span>
                     {% endif %}
                 </div>
                 <div class="product-content">
@@ -59,7 +59,7 @@
                         <div class="product-price">{{ burger.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         {% if burger.disponible %}
                         <button class="btn btn-primary btn-sm" onclick="addToCart('burger', {{ burger.id }}, '{{ burger.nom|e('js') }}', {{ burger.prix }}, '{{ burger.image|e('js') }}')">
-                            🛒 Ajouter
+                            Ajouter
                         </button>
                         {% else %}
                         <button class="btn btn-sm" disabled style="opacity: 0.5;">Indisponible</button>
@@ -71,9 +71,8 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-state-icon">🍔</div>
             <h3 class="empty-state-title">Aucun burger disponible</h3>
-            <p class="empty-state-text">Nos délicieux burgers arrivent bientôt !</p>
+            <p class="empty-state-text">Nos delicieux burgers arrivent bientot !</p>
         </div>
         {% endif %}
     </section>
@@ -82,7 +81,7 @@
     <section class="admin-section animate-fade-up" id="menus">
         <div class="admin-section-header">
             <h2 class="admin-section-title">
-                <span class="icon">🍽️</span> Nos Menus
+                Nos Menus
             </h2>
             <span class="text-muted">{{ menus|length }} menu(s)</span>
         </div>
@@ -99,23 +98,23 @@
                     {% endif %}
                     <div class="product-overlay">
                         <a href="{{ path('app_menu_formule', {id: menu.id}) }}" class="btn btn-primary">
-                            👁️ Voir le menu
+                            Voir le menu
                         </a>
                     </div>
-                    <span class="card-badge promo">🏷️ Menu Complet</span>
+                    <span class="card-badge promo">Menu Complet</span>
                 </div>
                 <div class="product-content">
                     <h3 class="product-title">{{ menu.nom }}</h3>
                     <p class="product-description">{{ menu.description }}</p>
                     <div class="d-flex gap-1 mb-2">
-                        <span class="status-badge status-confirmed">🍔 {{ menu.burgers|length }}</span>
-                        <span class="status-badge status-ready">🍟 {{ menu.complements|length }}</span>
+                        <span class="status-badge status-confirmed">{{ menu.burgers|length }} burger(s)</span>
+                        <span class="status-badge status-ready">{{ menu.complements|length }} accomp.</span>
                     </div>
                     <div class="product-footer">
                         <div class="product-price">{{ menu.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         {% if menu.disponible %}
                         <button class="btn btn-success btn-sm" onclick="addToCart('menu', {{ menu.id }}, '{{ menu.nom|e('js') }}', {{ menu.prix }}, '{{ menu.image|e('js') }}')">
-                            🛒 Ajouter
+                            Ajouter
                         </button>
                         {% endif %}
                     </div>
@@ -125,9 +124,8 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-state-icon">🍽️</div>
             <h3 class="empty-state-title">Aucun menu disponible</h3>
-            <p class="empty-state-text">Nos menus arrivent bientôt !</p>
+            <p class="empty-state-text">Nos menus arrivent bientot !</p>
         </div>
         {% endif %}
     </section>
@@ -136,7 +134,7 @@
     <section class="admin-section animate-fade-up" id="complements">
         <div class="admin-section-header">
             <h2 class="admin-section-title">
-                <span class="icon">🍟</span> Accompagnements
+                Accompagnements
             </h2>
             <span class="text-muted">{{ complements|length }} produit(s)</span>
         </div>
@@ -153,7 +151,7 @@
                     {% endif %}
                     <div class="product-overlay">
                         <button class="btn btn-primary" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
-                            🛒 Ajouter au panier
+                            Ajouter au panier
                         </button>
                     </div>
                 </div>
@@ -165,7 +163,7 @@
                         <div class="product-price">{{ complement.prix|number_format(0, ',', ' ') }} <small>FCFA</small></div>
                         {% if complement.disponible %}
                         <button class="btn btn-primary btn-sm" onclick="addToCart('complement', {{ complement.id }}, '{{ complement.nom|e('js') }}', {{ complement.prix }}, '{{ complement.image|e('js') }}')">
-                            🛒 Ajouter
+                            Ajouter
                         </button>
                         {% endif %}
                     </div>
@@ -175,9 +173,8 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-state-icon">🍟</div>
             <h3 class="empty-state-title">Aucun accompagnement disponible</h3>
-            <p class="empty-state-text">Nos accompagnements arrivent bientôt !</p>
+            <p class="empty-state-text">Nos accompagnements arrivent bientot !</p>
         </div>
         {% endif %}
     </section>
@@ -203,7 +200,7 @@ function addToCart(type, id, name, price, image) {
     
     localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
     updateCartBadge();
-    showNotification('✅ ' + name + ' ajouté au panier !');
+    showNotification(name + ' ajoute au panier !');
 }
 
 function updateCartBadge() {
@@ -245,3 +242,4 @@ document.querySelectorAll('.category-tab').forEach(tab => {
 document.addEventListener('DOMContentLoaded', updateCartBadge);
 </script>
 {% endblock %}
+

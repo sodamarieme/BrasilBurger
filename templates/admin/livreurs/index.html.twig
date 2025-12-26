@@ -6,62 +6,65 @@
 <div class="admin-container">
     <div class="admin-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 class="admin-section-title" style="margin-bottom: 0; border: none; padding: 0;">👨‍💼 Gestion des Livreurs</h2>
-            <a href="{{ path('app_admin_livreur_new') }}" class="btn">➕ Nouveau Livreur</a>
+            <h2 class="admin-section-title" style="margin-bottom: 0; border: none; padding: 0;">Gestion des Livreurs</h2>
+            <a href="{{ path('app_admin_livreur_new') }}" class="btn">+ Nouveau Livreur</a>
         </div>
         
         <!-- Sous-navigation Livraisons -->
         <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
-            <a href="{{ path('app_admin_deliveries') }}" class="btn btn-secondary">🚚 Livraisons</a>
-            <a href="{{ path('app_admin_livreurs') }}" class="btn">👨‍💼 Livreurs</a>
-            <a href="{{ path('app_admin_zones') }}" class="btn btn-secondary">📍 Zones</a>
+            <a href="{{ path('app_admin_deliveries') }}" class="btn btn-secondary">Livraisons</a>
+            <a href="{{ path('app_admin_livreurs') }}" class="btn">Livreurs</a>
+            <a href="{{ path('app_admin_zones') }}" class="btn btn-secondary">Zones</a>
         </div>
         
         {% if livreurs|length > 0 %}
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Téléphone</th>
-                    <th>Véhicule</th>
-                    <th>Zone</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for livreur in livreurs %}
-                <tr>
-                    <td><strong>{{ livreur.prenom }} {{ livreur.nom }}</strong></td>
-                    <td>📞 {{ livreur.telephone }}</td>
-                    <td>🏍️ {{ livreur.vehicule|default('Non spécifié') }}</td>
-                    <td>{{ livreur.zones|length > 0 ? livreur.zones|map(z => z.nom)|join(', ') : '-' }}</td>
-                    <td>
-                        {% if livreur.disponible %}
-                            <span class="badge badge-success">✅ Disponible</span>
-                        {% else %}
-                            <span class="badge badge-danger">🚫 Occupé</span>
-                        {% endif %}
-                    </td>
-                    <td class="action-btns">
-                        <a href="{{ path('app_admin_livreur_edit', {id: livreur.id}) }}" class="btn-edit">✏️</a>
-                        <form method="post" action="{{ path('app_admin_livreur_toggle', {id: livreur.id}) }}" style="display: inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ livreur.id) }}">
-                            <button type="submit" class="btn-archive">🔄</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Telephone</th>
+                        <th>Vehicule</th>
+                        <th>Zone</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for livreur in livreurs %}
+                    <tr>
+                        <td><strong>{{ livreur.prenom }} {{ livreur.nom }}</strong></td>
+                        <td>{{ livreur.telephone }}</td>
+                        <td>{{ livreur.vehicule|default('Non specifie') }}</td>
+                        <td>{{ livreur.zones|length > 0 ? livreur.zones|map(z => z.nom)|join(', ') : '-' }}</td>
+                        <td>
+                            {% if livreur.disponible %}
+                                <span class="badge badge-success">Disponible</span>
+                            {% else %}
+                                <span class="badge badge-danger">Occupe</span>
+                            {% endif %}
+                        </td>
+                        <td class="action-btns">
+                            <a href="{{ path('app_admin_livreur_edit', {id: livreur.id}) }}" class="btn-edit">Modifier</a>
+                            <form method="post" action="{{ path('app_admin_livreur_toggle', {id: livreur.id}) }}" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ livreur.id) }}">
+                                <button type="submit" class="btn-archive">Statut</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
         <div style="text-align: center; padding: 60px 20px; color: #888;">
-            <div style="font-size: 4rem; margin-bottom: 20px;">👨‍💼</div>
+            <div style="font-size: 4rem; margin-bottom: 20px; color: var(--primary);">[L]</div>
             <h3>Aucun livreur</h3>
             <p>Ajoutez votre premier livreur</p>
-            <a href="{{ path('app_admin_livreur_new') }}" class="btn" style="margin-top: 15px;">➕ Ajouter un livreur</a>
+            <a href="{{ path('app_admin_livreur_new') }}" class="btn" style="margin-top: 15px;">+ Ajouter un livreur</a>
         </div>
         {% endif %}
     </div>
 </div>
 {% endblock %}
+

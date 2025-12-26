@@ -5,19 +5,18 @@
 {% block body %}
 <section class="hero-small">
     <div class="container">
-        <h1 class="hero-title animate-fadeIn">🚚 Livraison</h1>
-        <p class="hero-subtitle animate-fadeIn">Nous livrons vos burgers chauds et délicieux chez vous !</p>
+        <h1 class="hero-title animate-fadeIn">Livraison</h1>
+        <p class="hero-subtitle animate-fadeIn">Nous livrons vos burgers chauds et delicieux chez vous !</p>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
-        <h2 class="section-title">📍 Zones de livraison</h2>
+        <h2 class="section-title">Zones de livraison</h2>
         
         <div class="zones-grid">
             {% for zone in zones %}
             <div class="zone-card animate-fadeInUp" style="animation-delay: {{ loop.index * 0.1 }}s">
-                <div class="zone-icon">📍</div>
                 <h3 class="zone-name">{{ zone.nom }}</h3>
                 <div class="zone-price">
                     <span class="price-label">Frais de livraison</span>
@@ -32,34 +31,30 @@
         </div>
 
         <div class="delivery-info animate-fadeIn">
-            <h3>ℹ️ Informations de livraison</h3>
+            <h3>Informations de livraison</h3>
             <div class="info-grid">
                 <div class="info-item">
-                    <span class="info-icon">⏱️</span>
                     <div>
-                        <strong>Délai de livraison</strong>
+                        <strong>Delai de livraison</strong>
                         <p>30-45 minutes en moyenne</p>
                     </div>
                 </div>
                 <div class="info-item">
-                    <span class="info-icon">📞</span>
                     <div>
                         <strong>Contact</strong>
                         <p>+221 77 123 45 67</p>
                     </div>
                 </div>
                 <div class="info-item">
-                    <span class="info-icon">🕐</span>
                     <div>
                         <strong>Horaires</strong>
                         <p>10h - 23h tous les jours</p>
                     </div>
                 </div>
                 <div class="info-item">
-                    <span class="info-icon">💳</span>
                     <div>
                         <strong>Paiement</strong>
-                        <p>Espèces ou Wave/Orange Money</p>
+                        <p>Especes ou Wave/Orange Money</p>
                     </div>
                 </div>
             </div>
@@ -67,3 +62,4 @@
     </div>
 </section>
 {% endblock %}
+

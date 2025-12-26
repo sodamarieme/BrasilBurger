@@ -5,14 +5,14 @@
 {% block body %}
 <div class="admin-container">
     <div class="section" style="max-width: 600px; margin: 0 auto;">
-        <a href="{{ path('app_admin_zones') }}" class="back-link">← Retour aux zones</a>
+        <a href="{{ path('app_admin_zones') }}" class="back-link">Retour aux zones</a>
         
-        <h2 class="section-title">{{ zone ? '✏️ Modifier la Zone' : '➕ Ajouter une Zone' }}</h2>
+        <h2 class="section-title">{{ zone ? 'Modifier la Zone' : 'Ajouter une Zone' }}</h2>
         
         <form method="post">
             <div class="form-group">
                 <label>Nom de la zone</label>
-                <input type="text" name="nom" class="form-control" value="{{ zone ? zone.nom : '' }}" required placeholder="Ex: Zone A (Plateau, Médina)">
+                <input type="text" name="nom" class="form-control" value="{{ zone ? zone.nom : '' }}" required placeholder="Ex: Zone A (Plateau, Medina)">
             </div>
             
             <div class="form-group">
@@ -21,9 +21,10 @@
             </div>
             
             <button type="submit" class="btn" style="width: 100%;">
-                {{ zone ? '💾 Enregistrer' : '➕ Ajouter la zone' }}
+                {{ zone ? 'Enregistrer' : 'Ajouter la zone' }}
             </button>
         </form>
     </div>
 </div>
 {% endblock %}
+

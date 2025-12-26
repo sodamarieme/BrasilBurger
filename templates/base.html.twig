@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Brasil Burger{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍔</text></svg>">
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
         
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -19,7 +19,7 @@
         <nav class="navbar">
             <div class="container">
                 <a href="{{ path('app_home') }}" class="logo">
-                    <span class="logo-icon">🍔</span>
+                    <span class="logo-icon">B</span>
                     <span class="logo-text">Brasil Burger</span>
                 </a>
                 
@@ -28,13 +28,13 @@
                 </button>
                 
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="{{ path('app_home') }}" class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">🏠 Accueil</a></li>
+                    <li><a href="{{ path('app_home') }}" class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">Accueil</a></li>
                     <li><a href="{{ path('app_cart') }}" class="nav-link cart-link {% if 'cart' in app.request.attributes.get('_route') %}active{% endif %}">
-                        🛒 Panier
+                        Panier
                         <span class="cart-count" id="cartCount">0</span>
                     </a></li>
-                    <li><a href="{{ path('app_orders') }}" class="nav-link {% if 'order' in app.request.attributes.get('_route') %}active{% endif %}">📦 Commande</a></li>
-                    <li><a href="{{ path('app_livraison') }}" class="nav-link {% if 'livraison' in app.request.attributes.get('_route') %}active{% endif %}">🚚 Livraison</a></li>
+                    <li><a href="{{ path('app_orders') }}" class="nav-link {% if 'order' in app.request.attributes.get('_route') %}active{% endif %}">Commandes</a></li>
+                    <li><a href="{{ path('app_livraison') }}" class="nav-link {% if 'livraison' in app.request.attributes.get('_route') %}active{% endif %}">Livraison</a></li>
                     <li><a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a></li>
                 </ul>
             </div>
@@ -61,7 +61,7 @@
         <footer class="footer">
             <div class="container">
                 <p class="footer-text">
-                    &copy; {{ 'now'|date('Y') }} <span class="footer-brand">🍔 Brasil Burger</span>. Tous droits réservés.
+                    &copy; {{ 'now'|date('Y') }} <span class="footer-brand">Brasil Burger</span>. Tous droits réservés.
                 </p>
             </div>
         </footer>
@@ -87,3 +87,4 @@
         {% block javascripts_bottom %}{% endblock %}
     </body>
 </html>
+
