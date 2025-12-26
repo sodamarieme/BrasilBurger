@@ -25,6 +25,9 @@ RUN echo "APP_ENV=prod" > .env.local && echo "APP_DEBUG=0" >> .env.local
 # Install dependencies without scripts to avoid cache:clear error
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
+# Install JavaScript assets (importmap)
+RUN APP_ENV=prod php bin/console importmap:install || true
+
 # Configure Apache with proper rewrite rules
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 RUN sed -i '/<\/VirtualHost>/i \
