@@ -704,7 +704,7 @@ class AdminController extends AbstractController
         } elseif ($statut === 'livree') {
             $delivery->setStatut(Delivery::STATUS_DELIVERED);
             $delivery->setDeliveredAt(new \DateTimeImmutable());
-            $delivery->getCommande()->setStatut(Order::STATUS_COMPLETED);
+            $delivery->getCommande()->setStatut(Order::STATUS_DELIVERED);
         }
         
         $delivery->getCommande()->setUpdatedAt(new \DateTimeImmutable());
