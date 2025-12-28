@@ -43,7 +43,7 @@ class UpdateImagesCommand extends Command
             $burger = $this->em->getRepository(Burger::class)->findOneBy(['nom' => $nom]);
             if ($burger) {
                 $burger->setImage($image);
-                $io->writeln("  ✅ {$nom} → {$image}");
+                $io->writeln("   {$nom} → {$image}");
             }
         }
 
@@ -60,7 +60,7 @@ class UpdateImagesCommand extends Command
             $complement = $this->em->getRepository(Complement::class)->findOneBy(['nom' => $nom]);
             if ($complement) {
                 $complement->setImage($image);
-                $io->writeln("  ✅ {$nom} → {$image}");
+                $io->writeln("   {$nom} → {$image}");
             }
         }
 
@@ -76,7 +76,7 @@ class UpdateImagesCommand extends Command
             $menu = $this->em->getRepository(Menu::class)->findOneBy(['nom' => $nom]);
             if ($menu) {
                 $menu->setImage($image);
-                $io->writeln("  ✅ {$nom} → {$image}");
+                $io->writeln("   {$nom} → {$image}");
             }
         }
 

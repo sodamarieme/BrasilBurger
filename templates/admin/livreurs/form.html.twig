@@ -11,8 +11,13 @@
         
         <form method="post">
             <div class="form-group">
-                <label>Nom complet</label>
-                <input type="text" name="nom" class="form-control" value="{{ livreur ? livreur.nom : '' }}" required placeholder="Ex: Mamadou Diallo">
+                <label>Prenom</label>
+                <input type="text" name="prenom" class="form-control" value="{{ livreur ? livreur.prenom : '' }}" required placeholder="Ex: Mamadou">
+            </div>
+            
+            <div class="form-group">
+                <label>Nom</label>
+                <input type="text" name="nom" class="form-control" value="{{ livreur ? livreur.nom : '' }}" required placeholder="Ex: Diallo">
             </div>
             
             <div class="form-group">
@@ -21,8 +26,13 @@
             </div>
             
             <div class="form-group">
+                <label>Email (optionnel)</label>
+                <input type="email" name="email" class="form-control" value="{{ livreur ? livreur.email : '' }}" placeholder="Ex: mamadou@email.com">
+            </div>
+            
+            <div class="form-group">
                 <label>Zones de livraison</label>
-                <select name="zones[]" class="form-control" multiple>
+                <select name="zones[]" class="form-control" multiple style="min-height: 120px;">
                     {% for zone in zones %}
                     <option value="{{ zone.id }}" {{ livreur and zone in livreur.zones ? 'selected' : '' }}>
                         {{ zone.nom }}
@@ -36,6 +46,13 @@
                 <label class="checkbox-label">
                     <input type="checkbox" name="disponible" {{ (not livreur or livreur.disponible) ? 'checked' : '' }}>
                     Disponible pour les livraisons
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="active" {{ (not livreur or livreur.active) ? 'checked' : '' }}>
+                    Compte actif
                 </label>
             </div>
             

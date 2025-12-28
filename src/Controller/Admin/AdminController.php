@@ -680,4 +680,38 @@ class AdminController extends AbstractController
             'zones' => $zoneRepository->findAll(),
         ]);
     }
+
+    #[Route('/livreurs/{id}/toggle', name: 'app_admin_livreur_toggle', methods: ['POST'])]
+    public function toggleLivreur(Livreur $livreur, EntityManagerInterface $em): Response
+    {
+        $livreur->setDisponible(!$livreur->isDisponible());
+        $em->flush();
+        
+        $status = $livreur->isDisponible() ? 'disponible' : 'indisponible';
+        $this->addFlash('success', "Livreur marque comme {$status}");
+        
+        return $this->redirectToRoute('app_admin_livreurs');
+    }
+
+    #[Route('/livraisons/{id}/statut', name: 'app_admin_delivery_status', methods: ['POST'])]
+    public function updateDeliveryStatus(Delivery $delivery, Request $request, EntityManagerInterface $em): Response
+    {
+        $statut = $request->request->get('statut');
+        
+        if ($statut === 'en_livraison') {
+            $delivery->setStatut(Delivery::STATUS_DELIVERING);
+            $delivery->getCommande()->setStatut(Order::STATUS_DELIVERING);
+        } elseif ($statut === 'livree') {
+            $delivery->setStatut(Delivery::STATUS_DELIVERED);
+            $delivery->setDeliveredAt(new \DateTimeImmutable());
+            $delivery->getCommande()->setStatut(Order::STATUS_COMPLETED);
+        }
+        
+        $delivery->getCommande()->setUpdatedAt(new \DateTimeImmutable());
+        $em->flush();
+        
+        $this->addFlash('success', 'Statut de la livraison mis a jour');
+        
+        return $this->redirectToRoute('app_admin_deliveries');
+    }
 }
