@@ -9,53 +9,65 @@
         <h2 class="section-title">Gestion des Livraisons</h2>
         
         <div class="delivery-grid">
-            <!-- Colonne gauche: Commandes a livrer -->
+            <!-- Colonne gauche: Livraisons a affecter et en cours -->
             <div class="delivery-column">
-                <h3 class="column-title">Commandes a livrer</h3>
+                <h3 class="column-title">Livraisons a gerer</h3>
                 
                 {% set pendingDeliveries = [] %}
-                {% if ordersByZone|default({})|length > 0 %}
-                    {% for zoneName, zoneData in ordersByZone %}
-                        {% for order in zoneData.orders %}
-                            {% if order.statut != 'livree' and order.statut != 'annulee' %}
-                                {% set pendingDeliveries = pendingDeliveries|merge([{order: order, zone: zoneData.zone}]) %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                {% endif %}
+                
+                {# Ajouter les livraisons sans livreur ou en cours #}
+                {% for delivery in deliveries|default([]) %}
+                    {% if delivery.statut != 'livree' and delivery.statut != 'annulee' %}
+                        {% set pendingDeliveries = pendingDeliveries|merge([delivery]) %}
+                    {% endif %}
+                {% endfor %}
                 
                 {% if pendingDeliveries|length > 0 %}
-                    {% for item in pendingDeliveries %}
+                    {% for delivery in pendingDeliveries %}
                     <div class="delivery-card">
                         <div class="delivery-info">
-                            <div class="delivery-id">#{{ item.order.id }}</div>
+                            <div class="delivery-id">#{{ delivery.commande.id }}</div>
                             <div class="delivery-client">
-                                <strong>{{ item.order.client.prenom }} {{ item.order.client.nom }}</strong>
-                                <small>Tel: {{ item.order.client.telephone|default('N/A') }}</small>
+                                <strong>{{ delivery.commande.client.prenom }} {{ delivery.commande.client.nom }}</strong>
+                                <small>Tel: {{ delivery.commande.client.telephone|default('N/A') }}</small>
                             </div>
                             <div class="delivery-address">
-                                Adresse: {{ item.order.adresseLivraison|default('Adresse non specifiee') }}
+                                Adresse: {{ delivery.adresse|default(delivery.commande.adresseLivraison|default('Adresse non specifiee')) }}
                             </div>
+                            {% if delivery.zone %}
                             <div class="delivery-zone">
-                                Zone: <strong>{{ item.zone.nom }}</strong> - {{ item.zone.prixLivraison|number_format(0, ' ', ' ') }} FCFA
+                                Zone: <strong>{{ delivery.zone.nom }}</strong> - {{ delivery.zone.prixLivraison|number_format(0, ' ', ' ') }} FCFA
                             </div>
+                            {% endif %}
                             <div class="delivery-amount">
-                                {{ item.order.total|number_format(0, ' ', ' ') }} FCFA
+                                {{ delivery.commande.total|number_format(0, ' ', ' ') }} FCFA
+                            </div>
+                            <div class="delivery-status-badge">
+                                {% if delivery.statut == 'en_attente' %}
+                                    <span class="status-pill status-pending">En attente</span>
+                                {% elseif delivery.statut == 'assignee' %}
+                                    <span class="status-pill status-assigned">Assignee</span>
+                                {% elseif delivery.statut == 'en_livraison' %}
+                                    <span class="status-pill status-delivering">En livraison</span>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="delivery-actions">
-                            {% if item.order.delivery.livreur %}
-                                <span class="livreur-assigned">
-                                    {{ item.order.delivery.livreur.prenom }}
-                                </span>
-                                <form action="{{ path('app_admin_delivery_status', {id: item.order.delivery.id}) }}" method="POST">
+                            <button class="btn-action btn-assign" onclick="showLivreurModal({{ delivery.id }})">
+                                Affecter un livreur
+                            </button>
+                            {% if delivery.livreur %}
+                                {% if delivery.statut == 'assignee' or delivery.statut == 'en_attente' %}
+                                <form action="{{ path('app_admin_delivery_status', {id: delivery.id}) }}" method="POST" style="display:inline;">
                                     <input type="hidden" name="statut" value="en_livraison">
                                     <button type="submit" class="btn-action btn-success">Lancer</button>
                                 </form>
-                            {% else %}
-                                <button class="btn-action btn-assign" onclick="showLivreurModal({{ item.order.delivery.id }})">
-                                    Affecter un livreur
-                                </button>
+                                {% elseif delivery.statut == 'en_livraison' %}
+                                <form action="{{ path('app_admin_delivery_status', {id: delivery.id}) }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="statut" value="livree">
+                                    <button type="submit" class="btn-action btn-success">Terminer</button>
+                                </form>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -63,7 +75,7 @@
                 {% else %}
                 <div class="empty-state">
                     <div class="empty-icon">[OK]</div>
-                    <h3>Toutes les livraisons sont terminees</h3>
+                    <h3>Aucune livraison en attente</h3>
                 </div>
                 {% endif %}
             </div>
@@ -85,15 +97,11 @@
                         </div>
                         <div class="livreur-status">
                             {% set activeDeliveries = 0 %}
-                            {% if ordersByZone|default({})|length > 0 %}
-                                {% for zoneName, zoneData in ordersByZone %}
-                                    {% for order in zoneData.orders %}
-                                        {% if order.delivery.livreur and order.delivery.livreur.id == livreur.id and order.statut == 'en_livraison' %}
-                                            {% set activeDeliveries = activeDeliveries + 1 %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-                            {% endif %}
+                            {% for delivery in deliveries|default([]) %}
+                                {% if delivery.livreur and delivery.livreur.id == livreur.id and delivery.statut == 'en_livraison' %}
+                                    {% set activeDeliveries = activeDeliveries + 1 %}
+                                {% endif %}
+                            {% endfor %}
                             
                             {% if activeDeliveries > 0 %}
                                 <span class="status-pill status-delivering">En course ({{ activeDeliveries }})</span>
@@ -168,6 +176,24 @@ function closeModal() {
     border-radius: 15px;
     max-width: 400px;
     width: 90%;
+}
+.btn-change {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.btn-change:hover {
+    background: #5a6268;
+}
+.delivery-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
 }
 </style>
 {% endblock %}

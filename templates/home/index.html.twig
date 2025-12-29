@@ -7,7 +7,24 @@
 <section class="hero">
     <div class="container">
         <h1 class="hero-title">Brasil Burger</h1>
-        <p class="hero-subtitle">Les meilleurs burgers artisanaux de Dakar. Ingredients frais, recettes uniques, livraison express !</p>
+        <p class="hero-subtitle">Les meilleurs burgers artisanaux,<br>prepares avec passion et livres chez vous !</p>
+        
+        <!-- Featured Burgers Circles -->
+        <div class="hero-burgers">
+            <div class="hero-burger-circle">
+                <img src="{{ asset('images/products/burger-classic.jpg') }}" alt="Classic Burger">
+                <span class="hero-burger-name">Classic Burger</span>
+            </div>
+            <div class="hero-burger-circle">
+                <img src="{{ asset('images/products/burger-cheese.jpg') }}" alt="Cheese Burger">
+                <span class="hero-burger-name">Cheese Burger</span>
+            </div>
+            <div class="hero-burger-circle">
+                <img src="{{ asset('images/products/burger-bacon.jpg') }}" alt="Bacon Burger">
+                <span class="hero-burger-name">Bacon Burger</span>
+            </div>
+        </div>
+        
         <div class="hero-buttons">
             <a href="{{ path('app_menu') }}" class="hero-btn hero-btn-primary">
                 Decouvrir le Menu

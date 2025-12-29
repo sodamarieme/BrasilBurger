@@ -89,7 +89,7 @@ class SeedDataCommand extends Command
                 $category->setDescription($cat['description']);
                 $this->em->persist($category);
                 $categoryEntities[] = $category;
-                $io->writeln("  ✅ {$cat['nom']}");
+                $io->writeln("   {$cat['nom']}");
             } else {
                 $categoryEntities[] = $existing;
             }
@@ -121,7 +121,7 @@ class SeedDataCommand extends Command
                 }
                 $this->em->persist($burger);
                 $burgerEntities[] = $burger;
-                $io->writeln("  ✅ {$b['nom']} - {$b['prix']} FCFA");
+                $io->writeln("   {$b['nom']} - {$b['prix']} FCFA");
             } else {
                 $burgerEntities[] = $existing;
             }
