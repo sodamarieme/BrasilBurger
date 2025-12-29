@@ -6,9 +6,6 @@ use App\Entity\Burger;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Burger>
- */
 class BurgerRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
